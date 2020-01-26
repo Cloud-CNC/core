@@ -1,0 +1,32 @@
+# VS Code Counter
+.VSCodeCounter
+
+# Cryptography related files
+crypto
+
+# Uploaded files
+files
+
+# Logs
+logs
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Dependency directories
+node_modules
+jspm_packages
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
+.env.test
+
+# Parcel
+.cache
+dist

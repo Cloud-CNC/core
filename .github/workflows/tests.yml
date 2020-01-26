@@ -1,0 +1,21 @@
+name: tests
+on: push
+jobs:
+  build:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+      - name: Install MongoDB
+        run: sudo apt install -y mongodb
+      - name: Install Modules
+        run: npm ci
+      - name: Create Directories
+        run: mkdir crypto files && sudo mkdir /data/db -p
+      - name: Generate Salt
+        run: cd crypto && openssl rand -out secret.txt -base64 512
+      - name: Generate Certificate
+        run: cd crypto && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -keyout key.pem -out cert.pem
+      - name: Test
+        run: sudo npm test
