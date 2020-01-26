@@ -20,15 +20,15 @@ import colors from 'vuetify/lib/util/colors.js';
 import index from './index.vue';
 
 //Routes
-import account from './pages/account.vue';
-import accounts from './pages/accounts.vue';
-import controllers from './pages/controllers.vue';
-import error from './pages/error.vue';
-import file from './pages/file.vue';
-import files from './pages/files.vue';
-import login from './pages/login.vue';
-import machines from './pages/machines.vue';
-import trash from './pages/trash.vue';
+import account from './views/account.vue';
+import accounts from './views/accounts.vue';
+import controllers from './views/controllers.vue';
+import error from './views/error.vue';
+import file from './views/file.vue';
+import files from './views/files.vue';
+import login from './views/login.vue';
+import machines from './views/machines.vue';
+import trash from './views/trash.vue';
 
 //Vue plugins
 Vue.use(VueRouter);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <lightbox v-model="lightbox.visible">
+    <lightbox v-model="visible">
       <template v-slot:title>Execute {{ file.name }}</template>
       <template v-slot:content>
         <v-form>
@@ -10,7 +10,7 @@
                 item-text="name"
                 item-value="_id"
                 :items="machines"
-                v-model="lightbox.machine"
+                v-model="machine"
                 label="Machine"
               ></v-select>
             </v-list-item>
@@ -18,7 +18,7 @@
             <v-list-item>
               <v-item-group>
                 <v-btn @click="execute">Execute</v-btn>
-                <v-btn @click="lightbox.visible = false">Cancel</v-btn>
+                <v-btn @click="visible = false">Cancel</v-btn>
               </v-item-group>
             </v-list-item>
           </v-list>
@@ -36,15 +36,17 @@
         >
           <v-toolbar-title>{{ file.name }} - {{ file.description }}</v-toolbar-title>
 
-          <v-spacer></v-spacer>
+          <v-spacer />
 
-          <v-btn
-            icon
-            @click="lightbox.machine = machines[0]; lightbox.visible = true"
-            color="secondary"
-          >
-            <v-icon>cloud_upload</v-icon>
-          </v-btn>
+          <v-toolbar-items>
+            <v-btn
+              icon
+              @click="machine = machines[0]._id; visible = true"
+              color="secondary"
+            >
+              <v-icon>settings</v-icon>
+            </v-btn>
+          </v-toolbar-items>
         </v-toolbar>
       </v-col>
     </v-container>
@@ -54,7 +56,7 @@
       :position="viewer.position"
       :rotation="viewer.rotation"
       :scale="viewer.scale"
-      :theme="$vuetify.theme.dark ? viewer.theme.dark : viewer.theme.light"
+      :theme="theme"
     />
   </div>
 </template>
@@ -73,24 +75,22 @@ export default {
   },
   data: () => ({
     machines: [],
+    machine: null,
     file: {
       name: null,
       description: null,
       raw: null
     },
-    lightbox: {
-      machine: null,
-      visible: false
-    },
+    visible: false,
     viewer: {
       bed: {
-        X: 22.3,
-        Y: 22.3
+        X: 20,
+        Y: 20
       },
       position: {
-        X: 11.15,
+        X: 10,
         Y: 0,
-        Z: -11.15
+        Z: -10
       },
       rotation: {
         X: -90,
@@ -101,27 +101,16 @@ export default {
         X: 0.1,
         Y: 0.1,
         Z: 0.1
-      },
-      theme: {
-        light: {
-          extrusionColor: colors.blue.darken3,
-          pathColor: colors.blue.lighten2,
-          bedColor: colors.green.accent2,
-          backgroundColor: colors.grey.lighten3
-        },
-        dark: {
-          extrusionColor: colors.amber.darken2,
-          pathColor: colors.amber.lighten2,
-          bedColor: colors.blueGrey.darken3,
-          backgroundColor: colors.blueGrey.darken4
-        }
       }
     }
   }),
   created: function ()
   {
     //Get machines
-    api.machines.all().then(machines => this.machines = machines);
+    api.machines.all().then(machines =>
+    {
+      this.machines = machines;
+    });
 
     //Get file
     api.files.get(this.$route.params.id).then(file => this.file = file);
@@ -129,7 +118,33 @@ export default {
   methods: {
     execute: function ()
     {
-      api.machines.execute(this.lightbox.machine._id, this.$route.params.id);
+      api.machines.execute(this.machine, this.$route.params.id);
+    }
+  },
+  computed: {
+    theme: function ()
+    {
+      return this.$vuetify.theme.dark ? {
+        extrusionColor: colors.amber.darken2,
+        pathColor: colors.amber.lighten2,
+        bedColor: colors.blueGrey.darken3,
+        backgroundColor: colors.blueGrey.darken4
+      } : {
+          extrusionColor: colors.blue.darken3,
+          pathColor: colors.blue.lighten2,
+          bedColor: colors.green.accent2,
+          backgroundColor: colors.grey.lighten3
+        };
+    }
+  },
+  watch: {
+    machine: function ()
+    {
+      const machine = this.machines.find(machine => machine._id == this.machine);
+      this.viewer.bed.X = machine.length;
+      this.viewer.bed.Y = machine.width;
+      this.viewer.position.X = machine.length / 2;
+      this.viewer.position.Z = -machine.width / 2;
     }
   }
 };
