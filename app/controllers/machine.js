@@ -86,10 +86,11 @@ module.exports = {
     const id = new mongoose.Types.ObjectId();
 
     //Register response
-    socket.on('response:command', message =>
+    socket.on('response:command', function callback(message)
     {
       if (message._id == id)
       {
+        socket.off('response:command', callback);
         return res.json({response: message.response});
       }
     });
@@ -122,10 +123,11 @@ module.exports = {
     const id = new mongoose.Types.ObjectId();
 
     //Register response
-    socket.on('response:execute', message =>
+    socket.on('response:execute', function callback(message)
     {
       if (message._id == id)
       {
+        socket.off('response:execute', callback);
         return res.json({success: message.success});
       }
     });
