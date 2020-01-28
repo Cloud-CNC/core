@@ -25,7 +25,7 @@ module.exports = () =>
     });
 
     //Register error handler
-    socket.on('error', err =>
+    socket.once('error', err =>
     {
       expect(err.message).to.equal('Unexpected server response: 401');
       done();
@@ -42,7 +42,7 @@ module.exports = () =>
     });
 
     //Register error handler
-    socket.on('error', err =>
+    socket.once('error', err =>
     {
       expect(err.message).to.equal('Unexpected server response: 401');
       done();
@@ -60,7 +60,7 @@ module.exports = () =>
     });
 
     //Register error handler
-    socket.on('error', err =>
+    socket.once('error', err =>
     {
       expect(err.message).to.equal('Unexpected server response: 401');
       done();
@@ -78,7 +78,7 @@ module.exports = () =>
     });
 
     //Register error handler
-    socket.on('error', err =>
+    socket.once('error', err =>
     {
       expect(err.message).to.equal('Unexpected server response: 401');
       done();
@@ -96,7 +96,7 @@ module.exports = () =>
     });
 
     //Register open handler
-    socket.on('open', () =>
+    socket.once('open', () =>
     {
       done();
     });

@@ -42,7 +42,7 @@
         <v-btn
           icon
           x-large
-          color="secondary"
+          color="accent"
           @click="add()"
           id="plus"
         >

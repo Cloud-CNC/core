@@ -21,7 +21,7 @@ module.exports = {
     await req.file.save();
     return res.end();
   },
-  delete: async function (req, res)
+  remove: async function (req, res)
   {
     await fs.unlink(`${path.join(config.data.filesystem, req.file.id)}.gcode`);
     await req.file.remove();

@@ -50,7 +50,7 @@ module.exports = {
     await req.file.save();
     return res.end();
   },
-  delete: async function (req, res)
+  remove: async function (req, res)
   {
     req.file.status = 1;
     await req.file.save();

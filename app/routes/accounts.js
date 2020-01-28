@@ -15,13 +15,13 @@ router.param('id', async (req, res, next, param) =>
   //Validate
   if (mongoose.Types.ObjectId.isValid(param))
   {
-    if (req.session.user.role == 'admin')
+    if (req.user.role == 'admin')
     {
     const doc = await model.findById(param);
 
     if (doc == null)
     {
-      return res.json({
+      return res.status(404).json({
         error: {
           name: 'Invalid Account',
           description: 'The specified account doesn\'t exist!'
@@ -47,8 +47,7 @@ router.param('id', async (req, res, next, param) =>
   }
   else
   {
-    //Get account again because the session version was JSONified
-    req.account = await model.findById(req.session.user._id);
+    req.account = req.user;
     next();
   }
 });
@@ -58,7 +57,7 @@ router.get('/all', permission('accounts:all'), controller.getAll);
 router.post('/', permission('accounts:create'), controller.create);
 router.get('/:id', permission('accounts:get'), controller.get);
 router.patch('/:id', permission('accounts:update'), controller.update);
-router.delete('/:id', permission('accounts:remove'), controller.delete);
+router.delete('/:id', permission('accounts:remove'), controller.remove);
 
 //Export
 module.exports = router;

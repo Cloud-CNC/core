@@ -6,6 +6,7 @@
 const config = require('../../config.js');
 const create = require('../lib/create.js');
 const crypto = require('crypto');
+const machineModel = require('../models/machine.js');
 const model = require('../models/controller.js');
 const update = require('../lib/update.js');
 
@@ -47,9 +48,24 @@ module.exports = {
       return res.end();
     }
   },
-  delete: async function (req, res)
+  remove: async function (req, res)
   {
-    await req.controller.remove();
-    return res.end();
+    //Make sure no child machines exist
+    const machines = await machineModel.find({controller: req.controller._id});
+
+    if (machines.length > 0)
+    {
+      return res.status(409).json({
+        error: {
+          name: 'Child Machines',
+          description: 'The controller you\'re attempting to remove still owns machine(s). Please update or remove them before retrying.'
+        }
+      });
+    }
+    else
+    {
+      await req.controller.remove();
+      return res.end();
+    }
   }
 };

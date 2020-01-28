@@ -17,7 +17,7 @@ router.param('id', async (req, res, next, param) =>
 
   if (doc == null)
   {
-    return res.json({
+    return res.status(404).json({
       error: {
         name: 'Invalid File',
         description: 'The specified file doesn\'t exist!'
@@ -36,7 +36,7 @@ router.use(async (req, res, next) =>
 {
   if (mongoose.Types.ObjectId.isValid(req.body.account))
   {
-    if (req.session.user.role == 'admin')
+    if (req.user.role == 'admin')
     {
       req.account = await accountModel.findById(req.body.account);
       next();
@@ -54,8 +54,7 @@ router.use(async (req, res, next) =>
   }
   else
   {
-    //Get account again because the session version was JSONified
-    req.account = await accountModel.findById(req.session.user._id);
+    req.account = req.user;
     next();
   }
 });
@@ -63,7 +62,7 @@ router.use(async (req, res, next) =>
 //Routes
 router.get('/all', permission('trash:all'), controller.getAll);
 router.put('/:id', permission('trash:recover'), controller.recover);
-router.delete('/:id', permission('trash:remove'), controller.delete);
+router.delete('/:id', permission('trash:remove'), controller.remove);
 
 //Export
 module.exports = router;

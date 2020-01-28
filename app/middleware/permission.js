@@ -8,7 +8,7 @@ const {acl} = require('../../config.js').core;
 //Export
 module.exports = name => async (req, res, next) =>
 {
-  if (getPermissions(req.session.user.role).includes(name))
+  if (getPermissions(req.user.role).includes(name))
   {
     next();
   }

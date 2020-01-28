@@ -87,7 +87,7 @@ module.exports = () =>
     expect(doc._doc).to.haveOwnProperty('key');
   });
 
-  it('should delete a controler', async () =>
+  it('should remove a controler', async () =>
   {
     const res = await agent
       .delete(`/api/controllers/${id}`)

@@ -21,7 +21,7 @@ import index from './index.vue';
 
 //Routes
 import account from './views/account.vue';
-import accounts from './views/accounts.vue';
+import admin from './views/admin.vue';
 import controllers from './views/controllers.vue';
 import error from './views/error.vue';
 import file from './views/file.vue';
@@ -58,7 +58,7 @@ const routes = [
     name: 'Controllers', path: '/controllers', component: controllers
   },
   {
-    name: 'Accounts', path: '/accounts', component: accounts
+    name: 'Admin', path: '/admin', component: admin
   },
   {
     name: 'Account', path: '/account/:id?', component: account
@@ -75,7 +75,7 @@ window.$router = new VueRouter({
 });
 
 //Vue instance
-const app = new Vue({
+window.vm = new Vue({
   el: '#app',
   router: window.$router,
   vuetify: new Vuetify({
@@ -84,15 +84,15 @@ const app = new Vue({
     },
     theme: {
       themes: {
-        light: {
-          primary: colors.green.accent2,
-          secondary: colors.blue.base,
-          accent: colors.blue.darken2
-        },
         dark: {
-          primary: colors.blueGrey.darken1,
-          secondary: colors.amber.darken1,
-          accent: colors.amber.darken4
+          primary: colors.green.base,
+          secondary: colors.green.lighten1,
+          accent: colors.blue.accent2
+        },
+        light: {
+          primary: colors.blue.base,
+          secondary: colors.blue.lighten2,
+          accent: colors.blue.accent2
         }
       }
     }
@@ -101,7 +101,7 @@ const app = new Vue({
 });
 
 //Update title
-document.title = 'Cloud CNC - ' + app.$route.name;
+document.title = 'Cloud CNC - ' + window.vm.$route.name;
 window.$router.beforeEach((to, from, next) =>
 {
   document.title = 'Cloud CNC - ' + to.name;

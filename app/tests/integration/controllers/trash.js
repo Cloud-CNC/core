@@ -45,9 +45,9 @@ module.exports = () =>
     });
   });
 
-  it('should delete a trashed file', async () =>
+  it('should remove a trashed file', async () =>
   {
-    await controller.delete({
+    await controller.remove({
       file: doc
     }, {
       end: async () =>

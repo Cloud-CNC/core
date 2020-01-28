@@ -42,7 +42,6 @@
             <v-btn
               icon
               @click="machine = machines[0]._id; visible = true"
-              color="secondary"
             >
               <v-icon>settings</v-icon>
             </v-btn>
@@ -125,14 +124,14 @@ export default {
     theme: function ()
     {
       return this.$vuetify.theme.dark ? {
-        extrusionColor: colors.amber.darken2,
-        pathColor: colors.amber.lighten2,
-        bedColor: colors.blueGrey.darken3,
-        backgroundColor: colors.blueGrey.darken4
+        extrusionColor: colors.green.darken4,
+        pathColor: colors.green.base,
+        bedColor: colors.grey.darken4,
+        backgroundColor: colors.grey.darken4
       } : {
           extrusionColor: colors.blue.darken3,
           pathColor: colors.blue.lighten2,
-          bedColor: colors.green.accent2,
+          bedColor: colors.grey.base,
           backgroundColor: colors.grey.lighten3
         };
     }

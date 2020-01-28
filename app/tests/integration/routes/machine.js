@@ -126,7 +126,7 @@ module.exports = () =>
     expect(doc._doc).to.haveOwnProperty('height', 10.1);
   });
 
-  it('should delete a machine', async () =>
+  it('should remove a machine', async () =>
   {
     const res = await agent
       .delete(`/api/machines/${id}`)

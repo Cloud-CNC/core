@@ -26,7 +26,7 @@ module.exports = () =>
   {
     logger.info(`Mongoose disconnected from ${database}`);
   });
-  process.on('exit', () =>
+  process.once('exit', () =>
   {
     mongoose.connection.close();
     logger.info(`Mongoose disconnected from ${database} due to application shutdown`);

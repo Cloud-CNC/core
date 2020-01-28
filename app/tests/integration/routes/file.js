@@ -90,7 +90,7 @@ module.exports = () =>
     expect(doc._doc).to.haveOwnProperty('description', 'uvw');
   });
 
-  it('should delete a file', async () =>
+  it('should remove a file', async () =>
   {
     const res = await agent
       .delete(`/api/files/${id}`)

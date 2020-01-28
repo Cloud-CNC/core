@@ -318,6 +318,10 @@ async function rest(method, url, body = null)
   }
   else if (res.error)
   {
+    //Display popup
+    window.vm.$children[0].error = res.error;
+
+    //Log
     console.error(res.error);
     return Promise.reject(res.error);
   }

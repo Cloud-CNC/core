@@ -44,7 +44,7 @@ module.exports = () =>
   it('should emit command response event', done =>
   {
     //Listen for echo
-    socket.on('response:command', data =>
+    socket.once('response:command', data =>
     {
       expect(data).to.be.eql({event: 'response:command', key1: 'value1'});
       done();
@@ -60,7 +60,7 @@ module.exports = () =>
   it('should emit execute response event', done =>
   {
     //Listen for echo
-    socket.on('response:execute', data =>
+    socket.once('response:execute', data =>
     {
       expect(data).to.be.eql({event: 'response:execute', key2: 'value2'});
       done();

@@ -57,7 +57,7 @@ module.exports = (socket, req) =>
   });
 
   //Delete socket from store on disconnect
-  socket.on('close', () =>
+  socket.once('close', () =>
   {
     store.remove(id);
     logger.info(`Controller ${id} disconnected!`);

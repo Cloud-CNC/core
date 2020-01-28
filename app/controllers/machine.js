@@ -45,7 +45,7 @@ module.exports = {
       const controllerDoc = await controller.findById(constructor.controller);
       if (controllerDoc == null)
       {
-        return res.status(422).json({
+        return res.status(404).json({
           error: {
             name: 'Unrecognized Controller',
             description: 'The specified controller doesn\'t exist!'
@@ -86,7 +86,7 @@ module.exports = {
     const id = new mongoose.Types.ObjectId();
 
     //Register response
-    socket.on('response:command', function callback(message)
+    socket.once('response:command', function callback(message)
     {
       if (message._id == id)
       {
@@ -123,7 +123,7 @@ module.exports = {
     const id = new mongoose.Types.ObjectId();
 
     //Register response
-    socket.on('response:execute', function callback(message)
+    socket.once('response:execute', function callback(message)
     {
       if (message._id == id)
       {
@@ -170,7 +170,7 @@ module.exports = {
       return res.end();
     }
   },
-  delete: async function (req, res)
+  remove: async function (req, res)
   {
     await req.machine.remove();
     return res.end();

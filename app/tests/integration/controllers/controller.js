@@ -68,9 +68,9 @@ module.exports = () =>
     });
   });
 
-  it('should delete a controller', async () =>
+  it('should remove a controller', async () =>
   {
-    await controller.delete({
+    await controller.remove({
       controller: doc
     }, {
       end: async () =>

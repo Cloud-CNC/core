@@ -93,9 +93,9 @@ module.exports = () =>
     });
   });
 
-  it('should delete a machine', async () =>
+  it('should remove a machine', async () =>
   {
-    await controller.delete({
+    await controller.remove({
       machine: doc
     }, {
       end: async () =>

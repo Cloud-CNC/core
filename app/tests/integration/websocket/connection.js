@@ -91,7 +91,7 @@ module.exports = () =>
     });
 
     //Register open handler
-    socket.on('open', () =>
+    socket.once('open', () =>
     {
       done();
     });

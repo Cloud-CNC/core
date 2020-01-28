@@ -15,7 +15,7 @@ router.use(async (req, res, next) =>
 {
   if (mongoose.Types.ObjectId.isValid(req.body.account))
   {
-    if (req.session.user.role == 'admin')
+    if (req.user.role == 'admin')
     {
       req.account = await accountModel.findById(req.body.account);
       next();
@@ -33,8 +33,7 @@ router.use(async (req, res, next) =>
   }
   else
   {
-    //Get account again because the session version was JSONified
-    req.account = await accountModel.findById(req.session.user._id);
+    req.account = req.user;
     next();
   }
 });
@@ -74,7 +73,7 @@ router.get('/all', permission('files:all'), controller.getAll);
 router.post('/', permission('files:create'), controller.create);
 router.get('/:id', permission('files:get'), controller.get);
 router.patch('/:id', permission('files:update'), controller.update);
-router.delete('/:id', permission('files:remove'), controller.delete);
+router.delete('/:id', permission('files:remove'), controller.remove);
 
 //Export
 module.exports = router;

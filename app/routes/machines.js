@@ -15,7 +15,7 @@ router.param('id', async (req, res, next, param) =>
 
   if (doc == null)
   {
-    return res.json({
+    return res.status.apply(404).json({
       error: {
         name: 'Invalid Machine',
         description: 'The specified machine doesn\'t exist!'
@@ -36,7 +36,7 @@ router.get('/:id', permission('machines:get'), controller.get);
 router.post('/:id/command', permission('machines:command'), controller.command);
 router.post('/:id/execute', permission('machines:execute'), controller.execute);
 router.patch('/:id', permission('machines:update'), controller.update);
-router.delete('/:id', permission('machines:remove'), controller.delete);
+router.delete('/:id', permission('machines:remove'), controller.remove);
 
 //Export
 module.exports = router;

@@ -4,10 +4,11 @@
 
 //Imports
 const create = require('../lib/create.js');
-const {filters} = require('../../config.js');
+const fileModel = require('../models/file.js');
 const hash = require('../lib/hash.js');
 const model = require('../models/account.js');
 const update = require('../lib/update.js');
+const {filters} = require('../../config.js');
 
 //Logic
 module.exports = {
@@ -56,9 +57,24 @@ module.exports = {
       return res.end();
     }
   },
-  delete: async function (req, res)
+  remove: async function (req, res)
   {
-    await req.account.remove();
-    return res.end();
+    //Make sure no child files exist
+    const files = await fileModel.find({owner: req.account._id});
+
+    if (files.length > 0)
+    {
+      return res.status(409).json({
+        error: {
+          name: 'Child Files',
+          description: 'The account you\'re trying to remove still owns file(s). Please remove them before retrying.'
+        }
+      });
+    }
+    else
+    {
+      await req.account.remove();
+      return res.end();
+    }
   }
 };

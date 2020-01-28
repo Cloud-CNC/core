@@ -5,6 +5,7 @@
 //Imports
 const config = require('../../config.js');
 const fs = require('fs');
+const model = require('../models/account.js');
 const router = require('express').Router();
 const session = require('express-session');
 const store = require('connect-mongodb-session')(session);
@@ -34,6 +35,9 @@ router.use(async (req, res, next) =>
 {
   if (req.url == '/sessions/login' || req.session.user != null)
   {
+    //Get account document
+    req.user = await model.findById(req.session.user);
+
     next();
   }
   else

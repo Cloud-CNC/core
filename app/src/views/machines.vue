@@ -4,6 +4,7 @@
       <template v-slot:title>
         {{ lightboxes.upsert.create ? 'Create a new machine' : 'Edit ' + lightboxes.upsert.name }}
       </template>
+      
       <template v-slot:content>
         <v-form v-model="prechecks">
           <v-list>
@@ -129,9 +130,9 @@
           </v-btn>
           <v-btn
             color="error"
-            @click="_delete(props.entity)"
+            @click="remove(props.entity)"
           >
-            Delete
+            Remove
           </v-btn>
         </v-item-group>
       </template>
@@ -267,15 +268,15 @@ export default {
         }
       }
     },
-    //Delete machine
-    _delete: function (machine)
+    //Remove machine
+    remove: function (machine)
     {
       api.machines.remove(machine._id).then(() =>
       {
         //Get index
         const index = this.machines.findIndex(item => item._id == machine._id);
 
-        //Delete machine
+        //Remove machine
         this.machines.splice(index, 1);
       });
     }

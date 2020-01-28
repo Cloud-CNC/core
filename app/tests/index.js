@@ -15,4 +15,4 @@ chai.use(chaiHttp);
 
 //Tests
 describe('Unit', require('./unit/index.js'));
-describe('Integration', require('./integration/index.js'));
+//describe('Integration', require('./integration/index.js'));

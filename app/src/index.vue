@@ -4,7 +4,7 @@
       app
       temporary
       color="secondary"
-      v-model="drawer"
+      v-model="menu"
     >
       <v-list-item
         nav
@@ -12,11 +12,37 @@
       >
         <v-list-item-content>
           <v-list-item-title class="font-weight-light headline">Cloud CNC</v-list-item-title>
-          <v-list-item-subtitle class="font-weight-bold subtitle">{{ version }}</v-list-item-subtitle>
+          <v-list-item-subtitle class="font-weight-bold subtitle">V{{ version }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
       <v-divider></v-divider>
+
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon>account_circle</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-btn
+            text
+            class="font-weight-light"
+            to="/account"
+          >Account</v-btn>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon>gavel</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-btn
+            text
+            class="font-weight-light"
+            to="/admin"
+          >Admin</v-btn>
+        </v-list-item-content>
+      </v-list-item>
 
       <v-list-item>
         <v-list-item-icon>
@@ -33,7 +59,7 @@
 
       <v-list-item>
         <v-list-item-icon>
-          <v-icon>delete_outline</v-icon>
+          <v-icon>remove_outline</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
           <v-btn
@@ -72,19 +98,6 @@
 
       <v-list-item>
         <v-list-item-icon>
-          <v-icon>supervisor_account</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-btn
-            text
-            class="font-weight-light"
-            to="/accounts"
-          >Accounts</v-btn>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-icon>
           <v-icon>exit_to_app</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
@@ -102,51 +115,45 @@
       color="primary"
     >
       <v-app-bar-nav-icon
-        @click="drawer = !drawer"
+        @click="menu = !menu"
         v-if="$route.path != '/login'"
       ></v-app-bar-nav-icon>
       <v-toolbar-title class="display-1 font-weight-thin">{{ $route.name }}</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
-      <v-speed-dial
-        open-on-hover
-        right
-        direction="bottom"
-        v-model="menu"
+      <v-btn
+        icon
+        @click="invertTheme()"
       >
-        <template v-slot:activator>
-          <v-btn
-            icon
-            large
-            v-model="menu"
-          >
-            <v-icon v-if="menu">close</v-icon>
-            <v-icon v-else>more_vert</v-icon>
-          </v-btn>
-        </template>
-
-        <v-btn
-          icon
-          menu
-          @click.stop="invertTheme()"
-        >
-          <v-icon>invert_colors</v-icon>
-        </v-btn>
-
-        <v-btn
-          icon
-          menu
-          to="/account"
-          v-if="$route.path != '/login'"
-        >
-          <v-icon>account_box</v-icon>
-        </v-btn>
-      </v-speed-dial>
+        <v-icon>invert_colors</v-icon>
+      </v-btn>
     </v-app-bar>
+
     <v-content>
       <router-view></router-view>
     </v-content>
+
+    <v-bottom-sheet v-model="visible">
+      <v-sheet
+        class="text-center"
+        color="error"
+        id="error"
+      >
+        <v-btn
+          icon
+          x-large
+          @click="visible = false"
+        >
+          <v-icon>close</v-icon>
+        </v-btn>
+        <h1 class="font-weight-light title">{{error.name}}</h1>
+        <p
+          class="font-weight-light"
+          id="error-description"
+        >{{error.description}}</p>
+      </v-sheet>
+    </v-bottom-sheet>
   </v-app>
 </template>
 
@@ -176,9 +183,13 @@ export default {
     this.version = pkg.version;
   },
   data: () => ({
-    drawer: false,
+    error: {
+      name: null,
+      description: null
+    },
     menu: false,
-    version: null
+    version: null,
+    visible: false
   }),
   methods: {
     invertTheme: function ()
@@ -199,11 +210,29 @@ export default {
         this.$router.push('/login');
       });
     }
+  },
+  watch: {
+    error:
+    {
+      deep: true,
+      handler()
+      {
+        this.visible = true;
+      }
+    }
   }
 };
 </script>
 
 <style>
+#error {
+  padding: 12px;
+}
+
+#error-description {
+  margin: 0;
+}
+
 .v-btn--active:hover::before,
 .v-btn--active::before {
   opacity: 0 !important;

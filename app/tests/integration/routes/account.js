@@ -120,7 +120,7 @@ module.exports = () =>
     expect(doc._doc).to.haveOwnProperty('lastName', 'pqr');
   });
 
-  it('should delete an account', async () =>
+  it('should remove an account', async () =>
   {
     const res = await agent
       .delete(`/api/accounts/${id}`)

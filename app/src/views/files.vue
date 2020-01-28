@@ -71,9 +71,9 @@
           </v-btn>
           <v-btn
             color="error"
-            @click="_delete(props.entity)"
+            @click="remove(props.entity)"
           >
-            Delete
+            Remove
           </v-btn>
         </v-item-group>
       </template>
@@ -181,15 +181,15 @@ export default {
         api.files.update({[property]: this.dialog[property]}, this.dialog._id);
       }
     },
-    //Delete file
-    _delete: function (file)
+    //Remove file
+    remove: function (file)
     {
       api.files.remove(file._id).then(() =>
       {
         //Get index
         const index = this.files.findIndex(item => item._id == file._id);
 
-        //Delete file
+        //Remove file
         this.files.splice(index, 1);
       });
     }

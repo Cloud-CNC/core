@@ -77,9 +77,9 @@ module.exports = () =>
     });
   });
 
-  it('should delete an account', async () =>
+  it('should remove an account', async () =>
   {
-    await controller.delete({
+    await controller.remove({
       account: doc
     }, {
       end: async () =>

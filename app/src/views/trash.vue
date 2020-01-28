@@ -23,9 +23,9 @@
               </v-btn>
               <v-btn
                 color="error"
-                @click="_delete(file)"
+                @click="remove(file)"
               >
-                Delete
+                Remove
               </v-btn>
             </v-item-group>
           </v-card-actions>
@@ -62,19 +62,19 @@ export default {
         //Get index
         const index = this.files.findIndex(item => item._id == file._id);
 
-        //Delete file
+        //Remove file
         this.files.splice(index, 1);
       });
     },
-    //Delete file
-    _delete: function (file)
+    //Remove file
+    remove: function (file)
     {
       api.trash.remove(file._id).then(() =>
       {
         //Get index
         const index = this.files.findIndex(item => item._id == file._id);
 
-        //Delete file
+        //Remove file
         this.files.splice(index, 1);
       });
     }

@@ -80,9 +80,9 @@ module.exports = () =>
     });
   });
 
-  it('should delete a file', async () =>
+  it('should remove a file', async () =>
   {
-    await controller.delete({
+    await controller.remove({
       file: doc
     }, {
       end: async () =>

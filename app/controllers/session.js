@@ -49,7 +49,7 @@ module.exports = {
       {
         if (valid)
         {
-          req.session.user = user.toJSON();
+          req.session.user = user._id.toJSON();
           return res.json({valid: true});
         }
         else
@@ -74,8 +74,8 @@ module.exports = {
         res.status(500);
         return res.json({
           error: {
-            name: 'Failed To Delete Session',
-            description: 'An error occurred when trying to delete your session!'
+            name: 'Failed To Remove Session',
+            description: 'An error occurred when trying to remove your session!'
           }
         });
       }
