@@ -24,3 +24,5 @@ jobs:
         run: cd crypto && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.pem
       - name: Build
         run: sudo npm build
+      - name: Clean Up
+        run: rm -rf node_modules
