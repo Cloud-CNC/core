@@ -4,8 +4,8 @@
 
 //Imports
 const controller = require('../controllers/controller.js');
-const model = require('../models/controller.js')
-const permission = require('../middleware/permission.js');;
+const model = require('../models/controller.js');
+const permission = require('../middleware/permission.js');
 const router = require('express').Router();
 
 //Get controller
