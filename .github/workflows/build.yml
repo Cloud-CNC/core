@@ -25,4 +25,4 @@ jobs:
       - name: Build
         run: sudo npm build
       - name: Clean Up
-        run: rm -rf node_modules
+        run: sudo rm -rf node_modules
