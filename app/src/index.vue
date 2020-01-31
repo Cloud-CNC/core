@@ -59,7 +59,7 @@
 
       <v-list-item>
         <v-list-item-icon>
-          <v-icon>remove_outline</v-icon>
+          <v-icon>delete</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
           <v-btn

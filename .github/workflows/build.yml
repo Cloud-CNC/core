@@ -15,7 +15,7 @@ jobs:
       - name: Install MongoDB
         run: sudo apt install -y mongodb
       - name: Install Modules
-        run: npm ci
+        run: sudo npm ci
       - name: Create Directories
         run: mkdir crypto files && sudo mkdir /data/db -p
       - name: Generate Salt
@@ -24,5 +24,3 @@ jobs:
         run: cd crypto && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.pem
       - name: Build
         run: sudo npm build
-      - name: Clean Up
-        run: sudo rm -rf node_modules
