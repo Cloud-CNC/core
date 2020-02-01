@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - uses: stefanoeb/eslint-action@1.0.2
+        name: ESLint
       - name: Install MongoDB
         run: sudo apt install -y mongodb
       - name: Install Modules
@@ -23,9 +24,8 @@ jobs:
         run: cd crypto && openssl rand -out secret.txt -base64 512
       - name: Generate Certificate
         run: cd crypto && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.pem
-      - name: Test
-        run: sudo npm test
       - uses: paambaati/codeclimate-action@v2.4.0
+        name: Test
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
         with:
