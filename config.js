@@ -61,6 +61,12 @@ module.exports = {
     //Session expire time (MS)
     expire: 1000 * 60 * 30,
 
+    //Rate limit window (MS)
+    rateLimitWindow: 1000 * 60 * 15,
+
+    //Rate limit maximum requests (Per window)
+    rateLimitRequests: 100,
+
     //Logging directory (Only used in production)
     logs: './logs/',
 

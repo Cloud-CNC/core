@@ -4,6 +4,7 @@
 
 //Imports
 const model = require('../../../models/account.js');
+let mongo = require('../../../lib/mongo.js');
 
 //Dummy account
 let doc;
@@ -35,5 +36,8 @@ module.exports = () =>
   after(async () =>
   {
     await doc.remove();
+    
+    mongo = await mongo();
+    await mongo.connection.dropCollection('limits');
   });
 };

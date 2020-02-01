@@ -4,6 +4,7 @@
 
 //Imports
 const json = require('express').json;
+const limit = require('./limit.js');
 const logger = require('./logger.js');
 const router = require('express').Router();
 const sanitizer = require('express-sanitizer');
@@ -18,6 +19,7 @@ router.use(json({
   limit: upload
 }));
 router.use(security);
+router.use('/api', limit);
 router.use('/api', session);
 
 //Export

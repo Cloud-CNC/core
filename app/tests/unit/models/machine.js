@@ -6,7 +6,6 @@
 const controllerModel = require('../../../models/controller.js');
 const expect = require('chai').expect;
 const model = require('../../../models/machine.js');
-const mongoose = require('mongoose');
 
 //Document
 let controllerDoc;

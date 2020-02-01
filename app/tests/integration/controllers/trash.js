@@ -6,7 +6,6 @@
 const controller = require('../../../controllers/trash.js');
 const expect = require('chai').expect;
 const model = require('../../../models/file.js');
-const mongoose = require('mongoose');
 
 //Document
 let doc;

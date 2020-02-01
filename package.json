@@ -15,11 +15,13 @@
     "connect-mongodb-session": "^2.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-rate-limit": "^5.0.0",
     "express-sanitizer": "^1.0.5",
     "express-session": "^1.17.0",
     "helmet": "^3.21.2",
     "mongoose": "^5.8.10",
     "mongoose-id-validator": "^0.5.4",
+    "rate-limit-mongo": "^2.1.0",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^3.10.0",
     "ws": "^7.2.1"
