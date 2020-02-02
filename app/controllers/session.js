@@ -4,8 +4,9 @@
 
 //Imports
 const argon2 = require('argon2');
-const {filters} = require('../../config.js');
 const model = require('../models/account.js');
+const speakeasy = require('speakeasy');
+const {core, filters} = require('../../config.js');
 
 //Export
 module.exports = {
@@ -49,14 +50,55 @@ module.exports = {
       {
         if (valid)
         {
+          if (!user.mfa)
+          {
+            req.session.authenticated = true;
+          }
+
           req.session.user = user._id.toJSON();
-          return res.json({valid: true});
+          return res.json({valid: true, mfa: user.mfa});
         }
         else
         {
           return res.json({valid: false});
         }
       });
+    }
+  },
+
+  /**
+  * Log user in with MFA
+  * @param {Express.Request} req
+  * @param {Express.Response} res
+  */
+  mfa: async function (req, res)
+  {
+    //Validate
+    if (req.body.otp == null || !filters.otp.test(req.body.otp))
+    {
+      return res.json({
+        error: {
+          name: 'Missing Parameter',
+          description: '"otp" wasn\'t found!'
+        }
+      });
+    }
+    else
+    {
+      //Verify OTP
+      const valid = speakeasy.totp.verify({
+        encoding: 'base32',
+        secret: req.user.secret,
+        token: req.body.otp,
+        window: core.otpWindow
+      });
+
+      if (valid)
+      {
+        req.session.authenticated = true;
+      }
+
+      return res.json({valid});
     }
   },
 

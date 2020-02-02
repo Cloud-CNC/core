@@ -17,27 +17,6 @@ const schema = new mongoose.Schema({
   height: {type: Number, required: true}
 });
 
-//Statics
-schema.statics = {
-  create: function (data, cb)
-  {
-    const machine = new this(data);
-    machine.save(cb);
-  },
-  get: function (query, cb)
-  {
-    this.find(query, cb);
-  },
-  update: function (query, data, cb)
-  {
-    this.findOneAndUpdate(query, {$set: data}, {new: true}, cb);
-  },
-  remove: function(query, cb)
-  {
-    this.findOneAndDelete(query, cb);
-  }
-};
-
 //Plugins
 schema.plugin(idValidator);
 

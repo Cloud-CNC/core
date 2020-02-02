@@ -12,29 +12,10 @@ const schema = new mongoose.Schema({
   username: {type: String, validate: filters.name, unique: true, required: true},
   firstName: {type: String, validate: filters.name, required: true},
   lastName: {type: String, validate: filters.name, required: true},
-  hmac: {type: String, required: true}
+  hmac: {type: String, required: true},
+  mfa: {type: Boolean, required: true, default: false},
+  secret: {type: String}
 });
-
-//Statics
-schema.statics = {
-  create: function (data, cb)
-  {
-    const machine = new this(data);
-    machine.save(cb);
-  },
-  get: function (query, cb)
-  {
-    this.find(query, cb);
-  },
-  update: function (query, data, cb)
-  {
-    this.findOneAndUpdate(query, {$set: data}, {new: true}, cb);
-  },
-  remove: function (query, cb)
-  {
-    this.findOneAndDelete(query, cb);
-  }
-};
 
 //Export
 module.exports = mongoose.model('account', schema);

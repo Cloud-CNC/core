@@ -3,13 +3,29 @@
  */
 
 //Imports
+const accountModel = require('../../../models/account.js');
 const expect = require('chai').expect;
 const model = require('../../../models/file.js');
-const mongoose = require('mongoose');
+
+//Document
+let account;
 
 //Export
 module.exports = () =>
 {
+  //Create account
+  before(async () =>
+  {
+    account = new accountModel({
+      role: 'admin',
+      username: 'abc',
+      firstName: 'def',
+      lastName: 'ghi',
+      hmac: '$argon2id$v=19$m=65536,t=3,p=12$dMaFGvt1Bq3utN1FSQS3Ag$PIArM+hQPWCgM1xnUUvIqX8fK03A37mmLuSo7AoyK6I'
+    });
+    await account.save();
+  });
+
   it('should reject null parameters', async () =>
   {
     const doc = new model();
@@ -22,7 +38,7 @@ module.exports = () =>
   it('should accept valid parameters', async () =>
   {
     const doc = new model({
-      owner: new mongoose.Types.ObjectId('5e054e773f7093daf13a41e0'),
+      owner: account._id,
       name: 'abc',
       description: 'def'
     });
@@ -30,5 +46,11 @@ module.exports = () =>
     {
       expect(err).to.be.null;
     });
+  });
+
+  //Cleanup
+  after(async () =>
+  {
+    await account.remove();
   });
 };

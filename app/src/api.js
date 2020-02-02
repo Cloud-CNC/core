@@ -12,11 +12,21 @@ export default {
      * @param {String} username 
      * @param {String} password 
      */
-    async login(username, password)
+    login(username, password)
     {
-      return !!(await rest('POST', '/sessions/login', {
+      return rest('POST', '/sessions/login', {
         username,
         password
+      });
+    },
+    /**
+     * Log user in with OTP
+     * @param {String} otp 
+     */
+    async mfa(otp)
+    {
+      return (await rest('POST', '/sessions/mfa', {
+        otp
       })).valid;
     },
     /**
@@ -42,12 +52,13 @@ export default {
      * @param {String} lastName 
      * @param {String} username 
      * @param {String} password 
+     * @param {Boolean} mfa
      */
-    async create(role, firstName, lastName, username, password)
+    async create(role, firstName, lastName, username, password, mfa)
     {
-      return (await rest('POST', '/accounts', {
-        role, firstName, lastName, username, password
-      }))._id;
+      return rest('POST', '/accounts', {
+        role, firstName, lastName, username, password, mfa
+      });
     },
     /**
      * Get an account
@@ -65,6 +76,7 @@ export default {
      * @param {String} data.lastName
      * @param {String} data.username
      * @param {String} data.password
+     * @param {String} data.mfa
      * @param {String} id 
      */
     async update(data, id = 'own')

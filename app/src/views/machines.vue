@@ -159,7 +159,6 @@ export default {
     machine
   },
   data: () => ({
-    x: 3.5,
     controllers: [],
     lightboxes: {
       control: {

@@ -40,13 +40,14 @@ All errors will be JSON encoded and in the following format:
 
 Family | Method | Route | Route Parameters | Body | Response | Description
 --- | --- | --- | --- | --- | --- | --- | ---
-Sessions | POST | /sessions/login | N/A | `{"username": <string>, "password": <string>}` | `{"valid": <boolean>}` | Logs user in.
+Sessions | POST | /sessions/login | N/A | `{"username": <string>, "password": <string>}` | `{"valid": <boolean>, "mfa": <boolean>}` | Logs user in. If user has MFA enabled, they'll need to POST to `/sessions/mfa` to complete the login process.
+Sessions | POST | /sessions/mfa | N/A | `{"otp": <string>}` | `{"valid": <boolean>}` | Logs user in. Only required if user has MFA enabled.
 Sessions | POST | /sessions/logout | N/A | N/A | N/A | Logs user out.
 | | | | | | |
 Accounts | GET | /accounts/all | N/A | N/A | `{"accounts": <array/account>}` | Gets all accounts.
-Accounts | POST | /accounts | N/A | `{"role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>, "password": <string>}` | `{"id": <string>}` | Creates an account.
+Accounts | POST | /accounts | N/A | `{"role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>, "password": <string>}, "mfa": <boolean>` | `{"id": <string>, "otpauth": <string>`<sup>1</sup>`}` | Creates an account.
 Accounts | GET | /accounts/:id | `id: <string>` | N/A | `{"account": {"id": <string>, "role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>}}` | Gets an account's information.
-Accounts | PATCH | /accounts/:id | `id: <string>` | `{"role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>, "password": <string>}` | N/A | Updates part(s) of an account.
+Accounts | PATCH | /accounts/:id | `id: <string>` | `{"role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>, "password": <string>}, "mfa": <boolean>` | N/A | Updates part(s) of an account.
 Accounts | DELETE | /accounts/:id | `id: <string>` | N/A | N/A | Deletes an account.
 | | | | | | |
 Files | GET | /files/all | N/A | N/A | `{"files": <array/file>}` | Gets all files for a user. *(The raw attribute will not be present)*
@@ -72,3 +73,5 @@ Machines | POST | /machines/:id/command | `id: <string>` | `{"command": <string>
 Machines | POST | /machines/:id/execute | `id: <string>` | `{"file": <string>}` | N/A | Start executing the specified file on the specified machine.
 Machines | PATCH | /machines/:id | `id: <string>` | `{"controller": <string>, "name": <string>, "tags": <string>, "length": <string>, "width": <string>, "height": <string>}` | N/A | Updates a machine.
 Machines | DELETE | /machines/:id | `id: <string>` | N/A | N/A | Deletes a machine.
+
+1. Only present if the account has MFA enabled

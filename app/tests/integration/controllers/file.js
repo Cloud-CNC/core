@@ -3,22 +3,36 @@
  */
 
 //Imports
+const accountModel = require('../../../models/account.js');
 const controller = require('../../../controllers/file.js');
 const expect = require('chai').expect;
 const model = require('../../../models/file.js');
-const mongoose = require('mongoose');
 
 //Document
+let accountDoc;
 let doc;
 
 //Export
 module.exports = () =>
 {
+  //Setup
+  before(async () =>
+  {
+    accountDoc = new accountModel({
+      role: 'admin',
+      username: 'abc',
+      firstName: 'def',
+      lastName: 'ghi',
+      hmac: '$argon2id$v=19$m=65536,t=3,p=12$dMaFGvt1Bq3utN1FSQS3Ag$PIArM+hQPWCgM1xnUUvIqX8fK03A37mmLuSo7AoyK6I'
+    });
+    await accountDoc.save();
+  });
+
   it('should create a file', done =>
   {
     controller.create({
       account: {
-        _id: new mongoose.Types.ObjectId('5e054e773f7093daf13a41e0')
+        _id: accountDoc._id
       },
       body: {
         name: 'abc',
@@ -50,7 +64,7 @@ module.exports = () =>
   {
     await controller.getAll({
       account: {
-        _id: new mongoose.Types.ObjectId('5e054e773f7093daf13a41e0')
+        _id: accountDoc._id
       },
     }, {
       json: files =>
@@ -91,5 +105,11 @@ module.exports = () =>
         expect(doc._doc).to.haveOwnProperty('status', 1);
       }
     });
+  });
+
+  //Cleanup
+  after(async () =>
+  {
+    await accountDoc.remove();
   });
 };

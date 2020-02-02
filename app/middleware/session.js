@@ -33,7 +33,7 @@ router.use(session({
 //Logic
 router.use(async (req, res, next) =>
 {
-  if (req.url == '/sessions/login' || req.session.user != null)
+  if (req.url == '/sessions/login' || req.url == '/sessions/mfa' || req.session.authenticated)
   {
     //Get account document
     req.user = await model.findById(req.session.user);

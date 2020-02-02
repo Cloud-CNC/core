@@ -19,9 +19,11 @@
     "express-sanitizer": "^1.0.5",
     "express-session": "^1.17.0",
     "helmet": "^3.21.2",
-    "mongoose": "^5.8.10",
+    "mongoose": "^5.8.11",
     "mongoose-id-validator": "^0.5.4",
+    "qrcode": "^1.4.4",
     "rate-limit-mongo": "^2.1.0",
+    "speakeasy": "^2.0.0",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^3.10.0",
     "ws": "^7.2.1"

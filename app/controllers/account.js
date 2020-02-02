@@ -7,6 +7,7 @@ const create = require('../lib/create.js');
 const fileModel = require('../models/file.js');
 const hash = require('../lib/hash.js');
 const model = require('../models/account.js');
+const speakeasy = require('speakeasy');
 const update = require('../lib/update.js');
 const {filters} = require('../../config.js');
 
@@ -23,6 +24,7 @@ module.exports = {
       role: filters.role,
       username: filters.username,
       password: filters.password,
+      mfa: filters.boolean,
       firstName: filters.name,
       lastName: filters.name
     }, res);
@@ -32,9 +34,21 @@ module.exports = {
       constructor.hmac = await hash(constructor.password);
       delete constructor.password;
 
+      const body = {};
+
+      if (constructor.mfa)
+      {
+        const secret = speakeasy.generateSecret({
+          name: 'Cloud CNC'
+        });
+        constructor.mfa = true;
+        constructor.secret = secret.base32;
+        body.otpauth = secret.otpauth_url;
+      }
+
       const doc = new model(constructor);
       await doc.save();
-      return res.json({_id: doc.id});
+      return res.json({_id: doc.id, ...body});
     }
   },
   get: function (req, res)
@@ -47,12 +61,23 @@ module.exports = {
       role: filters.role,
       username: filters.username,
       password: filters.password,
+      mfa: filters.boolean,
       firstName: filters.name,
-      lastName: filters.name
+      lastName: filters.name,
+      mfa: filters.boolean
     }, res);
 
     if (success)
     {
+      if (req.account.mfa)
+      {
+        req.account.secret = speakeasy.generateSecret();
+      }
+      else
+      {
+        req.account.secret = null;
+      }
+
       await req.account.save();
       return res.end();
     }

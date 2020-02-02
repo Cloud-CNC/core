@@ -67,6 +67,9 @@ module.exports = {
     //Rate limit maximum requests (Per window)
     rateLimitRequests: 100,
 
+    //OTP (MFA) window forgiveness (30S intervals)
+    otpWindow: 1,
+
     //Logging directory (Only used in production)
     logs: './logs/',
 
@@ -89,10 +92,11 @@ module.exports = {
   },
   //RegEx Filters (Used for frontend and backend validation)
   filters: {
-    command: /^text$/,
+    boolean: /^true|false$/,
     description: /^(.|\\s){0,1000}$/,
     key: /^[A-z0-9+/]+={0,3}$/,
     name: /^.{3,30}$/,
+    otp: /^\d{6}$/,
     password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-z0-9]).{12,256}$/,
     role: /^admin|user$/,
     status: /^[01]$/,
