@@ -47,7 +47,7 @@ Sessions | POST | /sessions/logout | N/A | N/A | N/A | Logs user out.
 Accounts | GET | /accounts/all | N/A | N/A | `{"accounts": <array/account>}` | Gets all accounts.
 Accounts | POST | /accounts | N/A | `{"role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>, "password": <string>}, "mfa": <boolean>` | `{"id": <string>, "otpauth": <string>`<sup>1</sup>`}` | Creates an account.
 Accounts | GET | /accounts/:id | `id: <string>` | N/A | `{"account": {"id": <string>, "role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>}}` | Gets an account's information.
-Accounts | PATCH | /accounts/:id | `id: <string>` | `{"role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>, "password": <string>}, "mfa": <boolean>` | N/A | Updates part(s) of an account.
+Accounts | PATCH | /accounts/:id | `id: <string>` | `{"role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>, "password": <string>}, "mfa": <boolean>}` | `{"otpauth": <string>`<sup>1</sup>`}` | Updates part(s) of an account.
 Accounts | DELETE | /accounts/:id | `id: <string>` | N/A | N/A | Deletes an account.
 | | | | | | |
 Files | GET | /files/all | N/A | N/A | `{"files": <array/file>}` | Gets all files for a user. *(The raw attribute will not be present)*

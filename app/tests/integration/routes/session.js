@@ -36,7 +36,7 @@ module.exports = () =>
       });
 
     expect(res).to.have.cookie('session');
-    expect(res.body).to.eql({valid: true});
+    expect(res.body).to.eql({valid: true, mfa: false});
   });
 
   it('should logout', async () =>

@@ -21,7 +21,8 @@ module.exports = () =>
         username: 'ghi',
         firstName: 'jkl',
         lastName: 'mno',
-        password: 'Testingpassword123!'
+        password: 'Testingpassword123!',
+        mfa: false
       }
     }, {
       json: async res =>
@@ -60,19 +61,21 @@ module.exports = () =>
       username: 'rst',
       firstName: 'uvw',
       lastName: 'xyz',
-      password: 'Testingpassword321!'
+      password: 'Testingpassword321!',
+      mfa: true
     };
 
     await controller.update({
       account: doc,
       body: update
     }, {
-      end: () =>
+      json: () =>
       {
         expect(doc._doc).to.haveOwnProperty('role', 'user');
         expect(doc._doc).to.haveOwnProperty('username', 'rst');
         expect(doc._doc).to.haveOwnProperty('firstName', 'uvw');
         expect(doc._doc).to.haveOwnProperty('lastName', 'xyz');
+        expect(doc._doc).to.haveOwnProperty('mfa', true);
       }
     });
   });

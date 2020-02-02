@@ -70,6 +70,9 @@ module.exports = {
     //OTP (MFA) window forgiveness (30S intervals)
     otpWindow: 1,
 
+    //Length of OTP (MFA) secret
+    otpSecretLength: 32,
+
     //Logging directory (Only used in production)
     logs: './logs/',
 

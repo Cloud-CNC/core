@@ -9,7 +9,7 @@ const hash = require('../lib/hash.js');
 const model = require('../models/account.js');
 const speakeasy = require('speakeasy');
 const update = require('../lib/update.js');
-const {filters} = require('../../config.js');
+const {core, filters} = require('../../config.js');
 
 //Logic
 module.exports = {
@@ -39,8 +39,10 @@ module.exports = {
       if (constructor.mfa)
       {
         const secret = speakeasy.generateSecret({
-          name: 'Cloud CNC'
+          name: 'Cloud CNC',
+          length: core.otpSecretLength
         });
+
         constructor.mfa = true;
         constructor.secret = secret.base32;
         body.otpauth = secret.otpauth_url;
@@ -63,23 +65,30 @@ module.exports = {
       password: filters.password,
       mfa: filters.boolean,
       firstName: filters.name,
-      lastName: filters.name,
-      mfa: filters.boolean
+      lastName: filters.name
     }, res);
 
     if (success)
     {
       if (req.account.mfa)
       {
-        req.account.secret = speakeasy.generateSecret();
+        const secret = speakeasy.generateSecret({
+          name: 'Cloud CNC',
+          length: core.otpSecretLength
+        });
+
+        req.account.secret = secret.base32;
+        await req.account.save();
+
+        return res.json({otpauth: secret.otpauth_url});
       }
       else
       {
         req.account.secret = null;
-      }
+        await req.account.save();
 
-      await req.account.save();
-      return res.end();
+        return res.end();
+      }
     }
   },
   remove: async function (req, res)
