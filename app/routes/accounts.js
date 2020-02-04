@@ -55,6 +55,8 @@ router.param('id', async (req, res, next, param) =>
 //Routes
 router.get('/all', permission('accounts:all'), controller.getAll);
 router.post('/', permission('accounts:create'), controller.create);
+router.post('/:id/impersonate/start', permission('accounts:impersonate:start'), controller.impersonateStart);
+router.post('/impersonate/stop', permission('accounts:impersonate:stop'), controller.impersonateStop);
 router.get('/:id', permission('accounts:get'), controller.get);
 router.patch('/:id', permission('accounts:update'), controller.update);
 router.delete('/:id', permission('accounts:remove'), controller.remove);

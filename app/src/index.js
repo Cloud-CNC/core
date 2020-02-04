@@ -14,7 +14,9 @@ import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.css';
 import 'typeface-roboto/index.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
-import colors from 'vuetify/lib/util/colors.js';
+
+//Theme
+import {customization} from '../../config.js';
 
 //Main template
 import index from './index.vue';
@@ -83,18 +85,7 @@ window.vm = new Vue({
       iconfont: 'md'
     },
     theme: {
-      themes: {
-        dark: {
-          primary: colors.green.base,
-          secondary: colors.green.lighten1,
-          accent: colors.blue.accent2
-        },
-        light: {
-          primary: colors.blue.base,
-          secondary: colors.blue.lighten2,
-          accent: colors.blue.accent2
-        }
-      }
+      themes: customization.vuetify
     }
   }),
   render: h => h(index)

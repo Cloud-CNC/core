@@ -66,6 +66,7 @@ import api from '../api.js';
 import colors from 'vuetify/lib/util/colors.js';
 import gcodeViewer from 'vue-gcode-viewer';
 import lightbox from '../components/lightbox.vue';
+import {customization} from '../../../config.js';
 
 export default {
   components: {
@@ -123,17 +124,7 @@ export default {
   computed: {
     theme: function ()
     {
-      return this.$vuetify.theme.dark ? {
-        extrusionColor: colors.green.darken4,
-        pathColor: colors.green.base,
-        bedColor: colors.grey.darken4,
-        backgroundColor: colors.grey.darken4
-      } : {
-          extrusionColor: colors.blue.darken3,
-          pathColor: colors.blue.lighten2,
-          bedColor: colors.grey.base,
-          backgroundColor: colors.grey.lighten3
-        };
+      return this.$vuetify.theme.dark ? customization.viewer.dark : customization.viewer.light;
     }
   },
   watch: {

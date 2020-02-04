@@ -60,6 +60,23 @@ export default {
         role, firstName, lastName, username, password, mfa
       });
     },
+    impersonate: {
+      /**
+       * Start impersonating target account
+       * @param {String} id 
+       */
+      async start(id)
+      {
+        await rest('POST', `/accounts/${id}/impersonate/start`);
+      },
+      /**
+       * Stop impersonating target account
+       */
+      async stop()
+      {
+        await rest('POST', '/accounts/impersonate/stop');
+      }
+    },
     /**
      * Get an account
      * @param {String} id 

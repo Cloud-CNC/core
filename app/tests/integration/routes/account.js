@@ -48,6 +48,50 @@ module.exports = () =>
     id = res.body._id;
   });
 
+  it('should start impersonating an account', async () =>
+  {
+    await agent
+      .post(`/api/accounts/${id}/impersonate/start`)
+      .send({
+        enabled: true
+      });
+
+    const res = await agent
+      .get('/api/accounts/own')
+      .send();
+
+    expect(res).to.have.status(200);
+    expect(res).to.be.json;
+
+    expect(res.body).to.haveOwnProperty('role', 'user');
+    expect(res.body).to.haveOwnProperty('username', 'rst');
+    expect(res.body).to.haveOwnProperty('firstName', 'uvw');
+    expect(res.body).to.haveOwnProperty('lastName', 'xyz');
+    expect(res.body).to.haveOwnProperty('mfa', true);
+  });
+
+  it('should stop impersonating an account', async () =>
+  {
+    await agent
+      .post('/api/accounts/impersonate/stop')
+      .send({
+        enabled: false
+      });
+
+    const res = await agent
+      .get('/api/accounts/own')
+      .send();
+
+    expect(res).to.have.status(200);
+    expect(res).to.be.json;
+
+    expect(res.body).to.haveOwnProperty('role', 'admin');
+    expect(res.body).to.haveOwnProperty('username', 'abc');
+    expect(res.body).to.haveOwnProperty('firstName', 'def');
+    expect(res.body).to.haveOwnProperty('lastName', 'ghi');
+    expect(res.body).to.haveOwnProperty('mfa', false);
+  });
+
   it('should get own account', async () =>
   {
     const res = await agent

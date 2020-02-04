@@ -134,7 +134,18 @@
       <router-view></router-view>
     </v-content>
 
-    <v-bottom-sheet v-model="visible">
+    <v-snackbar
+    :timeout="0"
+      v-model="impersonate.visible"
+    >
+      You're currently impersonating {{impersonate.name}}!
+      <v-btn
+        color="accent"
+        @click="stopImpersonate(); impersonate = false"
+      >Stop</v-btn>
+    </v-snackbar>
+
+    <v-bottom-sheet v-model="error.visible">
       <v-sheet
         class="text-center"
         color="error"
@@ -143,7 +154,7 @@
         <v-btn
           icon
           x-large
-          @click="visible = false"
+          @click="error.visible = false"
         >
           <v-icon>close</v-icon>
         </v-btn>
@@ -185,11 +196,15 @@ export default {
   data: () => ({
     error: {
       name: null,
-      description: null
+      description: null,
+      visible: false
+    },
+    impersonate: {
+      name: null,
+      visible: false
     },
     menu: false,
-    version: null,
-    visible: false
+    version: null
   }),
   methods: {
     invertTheme: function ()
@@ -209,6 +224,10 @@ export default {
       {
         this.$router.push('/login');
       });
+    },
+    stopImpersonate: function()
+    {
+      api.accounts.impersonate.stop();
     }
   },
   watch: {
@@ -217,7 +236,15 @@ export default {
       deep: true,
       handler()
       {
-        this.visible = true;
+        this.error.visible = true;
+      }
+    },
+    impersonate:
+    {
+      deep: true,
+      handler()
+      {
+        this.impersonate.visible = true;
       }
     }
   }

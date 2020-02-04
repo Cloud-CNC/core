@@ -46,6 +46,7 @@ Sessions | POST | /sessions/logout | N/A | N/A | N/A | Logs user out.
 | | | | | | |
 Accounts | GET | /accounts/all | N/A | N/A | `{"accounts": <array/account>}` | Gets all accounts.
 Accounts | POST | /accounts | N/A | `{"role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>, "password": <string>}, "mfa": <boolean>` | `{"id": <string>, "otpauth": <string>`<sup>1</sup>`}` | Creates an account.
+Accounts | POST | /accounts/:id/impersonate | `id: <string>` | `{"enabled": <boolean>}` | N/A | Impersonates account, all actions performed by user will be performed on behalf of the target account until the user stops impersonation.
 Accounts | GET | /accounts/:id | `id: <string>` | N/A | `{"account": {"id": <string>, "role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>}}` | Gets an account's information.
 Accounts | PATCH | /accounts/:id | `id: <string>` | `{"role": <string/role>, "firstName": <string>, "lastName": <string>, "username": <string>, "password": <string>}, "mfa": <boolean>}` | `{"otpauth": <string>`<sup>1</sup>`}` | Updates part(s) of an account.
 Accounts | DELETE | /accounts/:id | `id: <string>` | N/A | N/A | Deletes an account.

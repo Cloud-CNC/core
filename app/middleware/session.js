@@ -36,7 +36,14 @@ router.use(async (req, res, next) =>
   if (req.url == '/sessions/login' || req.url == '/sessions/mfa' || req.session.authenticated)
   {
     //Get account document
-    req.user = await model.findById(req.session.user);
+    if (req.session.impersonate != null)
+    {
+      req.user = await model.findById(req.session.impersonate);
+    }
+    else
+    {
+      req.user = await model.findById(req.session.user);
+    }
 
     next();
   }

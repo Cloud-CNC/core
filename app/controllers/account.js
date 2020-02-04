@@ -53,6 +53,20 @@ module.exports = {
       return res.json({_id: doc.id, ...body});
     }
   },
+  impersonateStart: async function (req, res)
+  {
+    req.session.impersonate = req.params.id;
+    req.user = await model.findById(req.params.id);
+
+    return res.end();
+  },
+  impersonateStop: async function (req, res)
+  {
+    req.session.impersonate = null;
+    req.user = await model.findById(req.session.user);
+
+    return res.end();
+  },
   get: function (req, res)
   {
     return res.json(req.account.toJSON());

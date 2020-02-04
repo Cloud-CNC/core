@@ -129,8 +129,8 @@
 
       <template v-slot:actions="props">
         <v-item-group>
-          <v-btn @click="administrate(props.entity)">
-            Administrate
+          <v-btn @click="impersonate(props.entity)">
+            Impersonate
           </v-btn>
           <v-btn @click="showLightbox(props.entity)">
             Edit
@@ -250,13 +250,11 @@ export default {
         this.lightboxes.upsert.visible = false;
       });
     },
-    //TODO
-    //Administrate account
-    administrate: function (account)
+    //Impersonate account
+    impersonate: function (account)
     {
-      //Set cookie
-
-      //Go to files
+      window.vm.$children[0].impersonate.name = account.username;
+      api.accounts.impersonate.start(account._id);
     },
     //Update account
     update: function (property)

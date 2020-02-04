@@ -92,7 +92,7 @@ export default {
       required: value => value != null || 'Required',
       username: value => new RegExp(filters.name).test(value) || 'Invalid username',
       password: value => new RegExp(filters.password).test(value) || 'Invalid password',
-      otp: value => (typeof value == 'number' && new RegExp(filters.otp).test(value)) || 'Invalid code'
+      otp: value => new RegExp(filters.otp).test(value) || 'Invalid code'
     },
     prechecks: false,
     invalid: false
