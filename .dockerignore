@@ -1,0 +1,22 @@
+# VS Code Counter
+.VSCodeCounter
+
+# Cryptography related files
+crypto
+
+# Uploaded files
+files
+
+# Logs
+logs
+
+# Istanbul
+.nyc_output
+coverage
+
+# Node Modules
+node_modules
+
+# Parcel
+.cache
+dist
