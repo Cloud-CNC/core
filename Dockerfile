@@ -8,7 +8,7 @@ WORKDIR /usr/src/core
 COPY package*.json ./
 
 #Install Node-Gyp
-RUN npm install node-gyp
+RUN npm install node-gyp -g
 
 #Install dependencies
 RUN npm install
