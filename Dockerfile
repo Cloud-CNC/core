@@ -8,7 +8,7 @@ WORKDIR /usr/src/core
 COPY package*.json ./
 
 #Install MongoDB
-RUN apt install -y mongodb
+RUN apk add mongodb
 
 #Create MongoDB data directory
 RUN mkdir /data/db -p
