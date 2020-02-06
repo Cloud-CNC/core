@@ -8,6 +8,7 @@ WORKDIR /usr/src/core
 COPY package*.json ./
 
 #Install Node-Gyp
+RUN apk add make gcc g++ python
 RUN npm install node-gyp -g
 
 #Install dependencies
