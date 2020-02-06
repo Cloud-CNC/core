@@ -64,9 +64,13 @@ export default {
       /**
        * Start impersonating target account
        * @param {String} id 
+       * @param {String} name
        */
-      async start(id)
+      async start(id, name)
       {
+        //Client-side cookie
+        document.cookie = `impersonate=${name}`;
+
         await rest('POST', `/accounts/${id}/impersonate/start`);
       },
       /**
@@ -74,6 +78,9 @@ export default {
        */
       async stop()
       {
+        //Client-side cookie
+        document.cookie = 'impersonate=;';
+
         await rest('POST', '/accounts/impersonate/stop');
       }
     },
@@ -348,7 +355,10 @@ async function rest(method, url, body = null)
   else if (res.error)
   {
     //Display popup
-    window.vm.$children[0].error = res.error;
+    const error = window.vm.$children[0].error;
+    error.name = res.error.name;
+    error.description = res.error.description;
+    error.visible = true;
 
     //Log
     console.error(res.error);

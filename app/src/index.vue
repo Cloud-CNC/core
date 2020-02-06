@@ -141,7 +141,7 @@
       You're currently impersonating {{impersonate.name}}!
       <v-btn
         color="accent"
-        @click="stopImpersonate(); impersonate = false"
+        @click="stopImpersonate(); impersonate.visible = false"
       >Stop</v-btn>
     </v-snackbar>
 
@@ -176,10 +176,11 @@ import pkg from '../../package.json';
 export default {
   created: function ()
   {
+    //Dark mode
     let dark = true;
 
     //No cookie, use OS preference
-    if (document.cookie.length == 0 || !new RegExp(/(?<=dark=)(true|false)/).test(document.cookie))
+    if (document.cookie.length == 0 || !/(?<=dark=)(true|false)/.test(document.cookie))
     {
       dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
@@ -189,6 +190,13 @@ export default {
       dark = new RegExp(/(?<=dark=)true/).test(document.cookie);
     }
     this.$vuetify.theme.dark = dark;
+
+    //Impersonate
+    if (document.cookie.length > 0 && /impersonate=([^;]+)/.test(document.cookie))
+    {
+      this.impersonate.name = /impersonate=([^;]+)/.exec(document.cookie)[1];
+      this.impersonate.visible = true;
+    }
 
     //Version information
     this.version = pkg.version;
@@ -228,24 +236,6 @@ export default {
     stopImpersonate: function()
     {
       api.accounts.impersonate.stop();
-    }
-  },
-  watch: {
-    error:
-    {
-      deep: true,
-      handler()
-      {
-        this.error.visible = true;
-      }
-    },
-    impersonate:
-    {
-      deep: true,
-      handler()
-      {
-        this.impersonate.visible = true;
-      }
     }
   }
 };

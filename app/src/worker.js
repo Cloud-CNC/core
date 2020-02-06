@@ -11,7 +11,6 @@ workbox.setConfig({
 });
 
 //SPA
-//TODO Use precached version instead
 workbox.routing.registerRoute(new workbox.routing.NavigationRoute(event =>
 {
   return new workbox.strategies.CacheFirst().makeRequest({

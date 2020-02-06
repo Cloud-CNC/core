@@ -64,12 +64,20 @@
 
             <v-list-item>
               <v-select
+                item-text="ABc"
+                :items="lightboxes.upsert.roles"
+                @blur="update('role')"
+                label="Role"
                 ref="role"
                 v-model="lightboxes.upsert.role"
-                :items="lightboxes.upsert.roles"
-                label="Role"
-                @blur="update('role')"
-              />
+              >
+                <template v-slot:item="role">
+                  {{role.item.charAt(0).toUpperCase() + role.item.substring(1)}}
+                </template>
+                <template v-slot:selection="role">
+                  {{role.item.charAt(0).toUpperCase() + role.item.substring(1)}}
+                </template>
+              </v-select>
             </v-list-item>
 
             <v-list-item>
@@ -160,7 +168,7 @@ import api from '../api.js';
 import gallery from '../components/gallery.vue';
 import lightbox from '../components/lightbox.vue';
 import qr from '../components/qr.vue';
-import {filters} from '../../../config.js';
+import {core, filters} from '../../../config.js';
 
 export default {
   components: {
@@ -173,7 +181,7 @@ export default {
     lightboxes: {
       upsert: {
         _id: null,
-        roles: ['Admin', 'User'],
+        roles: Object.keys(core.acl.roles),
         role: null,
         firstName: null,
         lastName: null,
@@ -215,7 +223,7 @@ export default {
         this.lightboxes.upsert.username = null;
         this.lightboxes.upsert.password = null;
         this.lightboxes.upsert.mfa = false;
-        this.lightboxes.upsert.role = 'User';
+        this.lightboxes.upsert.role = Object.keys(core.acl.roles)[0];
         this.lightboxes.upsert.create = true;
       }
       else
@@ -226,7 +234,7 @@ export default {
         this.lightboxes.upsert.username = account.username;
         this.lightboxes.upsert.password = null;
         this.lightboxes.upsert.mfa = account.mfa;
-        this.lightboxes.upsert.role = account.role.charAt(0).toUpperCase() + account.role.substring(1);
+        this.lightboxes.upsert.role = account.role;
         this.lightboxes.upsert.create = false;
       }
 
@@ -236,15 +244,14 @@ export default {
     //Create account
     create: function ()
     {
-      const role = this.lightboxes.upsert.role.charAt(0).toLowerCase() + this.lightboxes.upsert.role.substring(1);
-      api.accounts.create(role, this.lightboxes.upsert.firstName, this.lightboxes.upsert.lastName, this.lightboxes.upsert.username, this.lightboxes.upsert.password, this.lightboxes.upsert.mfa).then(res =>
+      api.accounts.create(this.lightboxes.upsert.role, this.lightboxes.upsert.firstName, this.lightboxes.upsert.lastName, this.lightboxes.upsert.username, this.lightboxes.upsert.password, this.lightboxes.upsert.mfa).then(res =>
       {
         //Show otpauth URL
         this.lightboxes.qr.text = res.otpauth;
         this.lightboxes.qr.visible = true;
 
         //Add to list
-        this.accounts.push({_id: res._id, firstName: this.lightboxes.upsert.firstName, lastName: this.lightboxes.upsert.lastName, username: this.lightboxes.upsert.username, mfa: this.lightboxes.upsert.mfa, role});
+        this.accounts.push({_id: res._id, firstName: this.lightboxes.upsert.firstName, lastName: this.lightboxes.upsert.lastName, username: this.lightboxes.upsert.username, mfa: this.lightboxes.upsert.mfa, role: this.lightboxes.upsert.role});
 
         //Hide lightbox
         this.lightboxes.upsert.visible = false;
@@ -253,8 +260,11 @@ export default {
     //Impersonate account
     impersonate: function (account)
     {
-      window.vm.$children[0].impersonate.name = account.username;
-      api.accounts.impersonate.start(account._id);
+      const impersonate = window.vm.$children[0].impersonate;
+      impersonate.name = account.username;
+      impersonate.visible = true;
+
+      api.accounts.impersonate.start(account._id, account.username);
     },
     //Update account
     update: function (property)
@@ -264,18 +274,9 @@ export default {
       {
         //Update front end
         const account = this.accounts.find(account => account._id == this.lightboxes.upsert._id);
-        account[property] = this.lightbox[property];
+        account[property] = this.lightboxes.upsert[property];
 
-        //Update backend
-        if (property == 'role')
-        {
-          const role = this.lightboxes.upsert.role.charAt(0).toLowerCase() + this.lightboxes.upsert.role.substring(1);
-          api.accounts.update({[property]: role}, this.lightboxes.upsert._id);
-        }
-        else
-        {
-          api.accounts.update({[property]: this.lightbox[property]}, this.lightboxes.upsert._id);
-        }
+        api.accounts.update({[property]: this.lightboxes.upsert[property]}, this.lightboxes.upsert._id);
       }
     },
     //Remove account
