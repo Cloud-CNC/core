@@ -8,6 +8,9 @@ WORKDIR /usr/src/core
 COPY package*.json ./
 
 #Install MongoDB
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.10/main' >> /etc/apk/repositories
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.10/community' >> /etc/apk/repositories
+RUN apk update
 RUN apk add mongodb
 
 #Create MongoDB data directory
