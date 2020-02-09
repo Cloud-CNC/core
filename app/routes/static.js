@@ -9,8 +9,8 @@ const router = require('express').Router();
 
 //Bundler
 const bundler = new parcel(['./app/src/index.html', './app/src/worker.js'], {
-  logLevel: process.env.NODE_ENV == 'testing' ? 1 : 2,
-  watch: process.env.NODE_ENV != 'production' && process.env.NODE_ENV != 'testing',
+  logLevel: process.env.NODE_ENV == 'development' ? 1 : 2,
+  watch: process.env.NODE_ENV == 'development',
   hmr: false,
   outDir: './app/dist/'
 });

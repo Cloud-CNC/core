@@ -48,10 +48,10 @@ module.exports = {
     },
 
     //SSL certificate
-    cert: './crypto/cert.pem',
+    cert: './crypto/cert.cer',
     key: './crypto/key.pem',
 
-    //Domain (Used for CORS and session cookies)
+    //Domain (Used for CORS, sessions, and tests)
     domain: '127.0.0.1',
 
     //Listening port
@@ -118,7 +118,7 @@ module.exports = {
   },
   data: {
     //MongoDB URI
-    database: `mongodb://127.0.0.1:27017/${process.env.NODE_ENV == 'testing' ? 'testing' : 'production'}`,
+    database: `mongodb://localhost:27017/${process.env.NODE_ENV}`,
 
     //Filesystem (Used for storing user files)
     filesystem: './files/'

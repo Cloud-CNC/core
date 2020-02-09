@@ -5,15 +5,16 @@
   "main": "index.js",
   "scripts": {
     "coverage": "nyc --reporter=lcov npm test",
-    "start": "node app.js",
+    "start": "cross-env NODE_ENV=production node app.js",
     "test": "mocha --colors --exit --timeout 60000 ./app/tests/index.js"
   },
   "author": "Cloud CNC",
   "license": "MIT",
   "dependencies": {
     "argon2": "^0.24.1",
-    "connect-mongodb-session": "^2.3.0",
+    "connect-mongodb-session": "^2.3.1",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.0.0",
     "express-sanitizer": "^1.0.5",
@@ -47,7 +48,7 @@
     "vue-hot-reload-api": "^2.3.4",
     "vue-router": "^3.1.5",
     "vue-template-compiler": "^2.6.11",
-    "vuetify": "^2.2.8",
+    "vuetify": "^2.2.11",
     "workbox-sw": "^4.3.1"
   },
   "workbox": {

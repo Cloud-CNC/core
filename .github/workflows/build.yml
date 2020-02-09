@@ -21,6 +21,6 @@ jobs:
       - name: Generate Salt
         run: cd crypto && openssl rand -out secret.txt -base64 512
       - name: Generate Certificate
-        run: cd crypto && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.pem
+        run: cd crypto && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.cer
       - name: Build
         run: sudo npm build

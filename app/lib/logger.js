@@ -5,6 +5,7 @@
 //Imports
 const config = require('../../config.js');
 const winston = require('winston');
+require('winston-daily-rotate-file');
 
 const logger = winston.createLogger();
 
@@ -25,7 +26,7 @@ else if (process.env.NODE_ENV == 'testing')
     transport.silent = true;
   });
 }
-//Development: log to console
+//Development or Docker: log to console
 else
 {
   logger.format = winston.format.combine(
