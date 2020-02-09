@@ -24,4 +24,4 @@ COPY . .
 EXPOSE 443
 
 #Run server
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
