@@ -2,9 +2,6 @@
  * @fileoverview Workbox service worker
  */
 
-//Imports
-const {domain} = require('../../config.js').core;
-
 //Disable logging
 workbox.setConfig({
   debug: false
@@ -19,7 +16,7 @@ workbox.routing.registerRoute(new workbox.routing.NavigationRoute(event =>
 }));
 
 //API
-workbox.routing.registerRoute(new RegExp(`/https:\/\/${domain}/api`), new workbox.strategies.NetworkOnly());
+workbox.routing.registerRoute(('/api'), new workbox.strategies.NetworkOnly());
 
 //Static resources
 workbox.routing.setDefaultHandler(new workbox.strategies.CacheFirst());
