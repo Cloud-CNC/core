@@ -24,4 +24,4 @@ COPY . .
 EXPOSE 443
 
 #Run server
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:docker"]

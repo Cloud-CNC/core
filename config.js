@@ -118,7 +118,7 @@ module.exports = {
   },
   data: {
     //MongoDB URI
-    database: `mongodb://localhost:27017/${process.env.NODE_ENV}`,
+    database: `mongodb://localhost:27017/${process.env.NODE_ENV || 'production'}`,
 
     //Filesystem (Used for storing user files)
     filesystem: './files/'

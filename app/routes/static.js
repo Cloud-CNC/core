@@ -8,11 +8,13 @@ const path = require('path');
 const router = require('express').Router();
 
 //Bundler
+const dev = process.env.NODE_ENV == 'development';
 const bundler = new parcel(['./app/src/index.html', './app/src/worker.js'], {
-  logLevel: process.env.NODE_ENV == 'development' ? 1 : 2,
-  watch: process.env.NODE_ENV == 'development',
   hmr: false,
-  outDir: './app/dist/'
+  logLevel: dev ? 1 : 2,
+  minify: !dev,
+  outDir: './app/dist/',
+  watch: dev
 });
 
 //Routes

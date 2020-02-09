@@ -16,7 +16,7 @@ workbox.routing.registerRoute(new workbox.routing.NavigationRoute(event =>
 }));
 
 //API
-workbox.routing.registerRoute(('/api'), new workbox.strategies.NetworkOnly());
+workbox.routing.registerRoute('/api', new workbox.strategies.NetworkOnly());
 
 //Static resources
 workbox.routing.setDefaultHandler(new workbox.strategies.CacheFirst());
