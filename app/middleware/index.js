@@ -18,8 +18,11 @@ router.use(sanitizer());
 router.use(json({
   limit: upload
 }));
-router.use(security);
-router.use('/api', limit);
+if (process.env.NODE_ENV != 'development')
+{
+  router.use(security);
+  router.use('/api', limit);
+}
 router.use('/api', session);
 
 //Export

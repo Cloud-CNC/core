@@ -6,7 +6,10 @@
 
 This repository contains all files for running a core server instance. The core server is typically ran on a VPS.
 
-## Installation
+
+## Development
+
+### Environment Setup
 1. Install dependencies via running `npm i`
 2. Setup a [Mongo](https://www.mongodb.com) database (Either on the same server of a different one)
 3. Install Node Gyp (Using [these](https://github.com/nodejs/node-gyp#installation) instructions)
@@ -16,14 +19,12 @@ This repository contains all files for running a core server instance. The core 
 7. Run `npm start` to start the web server
 8. If you need any additional help, feel free to ask in the Discord server 
 
-## Development
-
 ### Recommended IDE Extensions
 Name | VS Code | Atom
 --- | --- | ---
 ESLint | [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) | [ESLint](https://atom.io/packages/eslint)
 Spell Checker | [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker) (Enable cSpell.allowCompoundWords) | [Spell Check](https://atom.io/packages/spell-check)
-Mark code for review, take notes, add todo items, etc. | [TODO Highlight](https://marketplace.visualstudio.com/items?itemName=wayou.vscode-todo-highlight) | [language-todo-extra-words](https://atom.io/packages/language-todo-extra-words)
+Mark code for review, take notes, add todo items, etc. | [Comment Anchors](https://marketplace.visualstudio.com/items?itemName=ExodiusStudios.comment-anchors) | [language-todo-extra-words](https://atom.io/packages/language-todo-extra-words)
 Colorize pairs of brackets | [Bracket Colorizer 2](https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2) | [Bracket Colorizer](https://atom.io/packages/bracket-colorizer)
 Help with writing documentation | [GitHub Markdown Preview](https://marketplace.visualstudio.com/items?itemName=bierner.github-markdown-preview) | [Markdown Preview](https://atom.io/packages/markdown-preview)
 Vue tooling | [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur) | [Vue FMT](https://atom.io/packages/vue-fmt)
@@ -32,5 +33,8 @@ Vue boilerplate | [Vue VSCode Snippets](https://marketplace.visualstudio.com/ite
 ### NPM Scripts
 Name | Description
 --- | ---
-`start` | Run server
+`coverage` | Generate test coverage using Istanbul
+`start` | Run server in production mode (PWA and file logging)
+`start:development` | Run server in development mode (No PWA)
+`start:docker` | Run server in production mode with console logging
 `test` | Run all tests
