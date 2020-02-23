@@ -35,6 +35,7 @@ module.exports = () =>
   //Connect to database
   return mongoose.connect(database, {
     useCreateIndex: true,
+    useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true
   });

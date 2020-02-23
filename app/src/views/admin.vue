@@ -10,28 +10,6 @@
           <v-list>
             <v-list-item>
               <v-text-field
-                ref="firstName"
-                v-model="lightboxes.upsert.firstName"
-                counter="30"
-                label="First Name"
-                :rules="[rules.required, rules.firstName]"
-                @blur="update('firstName')"
-              />
-            </v-list-item>
-
-            <v-list-item>
-              <v-text-field
-                ref="lastName"
-                v-model="lightboxes.upsert.lastName"
-                counter="30"
-                label="Last Name"
-                :rules="[rules.required, rules.lastName]"
-                @blur="update('lastName')"
-              />
-            </v-list-item>
-
-            <v-list-item>
-              <v-text-field
                 ref="username"
                 v-model="lightboxes.upsert.username"
                 counter="30"
@@ -132,7 +110,6 @@
             {{ props.entity.role.charAt(0).toUpperCase() + props.entity.role.substring(1) }}
           </v-chip>
         </v-chip-group>
-        {{ props.entity.firstName }} {{ props.entity.lastName }}
       </template>
 
       <template v-slot:actions="props">
@@ -183,8 +160,6 @@ export default {
         _id: null,
         roles: Object.keys(core.acl.roles),
         role: null,
-        firstName: null,
-        lastName: null,
         username: null,
         password: null,
         mfa: false,
@@ -199,8 +174,6 @@ export default {
     prechecks: false,
     rules: {
       required: value => value != null || 'Required',
-      firstName: value => new RegExp(filters.name).test(value) || 'Invalid first name',
-      lastName: value => new RegExp(filters.name).test(value) || 'Invalid last name',
       username: value => new RegExp(filters.name).test(value) || 'Invalid username',
       password: value => new RegExp(filters.password).test(value) || 'Invalid password'
     }
@@ -218,8 +191,6 @@ export default {
       if (account == null)
       {
         this.lightboxes.upsert._id = null;
-        this.lightboxes.upsert.firstName = null;
-        this.lightboxes.upsert.lastName = null;
         this.lightboxes.upsert.username = null;
         this.lightboxes.upsert.password = null;
         this.lightboxes.upsert.mfa = false;
@@ -229,8 +200,6 @@ export default {
       else
       {
         this.lightboxes.upsert._id = account._id;
-        this.lightboxes.upsert.firstName = account.firstName;
-        this.lightboxes.upsert.lastName = account.lastName;
         this.lightboxes.upsert.username = account.username;
         this.lightboxes.upsert.password = null;
         this.lightboxes.upsert.mfa = account.mfa;
@@ -244,14 +213,14 @@ export default {
     //Create account
     create: function ()
     {
-      api.accounts.create(this.lightboxes.upsert.role, this.lightboxes.upsert.firstName, this.lightboxes.upsert.lastName, this.lightboxes.upsert.username, this.lightboxes.upsert.password, this.lightboxes.upsert.mfa).then(res =>
+      api.accounts.create(this.lightboxes.upsert.role, this.lightboxes.upsert.username, this.lightboxes.upsert.password, this.lightboxes.upsert.mfa).then(res =>
       {
         //Show otpauth URL
         this.lightboxes.qr.text = res.otpauth;
         this.lightboxes.qr.visible = true;
 
         //Add to list
-        this.accounts.push({_id: res._id, firstName: this.lightboxes.upsert.firstName, lastName: this.lightboxes.upsert.lastName, username: this.lightboxes.upsert.username, mfa: this.lightboxes.upsert.mfa, role: this.lightboxes.upsert.role});
+        this.accounts.push({_id: res._id, username: this.lightboxes.upsert.username, mfa: this.lightboxes.upsert.mfa, role: this.lightboxes.upsert.role});
 
         //Hide lightbox
         this.lightboxes.upsert.visible = false;

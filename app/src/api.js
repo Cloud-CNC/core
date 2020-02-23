@@ -48,16 +48,14 @@ export default {
     /**
      * Create an account
      * @param {String} role 'admin' or 'user'
-     * @param {String} firstName 
-     * @param {String} lastName 
      * @param {String} username 
      * @param {String} password 
      * @param {Boolean} mfa
      */
-    async create(role, firstName, lastName, username, password, mfa)
+    async create(role, username, password, mfa)
     {
       return rest('POST', '/accounts', {
-        role, firstName, lastName, username, password, mfa
+        role, username, password, mfa
       });
     },
     impersonate: {
@@ -94,13 +92,7 @@ export default {
     },
     /**
      * Update an account
-     * @param {Object} data 
-     * @param {String} data.role
-     * @param {String} data.firstName
-     * @param {String} data.lastName
-     * @param {String} data.username
-     * @param {String} data.password
-     * @param {String} data.mfa
+     * @param {{role?: String, username?: String, password?: String, mfa?: Boolean}} data 
      * @param {String} id 
      */
     async update(data, id = 'own')
@@ -146,10 +138,7 @@ export default {
     },
     /**
      * Update a file
-     * @param {Object} data 
-     * @param {String} data.name
-     * @param {String} data.description
-     * @param {String} data.raw
+     * @param {{name?: String, description?: String, raw?: String}} data 
      * @param {String} id 
      */
     async update(data, id)
@@ -223,8 +212,7 @@ export default {
     },
     /**
      * Update a controller
-     * @param {Object} data 
-     * @param {String} data.name
+     * @param {{name: String}} data
      * @param {String} id 
      */
     async update(data, id)
@@ -296,12 +284,7 @@ export default {
     },
     /**
      * Update a machine
-     * @param {Object} data 
-     * @param {String} data.role
-     * @param {String} data.firstName
-     * @param {String} data.lastName
-     * @param {String} data.username
-     * @param {String} data.password
+     * @param {{controller?: String, name?: String, tags?: Array<String>, length?: Number, width?: Number, height?: Number}} data
      * @param {String} id 
      */
     async update(data, id)

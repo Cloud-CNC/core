@@ -11,6 +11,7 @@ module.exports = {
         admin: {
           inherits: 'user',
           rules: [
+            'accounts:admin',
             'accounts:all',
             'accounts:create',
             'accounts:impersonate:start',

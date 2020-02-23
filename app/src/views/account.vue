@@ -15,28 +15,6 @@
               <v-list>
                 <v-list-item>
                   <v-text-field
-                    ref="firstName"
-                    v-model="account.firstName"
-                    counter="30"
-                    label="First Name"
-                    :rules="[rules.required, rules.firstName]"
-                    @blur="update('firstName')"
-                  />
-                </v-list-item>
-
-                <v-list-item>
-                  <v-text-field
-                    ref="lastName"
-                    v-model="account.lastName"
-                    counter="30"
-                    label="Last Name"
-                    :rules="[rules.required, rules.lastName]"
-                    @blur="update('lastName')"
-                  />
-                </v-list-item>
-
-                <v-list-item>
-                  <v-text-field
                     ref="username"
                     v-model="account.username"
                     counter="30"
@@ -86,15 +64,11 @@ export default {
     account: {
       roles: ['Admin', 'User'],
       role: null,
-      firstName: null,
-      lastName: null,
       username: null,
       password: null
     },
     rules: {
       required: value => value != null || 'Required',
-      firstName: value => new RegExp(filters.name).test(value) || 'Invalid first name',
-      lastName: value => new RegExp(filters.name).test(value) || 'Invalid last name',
       username: value => new RegExp(filters.name).test(value) || 'Invalid username',
       password: value => new RegExp(filters.password).test(value) || 'Invalid password'
     }
@@ -104,8 +78,6 @@ export default {
     //Get account
     api.accounts.get().then(account =>
     {
-      this.account.firstName = account.firstName;
-      this.account.lastName = account.lastName;
       this.account.username = account.username;
       this.account.role = account.role.charAt(0).toUpperCase() + account.role.substring(1);
     });

@@ -1,130 +1,97 @@
 /**
- * @fileoverview Session controller
+ * @fileoverview Session Controller
  */
 
-//Imports
 const argon2 = require('argon2');
-const model = require('../models/account.js');
+const model = require('../models/account');
 const speakeasy = require('speakeasy');
-const {core, filters} = require('../../config.js');
+const {core} = require('../../config');
 
 //Export
 module.exports = {
   /**
-  * Log user in
-  * @param {Express.Request} req
-  * @param {Express.Response} res
-  */
-  login: async function (req, res)
+   * Log user in
+   * @param {Object} session Persistent session
+   * @param {String} username Account username
+   * @param {String} password Account password
+   * @returns {Promise<{valid: Boolean, mfa?: Boolean}>} Where `mfa` represents if the user needs to authenticated via MFA
+   */
+  login: async (session, username, password) =>
   {
-    //Validate
-    if (req.body.username == null || !filters.username.test(req.body.username))
+    //Get user
+    const user = await model.findOne({username}).exec();
+
+    if (user == null)
     {
-      return res.json({
-        error: {
-          name: 'Missing Parameter',
-          description: '"username" wasn\'t found!'
-        }
-      });
-    }
-    else if (req.body.password == null || !filters.password.test(req.body.password))
-    {
-      return res.json({
-        error: {
-          name: 'Missing Parameter',
-          description: '"password" wasn\'t found!'
-        }
-      });
+      return {valid: false};
     }
     else
     {
-      //Get user from database
-      const user = await model.findOne({username: req.body.username}).exec();
-      if (user == null)
+      //Verify password
+      if (await argon2.verify(user.hash, password))
       {
-        return res.json({valid: false});
+        //Finish authentication if MFA is disabled
+        if (!user.mfa)
+        {
+          session.authenticated = true;
+        }
+
+        //Store user ID
+        session.user = user._id;
+        return {valid: true, mfa: user.mfa};
       }
-
-      //Hash
-      argon2.verify(user.hmac, req.body.password).then(valid =>
+      else
       {
-        if (valid)
-        {
-          if (!user.mfa)
-          {
-            req.session.authenticated = true;
-          }
-
-          req.session.user = user._id.toJSON();
-          return res.json({valid: true, mfa: user.mfa});
-        }
-        else
-        {
-          return res.json({valid: false});
-        }
-      });
+        return {valid: false};
+      }
     }
   },
 
   /**
-  * Log user in with MFA
-  * @param {Express.Request} req
-  * @param {Express.Response} res
-  */
-  mfa: async function (req, res)
+   * Finish authenticating user via MFA
+   * @param {Object} session Persistent session
+   * @param {String} otp One time password
+   * @returns {Promise<{valid: Boolean}>} `valid: <Boolean>`
+   */
+  mfa: async (session, otp) =>
   {
-    //Validate
-    if (req.body.otp == null || !filters.otp.test(req.body.otp))
-    {
-      return res.json({
-        error: {
-          name: 'Missing Parameter',
-          description: '"otp" wasn\'t found!'
-        }
-      });
-    }
-    else
-    {
-      //Verify OTP
-      const valid = speakeasy.totp.verify({
-        encoding: 'base32',
-        secret: req.user.secret,
-        token: req.body.otp,
-        window: core.otpWindow
-      });
+    //Get user
+    const user = await model.findById(session.user);
 
-      if (valid)
-      {
-        req.session.authenticated = true;
-      }
+    //Veritfy OTP
+    const valid = speakeasy.totp.verify({
+      encoding: 'base32',
+      secret: user.secret,
+      token: otp,
+      window: core.otpWindow
+    });
 
-      return res.json({valid});
+    //Finish authenticating user
+    if (valid)
+    {
+      session.authenticated = true;
     }
+
+    return {valid};
   },
 
   /**
    * Log user out
-   * @param {Express.Request} req
-   * @param {Express.Response} res
+   * @param {Object} session Persistent session
+   * @returns {Promise<void|{error: {name: String, description: String}}>}
    */
-  logout: function (req, res)
+  logout: async session => new Promise((resolve, reject) =>
   {
-    req.session.destroy(err =>
+    session.destroy(err =>
     {
       if (err)
       {
-        res.status(500);
-        return res.json({
-          error: {
-            name: 'Failed To Remove Session',
-            description: 'An error occurred when trying to remove your session!'
-          }
-        });
+        reject(err);
       }
       else
       {
-        return res.end();
+        resolve();
       }
     });
-  }
+  })
 };

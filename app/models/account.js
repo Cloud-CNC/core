@@ -10,9 +10,7 @@ const {filters} = require('../../config.js');
 const schema = new mongoose.Schema({
   role: {type: String, validate: filters.role, default: 'user', required: true},
   username: {type: String, validate: filters.name, unique: true, required: true},
-  firstName: {type: String, validate: filters.name, required: true},
-  lastName: {type: String, validate: filters.name, required: true},
-  hmac: {type: String, required: true},
+  hash: {type: String, required: true},
   mfa: {type: Boolean, required: true, default: false},
   secret: {type: String}
 });

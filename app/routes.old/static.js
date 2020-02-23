@@ -9,7 +9,7 @@ const router = require('express').Router();
 
 //Bundler
 const dev = process.env.NODE_ENV == 'development';
-const bundler = new parcel(['./app/src/index.html', './app/src/worker'], {
+const bundler = new parcel(['./app/src/index.html', './app/src/worker.js'], {
   hmr: false,
   logLevel: dev ? 1 : 2,
   minify: !dev,

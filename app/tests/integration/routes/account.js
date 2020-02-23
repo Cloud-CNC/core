@@ -35,8 +35,6 @@ module.exports = () =>
       .send({
         role: 'user',
         username: 'rst',
-        firstName: 'uvw',
-        lastName: 'xyz',
         password: 'Testingpassword123!',
         mfa: true
       });
@@ -65,8 +63,6 @@ module.exports = () =>
 
     expect(res.body).to.haveOwnProperty('role', 'user');
     expect(res.body).to.haveOwnProperty('username', 'rst');
-    expect(res.body).to.haveOwnProperty('firstName', 'uvw');
-    expect(res.body).to.haveOwnProperty('lastName', 'xyz');
     expect(res.body).to.haveOwnProperty('mfa', true);
   });
 
@@ -87,8 +83,6 @@ module.exports = () =>
 
     expect(res.body).to.haveOwnProperty('role', 'admin');
     expect(res.body).to.haveOwnProperty('username', 'abc');
-    expect(res.body).to.haveOwnProperty('firstName', 'def');
-    expect(res.body).to.haveOwnProperty('lastName', 'ghi');
     expect(res.body).to.haveOwnProperty('mfa', false);
   });
 
@@ -103,8 +97,6 @@ module.exports = () =>
 
     expect(res.body).to.haveOwnProperty('role', 'admin');
     expect(res.body).to.haveOwnProperty('username', 'abc');
-    expect(res.body).to.haveOwnProperty('firstName', 'def');
-    expect(res.body).to.haveOwnProperty('lastName', 'ghi');
     expect(res.body).to.haveOwnProperty('mfa', false);
   });
 
@@ -119,8 +111,6 @@ module.exports = () =>
 
     expect(res.body).to.haveOwnProperty('role', 'user');
     expect(res.body).to.haveOwnProperty('username', 'rst');
-    expect(res.body).to.haveOwnProperty('firstName', 'uvw');
-    expect(res.body).to.haveOwnProperty('lastName', 'xyz');
     expect(res.body).to.haveOwnProperty('mfa', true);
   });
 
@@ -137,14 +127,10 @@ module.exports = () =>
 
     expect(res.body[0]).to.haveOwnProperty('role', 'admin');
     expect(res.body[0]).to.haveOwnProperty('username', 'abc');
-    expect(res.body[0]).to.haveOwnProperty('firstName', 'def');
-    expect(res.body[0]).to.haveOwnProperty('lastName', 'ghi');
     expect(res.body[0]).to.haveOwnProperty('mfa', false);
 
     expect(res.body[1]).to.haveOwnProperty('role', 'user');
     expect(res.body[1]).to.haveOwnProperty('username', 'rst');
-    expect(res.body[1]).to.haveOwnProperty('firstName', 'uvw');
-    expect(res.body[1]).to.haveOwnProperty('lastName', 'xyz');
     expect(res.body[1]).to.haveOwnProperty('mfa', true);
   });
 
@@ -155,8 +141,6 @@ module.exports = () =>
       .send({
         role: 'admin',
         username: 'jkl',
-        firstName: 'mno',
-        lastName: 'pqr',
         password: 'Testingpassword321!',
         mfa: false
       });
@@ -166,8 +150,6 @@ module.exports = () =>
     const doc = (await model.find())[1];
     expect(doc._doc).to.haveOwnProperty('role', 'admin');
     expect(doc._doc).to.haveOwnProperty('username', 'jkl');
-    expect(doc._doc).to.haveOwnProperty('firstName', 'mno');
-    expect(doc._doc).to.haveOwnProperty('lastName', 'pqr');
     expect(doc._doc).to.haveOwnProperty('mfa', false);
   });
 

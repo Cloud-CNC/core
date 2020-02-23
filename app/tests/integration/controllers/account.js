@@ -19,8 +19,6 @@ module.exports = () =>
       body: {
         role: 'admin',
         username: 'ghi',
-        firstName: 'jkl',
-        lastName: 'mno',
         password: 'Testingpassword123!',
         mfa: false
       }
@@ -59,8 +57,6 @@ module.exports = () =>
     const update = {
       role: 'user',
       username: 'rst',
-      firstName: 'uvw',
-      lastName: 'xyz',
       password: 'Testingpassword321!',
       mfa: true
     };
@@ -73,8 +69,6 @@ module.exports = () =>
       {
         expect(doc._doc).to.haveOwnProperty('role', 'user');
         expect(doc._doc).to.haveOwnProperty('username', 'rst');
-        expect(doc._doc).to.haveOwnProperty('firstName', 'uvw');
-        expect(doc._doc).to.haveOwnProperty('lastName', 'xyz');
         expect(doc._doc).to.haveOwnProperty('mfa', true);
       }
     });

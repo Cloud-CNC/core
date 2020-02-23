@@ -5,7 +5,7 @@ Documentation for the **upcoming** revised permissions system.
 Cloud CNC uses an RBAC (Role-Based Access Control) system for the majority of actions. Global permissions are only configurable by admins via the web GUI.
 
 ### Roles
-As a Cloud CNC administrator, you can create as many roles as you want. Cloud CNC comes with 2 default roles: `User` and `Admin`. Permissions are inheritied from the lowest ranking role (`User`) to the highest (`Admin`) meaning if the `User` role is granted the `machines:get` permission, the `Admin` role will automatically gain this permission as well. To configure account specific permissions, you must create a role just for that account. Without the `<family>:admin` permission, accounts within a role may only perform actions on its own (seperate) entities.
+As a Cloud CNC administrator, you can create as many roles as you want. Cloud CNC comes with 2 default roles: `User` and `Admin`. Permissions are inheritied from the lowest ranking role (`User`) to the highest (`Admin`) meaning if the `User` role is granted the `machines:get` permission, the `Admin` role will automatically gain this permission as well. To configure account specific permissions, you must create a role just for that account. To perform actions upon other accounts' files or trash, you must impersonate them.
 
 ### Defaults
 
@@ -14,9 +14,11 @@ Name | User | Admin | Description
 accounts:admin | ❌ | ✔️ | Administrate other accounts
 accounts:all | ❌ | ✔️ | Get all accounts
 accounts:create | ❌ | ✔️ | Create an account
+accounts:impersonate:start | ❌ | ✔️ | Start impersonating another account
+accounts:impersonate:stop | ❌ | ✔️ | Stop impersonating another account
 accounts:get | ✔️ | ✔️ | Get an account
-accounts:update | ✔️ | ✔️ | Update an account
-accounts:remove | ✔️ | ✔️ | Remove an account
+accounts:update | ❌ | ✔️ | Update an account
+accounts:remove | ❌ | ✔️ | Remove an account
 | | |
 files:admin | ❌ | ✔️ | Administrate other accounts' files
 files:all | ✔️ | ✔️ | Get all files

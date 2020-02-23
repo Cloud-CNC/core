@@ -1,118 +1,130 @@
 /**
- * @fileoverview Account controller
+ * @fileoverview Account Controller
  */
 
 //Imports
-const create = require('../lib/create.js');
-const fileModel = require('../models/file.js');
-const hash = require('../lib/hash.js');
-const model = require('../models/account.js');
+const file = require('../models/file');
+const hash = require('../lib/hash');
+const model = require('../models/account');
 const speakeasy = require('speakeasy');
-const update = require('../lib/update.js');
-const {core, filters} = require('../../config.js');
+const {core} = require('../../config');
 
-//Logic
+//Export
 module.exports = {
-  getAll: async function (req, res)
+  /**
+   * Get all accounts
+   * @returns {Promise<Array<{username :String, mfa: Boolean, role: String}>>} Array of accounts
+   */
+  all: async () =>
   {
-    const docs = await model.find();
-    return res.json(docs.map(doc => doc.toJSON()));
+    const docs = await model.find(null, ['username', 'mfa', 'role']);
+    return docs.map(doc => doc.toJSON());
   },
-  create: async function (req, res)
+
+  /**
+   * Create an account
+   * @param {String} username Account username
+   * @param {String} password Account password
+   * @param {Boolean} mfa MFA enabled
+   * @param {String} role Account role
+   * @returns {Promise<{_id: String, otpauth?: String}>} Contains `_id` and optionally `otpauth` (URL) if mfa was requested
+   */
+  create: async (username, password, mfa, role) =>
   {
-    const constructor = create(req.body, {
-      role: filters.role,
-      username: filters.username,
-      password: filters.password,
-      mfa: filters.boolean,
-      firstName: filters.name,
-      lastName: filters.name
-    }, res);
+    //MFA
+    const secret = mfa ? speakeasy.generateSecret({
+      name: 'Cloud CNC',
+      length: core.otpSecretLength
+    }) : null;
 
-    if (constructor != null)
+    const doc = new model({
+      username,
+      hash: await hash(password),
+      mfa,
+      secret: secret.base32,
+      role
+    });
+
+    await doc.save();
+    return mfa ? {_id: doc._id, otpauth: secret.otpauth_url} : {_id: doc._id};
+  },
+
+  impersonate: {
+    /**
+     * Start impersonating account
+     * @param {Object} session Persistent session
+     * @param {String} _id ID of the account to impersonate
+     */
+    start: async (session, _id) =>
     {
-      constructor.hmac = await hash(constructor.password);
-      delete constructor.password;
+      session.impersonate = _id;
+    },
 
-      const body = {};
-
-      if (constructor.mfa)
-      {
-        const secret = speakeasy.generateSecret({
-          name: 'Cloud CNC',
-          length: core.otpSecretLength
-        });
-
-        constructor.mfa = true;
-        constructor.secret = secret.base32;
-        body.otpauth = secret.otpauth_url;
-      }
-
-      const doc = new model(constructor);
-      await doc.save();
-      return res.json({_id: doc.id, ...body});
+    /**
+     * Stop impersonating account
+     * @param {Object} session Persistent session
+     */
+    stop: async session =>
+    {
+      session.impersonate = null;
     }
   },
-  impersonateStart: async function (req, res)
-  {
-    req.session.impersonate = req.params.id;
-    req.user = await model.findById(req.params.id);
 
-    return res.end();
-  },
-  impersonateStop: async function (req, res)
+  /**
+   * Get an account by its ID
+   * @param {String} _id Account ID
+   * @returns {Promise<{username :String, mfa: Boolean, role: String}>} Where `mfa` represents if the user has MFA enabled
+   */
+  get: async _id =>
   {
-    req.session.impersonate = null;
-    req.user = await model.findById(req.session.user);
+    const doc = await model.findById(_id, ['username', 'mfa', 'role']);
+    return doc.toJSON();
+  },
 
-    return res.end();
-  },
-  get: function (req, res)
+  /**
+   * Update an account by its ID
+   * @param {String} _id Account ID
+   * @param {Object} data Data to update account with
+   * @returns {Promise<{otpauth?: String}>} Optionally contains `otpauth` (URL) if mfa was requested
+   */
+  update: async (_id, data) =>
   {
-    return res.json(req.account.toJSON());
-  },
-  update: async function (req, res)
-  {
-    const success = update(req.body, req.account, {
-      role: filters.role,
-      username: filters.username,
-      password: filters.password,
-      mfa: filters.boolean,
-      firstName: filters.name,
-      lastName: filters.name
-    }, res);
+    let secret = {};
 
-    if (success)
+    //Generate MFA secret
+    if (data.mfa)
     {
-      if (req.account.mfa)
-      {
-        const secret = speakeasy.generateSecret({
-          name: 'Cloud CNC',
-          length: core.otpSecretLength
-        });
-
-        req.account.secret = secret.base32;
-        await req.account.save();
-
-        return res.json({otpauth: secret.otpauth_url});
-      }
-      else
-      {
-        req.account.secret = null;
-        await req.account.save();
-
-        return res.end();
-      }
+      secret = speakeasy.generateSecret({
+        name: 'Cloud CNC',
+        length: core.otpSecretLength
+      });
+      
+      data.secret = secret.base32;
     }
+    //Erase secret of MFA no longer needed
+    else if (data.mfa == false)
+    {
+      data.secret = null;
+    }
+
+    //Update
+    await model.findByIdAndUpdate(_id, data);
+
+    return secret.otpauth_url;
   },
-  remove: async function (req, res)
+
+  /**
+   * Remove account by its ID
+   * @param {String} _id Account ID
+   * @returns {Promise<{error: {name: String, description: String}}>}
+   */
+  remove: async _id =>
   {
-    //Make sure no child files exist
-    const files = await fileModel.find({owner: req.account._id});
+    const files = await file.find({owner: _id});
 
     if (files.length > 0)
     {
-      return res.status(409).json({
+      return Promise.reject({
         error: {
           name: 'Child Files',
           description: 'The account you\'re trying to remove still owns file(s). Please remove them before retrying.'
@@ -121,8 +133,7 @@ module.exports = {
     }
     else
     {
-      await req.account.remove();
-      return res.end();
+      await model.findByIdAndDelete(_id);
     }
   }
 };
