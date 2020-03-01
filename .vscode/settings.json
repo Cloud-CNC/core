@@ -2,19 +2,11 @@
   //C Spell
   "cSpell.allowCompoundWords": true,
   "cSpell.language": "en-US,en",
-  "cSpell.words": [
-    "Vuelidate",
-    "vuetify"
-  ],
   //Editor
   "editor.tabSize": 2,
   "editor.quickSuggestions": {
     "strings": false
   },
-  //Vetur
-  "vetur.format.defaultFormatter.js": "vscode-typescript",
-  "vetur.format.options.tabSize": 2,
-  "vetur.format.defaultFormatter.ts": "vscode-typescript",
   //VS Code Counter
   "VSCodeCounter.exclude": [
     "**/.cache/**",

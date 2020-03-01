@@ -3,25 +3,15 @@
  */
 
 //Imports
-const parcel = require('parcel');
+const express = require('express');
 const path = require('path');
 const router = require('express').Router();
 
-//Bundler
-const dev = process.env.NODE_ENV == 'development';
-const bundler = new parcel(['./app/src/index.html', './app/src/worker'], {
-  hmr: false,
-  logLevel: dev ? 1 : 2,
-  minify: !dev,
-  outDir: './app/dist/',
-  watch: dev
-});
-
 //Routes
-router.use(bundler.middleware());
+router.use(express.static(path.resolve('./app/frontend/dist')));
 router.use((req, res) =>
 {
-  return res.sendFile(path.resolve('./app/dist/index.html'));
+  return res.sendFile(path.resolve('./app/frontend/dist/index.html'));
 });
 
 //Export

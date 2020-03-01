@@ -27,8 +27,6 @@ Spell Checker | [Code Spell Checker](https://marketplace.visualstudio.com/items?
 Mark code for review, take notes, add todo items, etc. | [Comment Anchors](https://marketplace.visualstudio.com/items?itemName=ExodiusStudios.comment-anchors) | [language-todo-extra-words](https://atom.io/packages/language-todo-extra-words)
 Colorize pairs of brackets | [Bracket Colorizer 2](https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2) | [Bracket Colorizer](https://atom.io/packages/bracket-colorizer)
 Help with writing documentation | [GitHub Markdown Preview](https://marketplace.visualstudio.com/items?itemName=bierner.github-markdown-preview) | [Markdown Preview](https://atom.io/packages/markdown-preview)
-Vue tooling | [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur) | [Vue FMT](https://atom.io/packages/vue-fmt)
-Vue boilerplate | [Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets) | [Vue Snippets](https://atom.io/packages/vue-snippets)
 
 ### NPM Scripts
 Name | Description

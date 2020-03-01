@@ -89,34 +89,6 @@ module.exports = {
     //Controller key length
     keyLength: 512
   },
-  customization: {
-    viewer: {
-      dark: {
-        extrusionColor: '#1B5E20',
-        pathColor: '#4CAF50',
-        bedColor: '#212121',
-        backgroundColor: '#212121'
-      },
-      light: {
-        extrusionColor: '#1565C0',
-        pathColor: '#64B5F6',
-        bedColor: '#9E9E9E',
-        backgroundColor: '#EEEEEE'
-      }
-    },
-    vuetify: {
-      dark: {
-        primary: '#4CAF50',
-        secondary: '#66BB6A',
-        accent: '#448AFF'
-      },
-      light: {
-        primary: '#2196F3',
-        secondary: '#64B5F6',
-        accent: '#448AFF'
-      }
-    }
-  },
   data: {
     //MongoDB URI
     database: `mongodb://localhost:27017/${process.env.NODE_ENV || 'production'}`,

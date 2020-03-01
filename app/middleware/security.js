@@ -28,7 +28,7 @@ router.use(helmet.contentSecurityPolicy({
     styleSrc: ['\'self\'', '\'unsafe-inline\''],
     workerSrc: ['\'self\'', '\'unsafe-inline\''],
     fontSrc: ['\'self\'', 'data:'],
-    scriptSrc: ['\'self\'', '\'unsafe-inline\'']
+    scriptSrc: ['\'self\'', '\'unsafe-inline\'', 'storage.googleapis.com']
   }
 }));
 

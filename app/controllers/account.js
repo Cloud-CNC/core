@@ -13,7 +13,7 @@ const {core} = require('../../config');
 module.exports = {
   /**
    * Get all accounts
-   * @returns {Promise<Array<{username :String, mfa: Boolean, role: String}>>} Array of accounts
+   * @returns {Promise<Array<{username: String, mfa: Boolean, role: String}>>} Array of accounts
    */
   all: async () =>
   {
@@ -116,7 +116,7 @@ module.exports = {
   /**
    * Remove account by its ID
    * @param {String} _id Account ID
-   * @returns {Promise<{error: {name: String, description: String}}>}
+   * @returns {Promise<void|{error: {name: String, description: String}}>}
    */
   remove: async _id =>
   {

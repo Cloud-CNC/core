@@ -17,6 +17,5 @@ coverage
 # Node Modules
 node_modules
 
-# Parcel
-.cache
-dist
+# Frontend
+app/frontend
