@@ -34,16 +34,17 @@ module.exports = {
     //Verify owner
     if (await account.findById(owner) == null)
     {
-      return Promise.reject({
+      return {
         error: {
           name: 'Invalid Account',
-          description: 'The file you\'re trying to create belongs to an invalid account.'
+          description: 'The file you\'re trying to create belongs to an invalid account!'
         }
-      });
+      };
     }
     else
     {
       const doc = new model({
+        owner,
         name,
         description
       });
@@ -51,7 +52,7 @@ module.exports = {
       await doc.save();
 
       //Write to disk
-      await fs.writeFile(path.join(config.data.filesystem, doc._id) + '.gcode', raw);
+      await fs.writeFile(path.join(config.data.filesystem, doc.id) + '.gcode', raw);
 
       return {_id: doc._id};
     }
@@ -68,7 +69,7 @@ module.exports = {
     //Get from disk
     const raw = await fs.readFile(path.join(config.data.filesystem, _id) + '.gcode', 'utf8');
 
-    return {...doc, ...raw};
+    return {...doc.toJSON(), raw};
   },
   /**
    * Update a file by its ID

@@ -36,26 +36,6 @@ module.exports = (socket, req) =>
 
   logger.info(`Controller ${id} successfully bound!`);
 
-  //Events
-  socket.on('message', message =>
-  {
-    message = JSON.parse(message);
-    switch (message.event)
-    {
-      //Command response
-      case 'response:command': {
-        socket.emit('response:command', message);
-        break;
-      }
-
-      //Execute response
-      case 'response:execute': {
-        socket.emit('response:execute', message);
-        break;
-      }
-    }
-  });
-
   //Delete socket from store on disconnect
   socket.once('close', () =>
   {

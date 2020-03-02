@@ -7,5 +7,5 @@ module.exports = () =>
 {
   //describe('Controllers', require('./controllers/index.js'));
   describe('Routes', require('./routes/index.js'));
-  //describe('Websocket', require('./websocket/index.js'));
+  describe('Websocket', require('./websocket/index.js'));
 };

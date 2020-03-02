@@ -26,10 +26,10 @@ module.exports = () =>
 
   describe('Session', require('./session.js'));
   describe('Account', require('./account.js'));
-  //describe('Controller', require('./controller.js'));
-  //describe('File', require('./file.js'));
-  //describe('Machine', require('./machine.js'));
-  //describe('Trash', require('./trash.js'));
+  describe('Controller', require('./controller.js'));
+  describe('File', require('./file.js'));
+  describe('Machine', require('./machine.js'));
+  describe('Trash', require('./trash.js'));
 
   //Cleanup
   after(async () =>

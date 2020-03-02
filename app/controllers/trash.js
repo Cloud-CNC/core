@@ -3,7 +3,6 @@
  */
 
 //Imports
-const account = require('../models/account');
 const config = require('../../config');
 const fs = require('fs').promises;
 const model = require('../models/file');
@@ -38,7 +37,7 @@ module.exports = {
   remove: async _id =>
   {
     //Remove from disk
-    await fs.unlink(path.join(config.data.filesystem, doc._id) + '.gcode');
+    await fs.unlink(path.join(config.data.filesystem, _id) + '.gcode');
 
     await model.findByIdAndDelete(_id);
   }

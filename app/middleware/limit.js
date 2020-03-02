@@ -15,7 +15,7 @@ router.use(rateLimit({
   message: {
     error: {
       name: 'Rate Limit',
-      description: 'You\'ve hit a rate limit, please wait before trying again.'
+      description: 'You\'ve hit a rate limit, please wait before trying again!'
     }
   },
   store: new rateLimitMongo({

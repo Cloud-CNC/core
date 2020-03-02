@@ -124,12 +124,12 @@ module.exports = {
 
     if (files.length > 0)
     {
-      return Promise.reject({
+      return {
         error: {
           name: 'Child Files',
-          description: 'The account you\'re trying to remove still owns file(s). Please remove them before retrying.'
+          description: 'The account you\'re trying to remove still owns file(s). Please remove them before retrying!'
         }
-      });
+      };
     }
     else
     {

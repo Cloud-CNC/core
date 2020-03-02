@@ -45,15 +45,6 @@ module.exports = {
           }
         });
       }
-      else
-      {
-        return res.json({
-          error: {
-            name: `Missing ${source} parameter`,
-            description: `"${parameter.name}" wasn't found!`
-          }
-        });
-      }
     }
 
     //Evaluate validated parameters

@@ -3,7 +3,7 @@
  */
 
 //Imports
-const controller = require('../controllers/account.js');
+const controller = require('../controllers/account');
 const model = require('../models/account');
 const mongoose = require('mongoose');
 const permission = require('../middleware/permission');

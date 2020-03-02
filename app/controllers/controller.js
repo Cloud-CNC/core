@@ -5,7 +5,7 @@
 //Imports
 const crypto = require('crypto');
 const machine = require('../models/machine');
-const model = require('../models/account');
+const model = require('../models/controller');
 
 //Export
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
    */
   all: async () =>
   {
-    const docs = await model.find(null, 'name');
+    const docs = await model.find(null);
     return docs.map(doc => doc.toJSON());
   },
   /**
@@ -43,7 +43,7 @@ module.exports = {
    */
   get: async _id =>
   {
-    const doc = await model.findById(_id, 'name');
+    const doc = await model.findById(_id);
     return doc.toJSON();
   },
   /**
@@ -67,12 +67,12 @@ module.exports = {
 
     if (machines.length > 0)
     {
-      return Promise.reject({
+      return {
         error: {
           name: 'Child Machines',
-          description: 'The controller you\'re trying to remove still owns machine(s). Please remove them before retrying.'
+          description: 'The controller you\'re trying to remove still owns machine(s). Please remove them before retrying!'
         }
-      });
+      };
     }
     else
     {

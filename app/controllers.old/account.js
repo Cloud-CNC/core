@@ -111,7 +111,7 @@ module.exports = {
       return res.status(409).json({
         error: {
           name: 'Child Files',
-          description: 'The account you\'re trying to remove still owns file(s). Please remove them before retrying.'
+          description: 'The account you\'re trying to remove still owns file(s). Please remove them before retrying!'
         }
       });
     }

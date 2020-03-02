@@ -3,30 +3,34 @@
  */
 
 //Imports
+const machine = require('../models/machine');
 const mongoose = require('mongoose');
 const store = require('../websocket/store.js');
 
 //Export
 /**
- * Send data to machine by ID
- * @param {String} _id Controller ID
- * @param {Object} data Data to be sent to machine
- * @returns {Promise<Object>} Machine response
+ * Send data to a machine by its ID
+ * @param {String} _id Machine ID
+ * @param {Object} data Data to be forwarded to a machine
+ * @returns {Promise<Object>} Controller/machine response
  */
-module.exports = async (_id, data) => new Promise((resolve, reject) =>
+module.exports = (_id, data) => new Promise(async (resolve, reject) =>
 {
+  //Get controller
+  const controller = (await machine.findById(_id)).controller;
+
   //Get socket
-  const socket = store.get(_id);
+  const socket = store.get(controller);
 
   //Ensure socket isn't null
   if (socket == null)
   {
-    return {
+    reject({
       error: {
         name: 'Disconnected Controller',
-        description: 'The machine you\'re trying to contact a machine that is attached to a controller that isn\'t connected!'
+        description: 'The machine you\'re trying to contact is attached to a controller that isn\'t connected!'
       }
-    };
+    });
   }
   else
   {
@@ -36,17 +40,20 @@ module.exports = async (_id, data) => new Promise((resolve, reject) =>
     //Response event handler
     const response = message =>
     {
-      if (message._id == id)
+      //Parse
+      message = JSON.parse(message);
+      
+      if (message._id == conversation.toHexString())
       {
-        socket.off('response:execute', response);
+        socket.off('message', response);
         return resolve(message);
       }
     };
 
     //Register event
-    socket.onclose('response:execute', response);
+    socket.on('message', response);
 
     //Send message
-    socket.send(JSON.stringify({...conversation, ...data}));
+    socket.send(JSON.stringify({_id: conversation, machine: _id, ...data}));
   }
 });

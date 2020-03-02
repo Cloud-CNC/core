@@ -41,34 +41,20 @@ module.exports = () =>
     };
   });
 
-  it('should emit command response event', done =>
+  it('should emit message event', done =>
   {
     //Listen for echo
-    socket.once('response:command', data =>
+    socket.once('message', data =>
     {
-      expect(data).to.be.eql({event: 'response:command', key1: 'value1'});
+      data = JSON.parse(data);
+      expect(data).to.haveOwnProperty('key1', 'value1');
+      expect(data).to.haveOwnProperty('key2', 'value2');
       done();
     });
 
     //Simulate response
     socket.emit('message', JSON.stringify({
-      event: 'response:command',
-      key1: 'value1'
-    }));
-  });
-
-  it('should emit execute response event', done =>
-  {
-    //Listen for echo
-    socket.once('response:execute', data =>
-    {
-      expect(data).to.be.eql({event: 'response:execute', key2: 'value2'});
-      done();
-    });
-
-    //Simulate response
-    socket.emit('message', JSON.stringify({
-      event: 'response:execute',
+      key1: 'value1',
       key2: 'value2'
     }));
   });

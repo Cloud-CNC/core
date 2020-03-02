@@ -68,9 +68,6 @@ module.exports = () =>
     expect(res).to.be.json;
 
     expect(res.body).to.haveOwnProperty('controller');
-    expect(res.body.controller).to.haveOwnProperty('_id');
-    expect(res.body.controller).to.haveOwnProperty('name', 'abc');
-    expect(res.body.controller).to.haveOwnProperty('key');
     expect(res.body).to.haveOwnProperty('name', 'abc');
     expect(res.body).to.deep.haveOwnProperty('tags', ['def', 'ghi']);
     expect(res.body).to.haveOwnProperty('length', 1);
@@ -90,9 +87,6 @@ module.exports = () =>
     expect(res.body).to.have.length(1);
 
     expect(res.body[0]).to.haveOwnProperty('controller');
-    expect(res.body[0].controller).to.haveOwnProperty('_id');
-    expect(res.body[0].controller).to.haveOwnProperty('name', 'abc');
-    expect(res.body[0].controller).to.haveOwnProperty('key');
     expect(res.body[0]).to.haveOwnProperty('name', 'abc');
     expect(res.body[0]).to.deep.haveOwnProperty('tags', ['def', 'ghi']);
     expect(res.body[0]).to.haveOwnProperty('length', 1);
@@ -116,9 +110,6 @@ module.exports = () =>
 
     const doc = await (await model.findOne()).populate('controller').execPopulate();
     expect(doc._doc).to.haveOwnProperty('controller');
-    expect(doc._doc.controller._doc).to.haveOwnProperty('_id');
-    expect(doc._doc.controller._doc).to.haveOwnProperty('name', 'abc');
-    expect(doc._doc.controller._doc).to.haveOwnProperty('key');
     expect(doc._doc).to.haveOwnProperty('name', 'rst');
     expect(doc._doc).to.deep.haveOwnProperty('tags', ['uvw', 'xyz']);
     expect(doc._doc).to.haveOwnProperty('length', 10);

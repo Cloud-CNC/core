@@ -35,6 +35,7 @@ module.exports = () =>
       hash: '$argon2id$v=19$m=65536,t=3,p=12$dMaFGvt1Bq3utN1FSQS3Ag$PIArM+hQPWCgM1xnUUvIqX8fK03A37mmLuSo7AoyK6I',
       mfa: false
     });
+    
     await account.save();
   });
 
@@ -165,7 +166,7 @@ module.exports = () =>
     expect(res.body).to.eql({
       error: {
         name: 'Disconnected Controller',
-        description: 'The machine you\'re trying to command is attached to a controller that isn\'t connected!'
+        description: 'The machine you\'re trying to contact is attached to a controller that isn\'t connected!'
       }
     });
   });
@@ -180,7 +181,7 @@ module.exports = () =>
     expect(res.body).to.eql({
       error: {
         name: 'Disconnected Controller',
-        description: 'The machine you\'re trying to execute a file on is attached to a controller that isn\'t connected!'
+        description: 'The machine you\'re trying to contact is attached to a controller that isn\'t connected!'
       }
     });
   });

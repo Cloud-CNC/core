@@ -58,7 +58,7 @@ module.exports = {
       return res.status(409).json({
         error: {
           name: 'Child Machines',
-          description: 'The controller you\'re attempting to remove still owns machine(s). Please update or remove them before retrying.'
+          description: 'The controller you\'re attempting to remove still owns machine(s). Please update or remove them before retrying!'
         }
       });
     }
