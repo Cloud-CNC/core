@@ -29,8 +29,7 @@ router.use(helmet.contentSecurityPolicy({
     workerSrc: ['\'self\'', '\'unsafe-inline\''],
     fontSrc: ['\'self\'', 'data:'],
     scriptSrc: ['\'self\'', '\'unsafe-inline\'', 'storage.googleapis.com']
-  },
-  setAllHeaders: true
+  }
 }));
 
 router.use(helmet.permittedCrossDomainPolicies());

@@ -32,9 +32,8 @@ module.exports = () =>
   it('should use CSP', () =>
   {
     const csp = 'connect-src \'self\'; default-src \'self\'; style-src \'self\' \'unsafe-inline\'; worker-src \'self\' \'unsafe-inline\'; font-src \'self\' data:; script-src \'self\' \'unsafe-inline\' storage.googleapis.com';
-    expect(headers).to.haveOwnProperty('content-security-policy', csp);
-    expect(headers).to.haveOwnProperty('x-content-security-policy', csp);
-    expect(headers).to.haveOwnProperty('x-webkit-csp', csp);
+    
+    expect(csp).to.be.oneOf([headers['content-security-policy'], headers['x-content-security-policy'], headers['x-webkit-csp']]);
   });
 
   it('shouldn\'t allow mime sniffing', () =>
