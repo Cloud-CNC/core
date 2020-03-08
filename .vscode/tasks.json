@@ -9,6 +9,11 @@
       "type": "shell",
       "command": "mkdir logs; mongod --config ./mongo.conf",
       "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": []
     }
   ]
 }

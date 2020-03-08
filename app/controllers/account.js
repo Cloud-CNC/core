@@ -22,6 +22,15 @@ module.exports = {
   },
 
   /**
+   * Get all roles
+   * @returns {Array<String>}
+   */
+  roles: () =>
+  {
+    return {roles: Object.keys(core.acl.roles)};
+  },
+
+  /**
    * Create an account
    * @param {String} username Account username
    * @param {String} password Account password
@@ -41,7 +50,7 @@ module.exports = {
       username,
       hash: await hash(password),
       mfa,
-      secret: secret.base32,
+      secret: mfa ? secret.base32 : null,
       role
     });
 
@@ -84,10 +93,11 @@ module.exports = {
   /**
    * Update an account by its ID
    * @param {String} _id Account ID
+   * @param {String} source Source account ID (To check for permission escalation)
    * @param {Object} data Data to update account with
    * @returns {Promise<{otpauth?: String}>} Optionally contains `otpauth` (URL) if mfa was requested
    */
-  update: async (_id, data) =>
+  update: async (_id, source, data) =>
   {
     let secret = {};
 
@@ -98,7 +108,7 @@ module.exports = {
         name: 'Cloud CNC',
         length: core.otpSecretLength
       });
-      
+
       data.secret = secret.base32;
     }
     //Erase secret of MFA no longer needed
@@ -107,10 +117,33 @@ module.exports = {
       data.secret = null;
     }
 
+    //Hash password
+    if (data.password != null)
+    {
+      data.hash = await hash(data.password);
+      delete data.password;
+    }
+
+    //Prevent privilege escalation
+    if (data.role != null)
+    {
+      const sourceRole = (await model.findById(source)).role;
+      const roles = Object.keys(core.acl.roles);
+      if (!roles.includes(data.role) || roles.indexOf(data.role) < roles.indexOf(sourceRole))
+      {
+        return {
+          error: {
+            name: 'Privilege Escalation',
+            description: 'You\'re trying to increase the permissions of your own account!'
+          }
+        };
+      }
+    }
+
     //Update
     await model.findByIdAndUpdate(_id, data);
 
-    return secret.otpauth_url;
+    return {otpauth: secret.otpauth_url};
   },
 
   /**

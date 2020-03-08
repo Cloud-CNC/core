@@ -7,6 +7,7 @@ const app = require('../../../../app.js');
 const chai = require('chai');
 const expect = require('chai').expect;
 const model = require('../../../models/account.js');
+const {core} = require('../../../../config');
 
 //Agent
 const agent = chai.request.agent(app);
@@ -26,6 +27,20 @@ module.exports = () =>
         username: 'abc',
         password: 'Testingpassword123!'
       });
+  });
+
+  it('should get all roles', async () =>
+  {
+    const res = await agent
+      .get('/api/accounts/roles')
+      .send();
+
+    expect(res).to.have.status(200);
+    expect(res).to.be.json;
+
+    expect(res.body).to.be.eql({
+      roles: Object.keys(core.acl.roles)
+    });
   });
 
   it('should create an account', async () =>

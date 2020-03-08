@@ -25,3 +25,6 @@ EXPOSE 443
 
 #Run server
 CMD ["npm", "run", "start:docker"]
+
+#Health check
+HEALTHCHECK --interval=30s --timeout=5s CMD [ "node", "app/lib/healthcheck" ]

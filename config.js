@@ -27,6 +27,7 @@ module.exports = {
         },
         user: {
           rules: [
+            'accounts:roles',
             'accounts:impersonate:stop',
             'accounts:get',
             'accounts:update',
@@ -70,10 +71,10 @@ module.exports = {
     //Rate limit maximum requests (Per window)
     rateLimitRequests: 100,
 
-    //OTP (MFA) window forgiveness (30S intervals)
+    //[ADVANCED USERS ONLY] OTP (MFA) window forgiveness (30S intervals)
     otpWindow: 1,
 
-    //Length of OTP (MFA) secret
+    //[ADVANCED USERS ONLY] Length of OTP (MFA) secret
     otpSecretLength: 32,
 
     //Logging directory (Only used in production)
@@ -86,7 +87,7 @@ module.exports = {
     //Websocket auto-remove delay (MS)
     delay: 3000,
 
-    //Controller key length
+    //[ADVANCED USERS ONLY] Controller key length
     keyLength: 512
   },
   data: {
@@ -96,7 +97,7 @@ module.exports = {
     //Filesystem (Used for storing user files)
     filesystem: './files/'
   },
-  //RegEx Filters (Used for frontend and backend validation)
+  //[ADVANCED USERS ONLY] RegEx Filters (Used for backend validation, please update frontend with identical values)
   filters: {
     boolean: /^true|false$/,
     description: /^(.|\s){0,1000}$/,
@@ -104,7 +105,6 @@ module.exports = {
     name: /^.{3,30}$/,
     otp: /^\d{6}$/,
     password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-z0-9]).{12,256}$/,
-    role: /^admin|user$/,
     status: /^0|1$/,
     tags: /^.{0,200}$/,
     username: /^.{3,30}$/

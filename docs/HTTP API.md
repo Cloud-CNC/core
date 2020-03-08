@@ -39,40 +39,41 @@ All errors will be JSON encoded and in the following format:
 *PATCH requests accept **1** or more parameters. If the intended account is the currently logged in account, use `own` as the `:id` parameter*
 
 Family | Method | Route | Route Parameters | Body | Response | Description
---- | --- | --- | --- | --- | --- | --- | ---
-Sessions | POST | /sessions/login | N/A | `{"username": <string>, "password": <string>}` | `{"valid": <boolean>, "mfa": <boolean>}` | Logs user in. If user has MFA enabled, they'll need to POST to `/sessions/mfa` to complete the login process.
-Sessions | POST | /sessions/mfa | N/A | `{"otp": <string>}` | `{"valid": <boolean>}` | Logs user in. Only required if user has MFA enabled.
+--- | --- | --- | --- | --- | --- | ---
+Sessions | POST | /sessions/login | N/A | `{"username": String, "password": String}` | `{"valid": Boolean, "mfa": Boolean}` | Logs user in. If user has MFA enabled, they'll need to POST to `/sessions/mfa` to complete the login process.
+Sessions | POST | /sessions/mfa | N/A | `{"otp": String}` | `{"valid": Boolean}` | Logs user in. Only required if user has MFA enabled.
 Sessions | POST | /sessions/logout | N/A | N/A | N/A | Logs user out.
 | | | | | | |
-Accounts | GET | /accounts/all | N/A | N/A | `{"accounts": <array/account>}` | Gets all accounts.
-Accounts | POST | /accounts | N/A | `{"role": <string/role>, "username": <string>, "password": <string>}, "mfa": <boolean>` | `{"id": <string>, "otpauth": <string>`<sup>1</sup>`}` | Creates an account.
-Accounts | POST | /accounts/:id/impersonate | `id: <string>` | `{"enabled": <boolean>}` | N/A | Impersonates account, all actions performed by user will be performed on behalf of the target account until the user stops impersonation.
-Accounts | GET | /accounts/:id | `id: <string>` | N/A | `{"account": {"id": <string>, "role": <string/role>, "username": <string>}}` | Gets an account's information.
-Accounts | PATCH | /accounts/:id | `id: <string>` | `{"role": <string/role>, "username": <string>, "password": <string>}, "mfa": <boolean>}` | `{"otpauth": <string>`<sup>1</sup>`}` | Updates part(s) of an account.
-Accounts | DELETE | /accounts/:id | `id: <string>` | N/A | N/A | Deletes an account.
+Accounts | GET | /accounts/all | N/A | N/A | `{"accounts": Account[]}` | Gets all accounts.
+Accounts | GET | /accounts/roles | N/A | N/A | `{"roles": String[]}` | Get all roles.
+Accounts | POST | /accounts | N/A | `{"role": String, "username": String, "password": String}, "mfa": Boolean` | `{"id": String, "otpauth": String`<sup>1</sup>`}` | Creates an account.
+Accounts | POST | /accounts/:id/impersonate | `id: String` | `{"enabled": Boolean}` | N/A | Impersonates account, all actions performed by user will be performed on behalf of the target account until the user stops impersonation.
+Accounts | GET | /accounts/:id | `id: String` | N/A | `{"account": {"id": String, "role": String, "username": String}}` | Gets an account's information.
+Accounts | PATCH | /accounts/:id | `id: String` | `{"role": String, "username": String, "password": String}, "mfa": Boolean}` | `{"otpauth": String`<sup>1</sup>`}` | Updates part(s) of an account.
+Accounts | DELETE | /accounts/:id | `id: String` | N/A | N/A | Deletes an account.
 | | | | | | |
-Files | GET | /files/all | N/A | N/A | `{"files": <array/file>}` | Gets all files for a user. *(The raw attribute will not be present)*
-Files | POST | /files | N/A | `{"name": <string>, "description": <string>, "raw": <string/GCODE>}` | `{"id": <string>}` | Creates a file.
-Files | GET | /files/:id | `id: <string>` | N/A | `{"file": {"id": <string>, "status": <number>,	"owner": <string>, "name": <string>, "description": <string>}, "raw": <string/GCODE>}` | Gets a file.
-Files | PATCH | /files/:id | `id: <string>` | `{"name": <string>, "description": <string>` | N/A | Updates part(s) of a file.
-Files | DELETE | /files/:id | `id: <string>` | N/A | N/A | Deletes a file.
+Files | GET | /files/all | N/A | N/A | `{"files": File[]}` | Gets all files for a user. *(The raw attribute will not be present)*
+Files | POST | /files | N/A | `{"name": String, "description": String, "raw": String}` | `{"id": String}` | Creates a file.
+Files | GET | /files/:id | `id: String` | N/A | `{"file": {"id": String, "status": Number,	"owner": String, "name": String, "description": String}, "raw": String}` | Gets a file.
+Files | PATCH | /files/:id | `id: String` | `{"name": String, "description": String` | N/A | Updates part(s) of a file.
+Files | DELETE | /files/:id | `id: String` | N/A | N/A | Deletes a file.
 | | | | | | |
-Trash | GET | /trash/all | N/A | N/A | `{"files": <array/file>}` | Gets all trashed files for a user. *(The raw attribute will not be present)*
-Trash | PUT | /trash/:id | `id: <string>` | N/A | N/A | Recovers a trashed file.
-Trash | DELETE | /trash/:id | `id: <string>` | N/A | N/A | Deletes a file permanently.
+Trash | GET | /trash/all | N/A | N/A | `{"files": File[]}` | Gets all trashed files for a user. *(The raw attribute will not be present)*
+Trash | PUT | /trash/:id | `id: String` | N/A | N/A | Recovers a trashed file.
+Trash | DELETE | /trash/:id | `id: String` | N/A | N/A | Deletes a file permanently.
 | | | | | | |
-Controller | GET | /controllers/all | N/A | N/A | `{"controllers": <array/controller>}` | Get all controllers.
-Controller | POST | /controllers | N/A | `{"name": <string>}` | `{"id": <string>, "key": <string>}` | Creates a controller.
-Controller | GET | /controllers/:id | `id: <string>` | N/A | `{"controller": {"id": <string>, "name": <string>, "key": <string/key>}` | Gets a controller's information.
-Controller | PATCH | /controllers/:id | `id: <string>` | `{"name": <string>}` | N/A | Updates part(s) of a controller.
-Controller | DELETE | /controllers/:id | `id: <string>` | N/A | N/A | Deletes a controller.
+Controller | GET | /controllers/all | N/A | N/A | `{"controllers": Controller[]}` | Get all controllers.
+Controller | POST | /controllers | N/A | `{"name": String}` | `{"id": String, "key": String}` | Creates a controller.
+Controller | GET | /controllers/:id | `id: String` | N/A | `{"controller": {"id": String, "name": String, "key": String}` | Gets a controller's information.
+Controller | PATCH | /controllers/:id | `id: String` | `{"name": String}` | N/A | Updates part(s) of a controller.
+Controller | DELETE | /controllers/:id | `id: String` | N/A | N/A | Deletes a controller.
 | | | | | | |
-Machines | GET | /machines/all | N/A | N/A | `{"machines": <array/machine>}` | Get all machines.
-Machines | POST | /machines | N/A | `{"controller": <string>, "name": <string>, "tags": <string>, "length": <string>, "width": <string>, "height": <string>}` |  `{"id": <string>}` | Creates a machine.
-Machines | GET | /machines/:id | `id: <string>` | `{"machine": {"id": <string>, "controller": <string>, "name": <string>, "tags": <string>, "length: <number>, "width": <number>, "height": <number>}}` | Public | Gets a machines's information.
-Machines | POST | /machines/:id/command | `id: <string>` | `{"command": <string>}` | `{"response": <string>}` | Sends a *small* command to a machine.
-Machines | POST | /machines/:id/execute | `id: <string>` | `{"file": <string>}` | N/A | Start executing the specified file on the specified machine.
-Machines | PATCH | /machines/:id | `id: <string>` | `{"controller": <string>, "name": <string>, "tags": <string>, "length": <string>, "width": <string>, "height": <string>}` | N/A | Updates a machine.
-Machines | DELETE | /machines/:id | `id: <string>` | N/A | N/A | Deletes a machine.
+Machines | GET | /machines/all | N/A | N/A | `{"machines": Machine[]}` | Get all machines.
+Machines | POST | /machines | N/A | `{"controller": String, "name": String, "tags": String, "length": String, "width": String, "height": String}` |  `{"id": String}` | Creates a machine.
+Machines | GET | /machines/:id | `id: String` | `{"machine": {"id": String, "controller": String, "name": String, "tags": String, "length: Number, "width": Number, "height": Number}}` | Public | Gets a machines's information.
+Machines | POST | /machines/:id/command | `id: String` | `{"command": String}` | `{"response": String}` | Sends a *small* command to a machine.
+Machines | POST | /machines/:id/execute | `id: String` | `{"file": String}` | N/A | Start executing the specified file on the specified machine.
+Machines | PATCH | /machines/:id | `id: String` | `{"controller": String, "name": String, "tags": String, "length": String, "width": String, "height": String}` | N/A | Updates a machine.
+Machines | DELETE | /machines/:id | `id: String` | N/A | N/A | Deletes a machine.
 
 1. Only present if the account has MFA enabled

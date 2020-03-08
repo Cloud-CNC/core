@@ -8,7 +8,7 @@ const model = require('../models/account');
 const mongoose = require('mongoose');
 const permission = require('../middleware/permission');
 const router = require('express').Router();
-const {filters} = require('../../config');
+const {core, filters} = require('../../config');
 const {onePlus, body} = require('../middleware/validator');
 
 //Get target account
@@ -45,13 +45,21 @@ router.get('/all',
     return res.json(await controller.all());
   });
 
+//Get all roles
+router.get('/roles',
+  permission('accounts:roles'),
+  (req, res) =>
+  {
+    return res.json(controller.roles());
+  });
+
 //Create an account
 router.post('/',
   permission('accounts:create'),
   body('username', filters.username),
   body('password', filters.password),
   body('mfa', filters.boolean),
-  body('role', filters.role),
+  body('role', value => Object.keys(core.acl.roles).includes(value)),
   async (req, res) =>
   {
     return res.json(await controller.create(req.body.username, req.body.password, req.body.mfa, req.body.role));
@@ -90,11 +98,11 @@ router.patch('/:id',
     username: filters.username,
     password: filters.password,
     mfa: filters.boolean,
-    role: filters.role
+    role: value => Object.keys(core.acl.roles).includes(value)
   }),
   async (req, res) =>
   {
-    return res.json(await controller.update(req.account, req.data));
+    return res.json(await controller.update(req.account, req.session.user, req.data));
   });
 
 //Remove an account

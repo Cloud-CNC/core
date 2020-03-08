@@ -8,13 +8,16 @@ const express = require('express');
 const fs = require('fs');
 const https = require('https');
 const middleware = require('./app/middleware/index.js');
-const mongo = require('./app/lib/mongo.js');
 const routes = require('./app/routes/index.js');
 const websocket = require('./app/websocket/index.js');
 const ws = require('ws');
+let mongo = require('./app/lib/mongo.js');
 
 //Bootstrap mongo client
-mongo();
+mongo().then(mongoose =>
+{
+  mongo = mongoose;
+});
 
 //Express
 const app = express();
@@ -24,7 +27,7 @@ const server = https.createServer({
 }, app).listen(config.core.port);
 
 //Websocket
-new ws.Server({
+const wss = new ws.Server({
   server: server,
   verifyClient: websocket.authenticate
 }).on('connection', websocket.connection);
@@ -37,6 +40,20 @@ app.disable('x-powered-by');
 
 //Routes
 app.use(routes);
+
+//Shutdown
+const shutdown = async () =>
+{
+  //Close servers
+  wss.close();
+  server.close();
+
+  //Close Mongo
+  mongo.disconnect();
+};
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
 
 //Export
 module.exports = server;

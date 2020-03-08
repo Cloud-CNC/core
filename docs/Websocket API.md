@@ -23,5 +23,5 @@ All errors will be JSON encoded and in the following format:
 
 Initiator | Body | Response | Description
 --- | --- | --- | ---
-API Server | `{"_id": <string>, "event": "command", "machine": <string>, "command": <string>}` | `{"_id": <string>, "event": "response:command", "machine": <string>, "response": <string>}` | Sends a *small* command to the controller which forwards it to the specified machine.
-API Server | `{"_id": <string>, "event": "execute", "machine": <string>, "file": <string>}` | `{"_id": <string>, "event": "response:execute", "machine": <string>, "success": <boolean>}` | Sends a file to the controller which forwards it to the designated machine.
+API Server | `{"_id": String, "event": "command", "machine": String, "command": String}` | `{"_id": String, "event": "response:command", "machine": String, "response": String}` | Sends a *small* command to the controller which forwards it to the specified machine.
+API Server | `{"_id": String, "event": "execute", "machine": String, "file": String}` | `{"_id": String, "event": "response:execute", "machine": String, "success": Boolean}` | Sends a file to the controller which forwards it to the designated machine.
