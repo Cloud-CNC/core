@@ -10,6 +10,9 @@ files
 # Logs
 logs
 
+# Config
+config.js
+
 # Istanbul
 .nyc_output
 coverage
