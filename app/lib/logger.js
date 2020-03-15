@@ -26,7 +26,7 @@ else if (process.env.NODE_ENV == 'testing')
     transport.silent = true;
   });
 }
-//Development or Docker: log to console
+//Development or docker: log to console
 else
 {
   logger.format = winston.format.combine(

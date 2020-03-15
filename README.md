@@ -10,14 +10,11 @@ This repository contains all files for running a core server instance. The core 
 ## Development
 
 ### Environment Setup
-1. Install dependencies via running `npm i`
-2. Setup a [Mongo](https://www.mongodb.com) database (Either on the same server of a different one)
-3. Install Node Gyp (Using [these](https://github.com/nodejs/node-gyp#installation) instructions)
-4. Generate some salt for sessions (>512 bytes long) and place in a folder named `crypto` at the repository's root
-5. Generate an SSL certificate and place in the `crypto` folder (Change the certificate and key name in the [config file](config.js))
-6. Modify the [config file](config.js) to suit you needs
+1. Setup a [Mongo](https://www.mongodb.com) database
+2. Install Node Gyp (Using [these](https://github.com/nodejs/node-gyp#installation) instructions)
+3. Install dependencies via running `npm i`
+4. Run `npm run config` to generate some salt, a certificate, and a valid config file
 7. Run `npm start` to start the web server
-8. If you need any additional help, feel free to ask in the Discord server 
 
 ### Recommended IDE Extensions
 Name | VS Code | Atom
@@ -31,6 +28,7 @@ Help with writing documentation | [GitHub Markdown Preview](https://marketplace.
 ### NPM Scripts
 Name | Description
 --- | ---
+`config` | Generate some salt, a certificate, and a valid config file
 `coverage` | Generate test coverage using Istanbul
 `start` | Run server in production mode (PWA and file logging)
 `start:development` | Run server in development mode (No PWA)

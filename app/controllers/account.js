@@ -43,7 +43,7 @@ module.exports = {
     //MFA
     const secret = mfa ? speakeasy.generateSecret({
       name: 'Cloud CNC',
-      length: core.otpSecretLength
+      length: 64
     }) : null;
 
     const doc = new model({
@@ -106,7 +106,7 @@ module.exports = {
     {
       secret = speakeasy.generateSecret({
         name: 'Cloud CNC',
-        length: core.otpSecretLength
+        length: 64
       });
 
       data.secret = secret.base32;

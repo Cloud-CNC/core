@@ -5,7 +5,6 @@
 const argon2 = require('argon2');
 const model = require('../models/account');
 const speakeasy = require('speakeasy');
-const {core} = require('../../config');
 
 //Export
 module.exports = {
@@ -63,7 +62,7 @@ module.exports = {
       encoding: 'base32',
       secret: user.secret,
       token: otp,
-      window: core.otpWindow
+      window: 1
     });
 
     //Finish authenticating user
