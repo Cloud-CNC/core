@@ -22,12 +22,12 @@
     "express": "^4.17.1",
     "express-rate-limit": "^5.1.1",
     "express-sanitizer": "^1.0.5",
-    "express-session": "^1.17.0",
-    "helmet": "^3.21.3",
+    "express-session": "^1.17.1",
+    "helmet": "^3.22.0",
     "ip": "^1.1.5",
-    "mongoose": "^5.9.4",
+    "mongoose": "^5.9.9",
     "mongoose-id-validator": "^0.5.4",
-    "prompts": "^2.3.1",
+    "prompts": "^2.3.2",
     "rate-limit-mongo": "^2.1.0",
     "selfsigned": "^1.10.7",
     "speakeasy": "^2.0.0",
@@ -40,8 +40,8 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "eslint": "^6.8.0",
-    "mocha": "^6.2.2",
-    "nyc": "^15.0.0"
+    "mocha": "^6.2.3",
+    "nyc": "^15.0.1"
   },
   "browserslist": [
     "last 1 Chrome version"
