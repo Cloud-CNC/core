@@ -16,7 +16,7 @@ let socket;
 module.exports = () =>
 {
   //Get domain
-  const domain = config.get('core.server.domain')
+  const domain = config.get('core.server.domain');
 
   it('should deny controller for missing key', done =>
   {
