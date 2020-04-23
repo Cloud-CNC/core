@@ -3,7 +3,7 @@
  */
 
 //Imports
-const {acl} = require('../../config.js').core;
+const config = require('config');
 
 //Export
 module.exports = name => async (req, res, next) =>
@@ -27,7 +27,7 @@ module.exports = name => async (req, res, next) =>
 function getPermissions(role)
 {
   //Get ACL role
-  role = acl.roles[role];
+  role = config.get('core.acl.roles')[role];
 
   const permissions = [];
 

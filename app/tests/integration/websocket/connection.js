@@ -6,7 +6,7 @@
 const accountModel = require('../../../models/account.js');
 const app = require('../../../../app.js');
 const chai = require('chai');
-const config = require('../../../../config.js');
+const config = require('config');
 const expect = require('chai').expect;
 const fileModel = require('../../../models/file.js');
 const fs = require('fs').promises;
@@ -65,7 +65,7 @@ module.exports = () =>
 
     await file.save();
 
-    await fs.writeFile(`${path.join(config.data.filesystem, file._id.toJSON())}.gcode`, ';TEST FILE');
+    await fs.writeFile(`${path.join(config.get('core.data.filesystem'), file._id.toJSON())}.gcode`, ';TEST FILE');
   });
 
   //Login
@@ -83,7 +83,7 @@ module.exports = () =>
   before(done =>
   {
     //Connect
-    socket = new ws(`wss://${config.core.domain}`, {
+    socket = new ws(`wss://${config.get('core.server.domain')}`, {
       headers: {
         _id: process.env.controllerID,
         key: key
@@ -192,7 +192,7 @@ module.exports = () =>
     await account.remove();
     await machine.remove();
     await file.remove();
-    await fs.unlink(`${path.join(config.data.filesystem, file._id.toJSON())}.gcode`);
+    await fs.unlink(`${path.join(config.get('core.data.filesystem'), file._id.toJSON())}.gcode`);
     await agent
       .post('/api/sessions/logout')
       .send();

@@ -3,7 +3,7 @@
  */
 
 //Imports
-const config = require('../../config.js');
+const config = require('config');
 const fs = require('fs');
 const model = require('../models/account.js');
 const router = require('express').Router();
@@ -14,19 +14,19 @@ const store = require('connect-mongodb-session')(session);
 router.use(session({
   name: 'session',
   cookie: {
-    domain: config.core.domain,
+    domain: config.get('core.server.domain'),
     httpOnly: true,
-    maxAge: config.core.expire,
+    maxAge: config.get('core.server.sessionExpire'),
     sameSite: true,
     secure: true
   },
   store: new store({
-    uri: config.data.database,
+    uri: config.get('core.data.database'),
     collection: 'sessions'
   }),
   resave: false,
   saveUninitialized: false,
-  secret: fs.readFileSync(config.core.secret, 'utf8'),
+  secret: fs.readFileSync(config.get('core.cryptography.secret'), 'utf8'),
   unset: 'destroy'
 }));
 

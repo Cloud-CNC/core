@@ -6,7 +6,6 @@
 const constants = require('fs').constants;
 const crypto = require('crypto');
 const fs = require('fs').promises;
-const hash = require('../lib/hash');
 const ip = require('ip');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -68,6 +67,13 @@ const safeWrite = async (path, data) =>
   }
 };
 
+const onCancel = () =>
+{
+  fail('User canceled setup!');
+  prompts.
+  process.exit();
+};
+
 const main = async () =>
 {
   //Ensure crypto directory exists
@@ -88,7 +94,7 @@ const main = async () =>
   }
 
   //Read file
-  let config = await fs.readFile(path.resolve(__dirname, './config.js'), 'utf8');
+  let config = await fs.readFile(path.resolve(__dirname, './local.js'), 'utf8');
 
   //Prompt user
   const {mongoUri} = await prompts({
@@ -97,22 +103,31 @@ const main = async () =>
     message: 'MongoDB URI',
     initial: 'mongodb://localhost:27017/cloud-cnc',
     validate: value => /^mongodb:\/\/.+:\d+.+$/.test(value) || 'Must be a valid URI!'
-  });
+  }, {onCancel});
 
-  const {useHttps} = await prompts({
+  const {secretDirectory} = await prompts({
+    type: 'text',
+    name: 'secretDirectory',
+    message: 'Session secret directory',
+    initial: './crypto/secret.txt',
+    validate: value => /^(.+)\/([^/]+)$/.test(value) || 'Must be a valid directory!'
+  }, {onCancel});
+
+  const {tls} = await prompts({
     type: 'toggle',
-    name: 'useHttps',
-    message: 'Use HTTPS',
+    name: 'tls',
+    message: 'Use TLS',
     initial: true
-  });
+  }, {onCancel});
 
   //Edit config
   config = config
     .replace('[MONGO_URI]', mongoUri)
-    .replace('[USE_HTTPS]', useHttps);
+    .replace('[SECRET_DIRECTORY]', secretDirectory)
+    .replace('[TLS]', tls);
 
   //Certificate generation/selection
-  if (useHttps)
+  if (tls)
   {
     //Edit config
     config = config
@@ -123,7 +138,11 @@ const main = async () =>
       name: 'generateCertificate',
       message: 'Generate self-signed certificate',
       initial: true
-    });
+    }, {onCancel});
+
+    //Edit config
+    config = config
+      .replace('[SELF_SIGNED]', generateCertificate);
 
     //Generate self-signed certificate
     if (generateCertificate)
@@ -134,7 +153,7 @@ const main = async () =>
         name: 'address',
         message: 'Domain/IP',
         validate: value => (value && (ip.isV4Format(value) || /^[A-z0-9-]{1,63}\.[A-z0-9]{2,6}$/.test(value))) || 'Must be a valid domain or IP address!'
-      });
+      }, {onCancel});
 
       //Edit config
       config = config
@@ -179,18 +198,18 @@ const main = async () =>
         {
           type: 'text',
           name: 'certificateDirectory',
-          message: 'HTTPS certificate directory',
+          message: 'TLS certificate directory',
           initial: './crypto/cert.cer',
           validate: value => /^(.+)\/([^/]+)$/.test(value) || 'Must be a valid directory!'
         },
         {
           type: 'text',
           name: 'keyDirectory',
-          message: 'HTTPS key directory',
+          message: 'TLS key directory',
           initial: './crypto/key.pem',
           validate: value => /^(.+)\/([^/]+)$/.test(value) || 'Must be a valid directory!'
         }
-      ]);
+      ], {onCancel});
 
       //Edit config
       config = config
@@ -208,7 +227,7 @@ const main = async () =>
   }
 
   //Save config
-  await safeWrite(path.resolve(__dirname, '../../config.js'), config);
+  await safeWrite(path.resolve(__dirname, '../../config/local.js'), config);
   success('Saved modified config!');
 
   //Generate salt
@@ -221,7 +240,7 @@ const main = async () =>
     name: 'createAdmin',
     message: 'Create root admin',
     initial: true
-  });
+  }, {onCancel});
 
   //Create root admin
   if (createAdmin)
@@ -249,7 +268,7 @@ const main = async () =>
           message: 'Confirm password',
           validate: value => /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-z0-9]).{12,256}$/.test(value) || 'Must be between 12 and 256 characters, contain one upper and one lower case letter, a number, and a symbol!'
         }
-      ]);
+      ], {onCancel});
 
       if (password != confirmPassword)
       {
@@ -281,9 +300,9 @@ const main = async () =>
   //Start information
   console.log(`
 ${`Start Cloud CNC by running "${'npm start'.underline}".`.bgWhite.black}
-${'Make sure your MongoDB is running first!'.bgWhite.black}
+${'Make sure your MongoDB instance is running first!'.bgWhite.black}
 
-You can re-run this command at any time by running "${'npm run config'.underline}" or manually edit "${'config.js'.underline}".
+You can re-run this command at any time by running "${'npm run config'.underline}" or manually edit "${'config/local.js'.underline}".
 
 Thanks for installing Cloud CNC. You can find the docs at "${'https://cloud-cnc.github.io'.underline}".
 `);

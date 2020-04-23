@@ -5,9 +5,9 @@
 //Imports
 const app = require('../../../../app.js');
 const chai = require('chai');
+const config = require('config');
 const expect = require('chai').expect;
 const model = require('../../../models/account.js');
-const {core} = require('../../../../config');
 
 //Agent
 const agent = chai.request.agent(app);
@@ -39,7 +39,7 @@ module.exports = () =>
     expect(res).to.be.json;
 
     expect(res.body).to.be.eql({
-      roles: Object.keys(core.acl.roles)
+      roles: Object.keys(config.get('core.acl.roles'))
     });
   });
 

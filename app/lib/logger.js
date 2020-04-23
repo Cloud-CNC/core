@@ -3,7 +3,7 @@
  */
 
 //Imports
-const config = require('../../config.js');
+const config = require('config');
 const winston = require('winston');
 require('winston-daily-rotate-file');
 
@@ -15,7 +15,10 @@ if (process.env.NODE_ENV == 'production')
   logger.format = winston.format.combine(
     winston.format.timestamp(),
     winston.format.json());
-  logger.add(new (winston.transports.DailyRotateFile)({datePattern: 'HH-MM-DD-YYYY', filename: config.core.logs + '%DATE%.txt', maxSize: '1g'}));
+  logger.add(new winston.transports.DailyRotateFile({
+    datePattern: 'HH-MM-DD-YYYY',
+    filename: config.get('core.data.logs') + '%DATE%.txt',
+    maxSize: '100m'}));
 }
 //Testing: don't log
 else if (process.env.NODE_ENV == 'testing')

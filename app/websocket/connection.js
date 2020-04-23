@@ -5,7 +5,7 @@
 //Imports
 const logger = require('../lib/logger.js');
 const store = require('./store.js');
-const {delay} = require('../../config.js').controller;
+const config = require('config');
 
 /**
 * Connection event handler
@@ -32,7 +32,7 @@ module.exports = (socket, req) =>
         logger.warn(`Link with controller ${id} broke!`);
       }
     });
-  }, delay);
+  }, config.get('controller.timeout'));
 
   logger.info(`Controller ${id} successfully bound!`);
 

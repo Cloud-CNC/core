@@ -3,12 +3,15 @@
  */
 
 //Imports
+const config = require('config');
 const https = require('https');
 const syswideCA = require('syswide-cas');
-const {core} = require('../../config');
 
 //Enable self signed certificate
-syswideCA.addCAs(core.cert);
+if (config.get('core.cryptography.selfSigned'))
+{
+  syswideCA.addCAs(config.get('core.cryptography.cert'));
+}
 
 //Test
 https.get({host: '127.0.0.1', port: 443, timeout: 10}, res =>

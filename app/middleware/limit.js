@@ -3,15 +3,15 @@
  */
 
 //Imports
+const config = require('config');
 const rateLimit = require('express-rate-limit');
 const rateLimitMongo = require('rate-limit-mongo');
 const router = require('express').Router();
-const {core, data} = require('../../config.js');
 
 //Middleware
 router.use(rateLimit({
-  windowMs: core.rateLimitWindow,
-  max: core.rateLimitRequests,
+  windowMs: config.get('core.server.rateLimitWindow'),
+  max: config.get('core.server.rateLimitRequests'),
   message: {
     error: {
       name: 'Rate Limit',
@@ -20,7 +20,7 @@ router.use(rateLimit({
   },
   store: new rateLimitMongo({
     collectionName: 'limits',
-    uri: data.database
+    uri: config.get('core.data.database')
   })
 }));
 

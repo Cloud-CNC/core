@@ -5,8 +5,8 @@
 //Imports
 const app = require('../../../../app.js');
 const chai = require('chai');
+const config = require('config');
 const expect = require('chai').expect;
-const {core} = require('../../../../config.js');
 
 //Agent
 const agent = chai.request.agent(app);
@@ -26,7 +26,7 @@ module.exports = () =>
 
   it('should use CORS', () =>
   {
-    expect(headers).to.haveOwnProperty('access-control-allow-origin', `https://${core.domain}`);
+    expect(headers).to.haveOwnProperty('access-control-allow-origin', `https://${config.get('core.server.domain')}`);
   });
 
   it('should use CSP', () =>

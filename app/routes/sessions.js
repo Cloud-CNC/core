@@ -3,10 +3,10 @@
  */
 
 //Imports
-const controller = require('../controllers/session.js');
-const router = require('express').Router();
 const {body} = require('../middleware/validator');
-const {filters} = require('../../config');
+const controller = require('../controllers/session.js');
+const filters = require('../lib/filters');
+const router = require('express').Router();
 
 //Log user in
 router.post('/login',

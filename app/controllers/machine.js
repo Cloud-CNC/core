@@ -3,7 +3,7 @@
  */
 
 //Imports
-const config = require('../../config');
+const config = require('config');
 const controller = require('../models/controller');
 const file = require('../models/file');
 const fs = require('fs').promises;
@@ -103,7 +103,7 @@ module.exports = {
     else
     {
       //Get file
-      const raw = await fs.readFile(path.join(config.data.filesystem, _file) + '.gcode', 'utf8');
+      const raw = await fs.readFile(path.join(config.get('core.data.filesystem'), _file) + '.gcode', 'utf8');
 
       //Send command
       try

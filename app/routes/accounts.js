@@ -3,13 +3,14 @@
  */
 
 //Imports
+const {onePlus, body} = require('../middleware/validator');
+const config = require('config');
 const controller = require('../controllers/account');
+const filters = require('../lib/filters');
 const model = require('../models/account');
 const mongoose = require('mongoose');
 const permission = require('../middleware/permission');
 const router = require('express').Router();
-const {core, filters} = require('../../config');
-const {onePlus, body} = require('../middleware/validator');
 
 //Get target account
 router.param('id',
@@ -59,7 +60,7 @@ router.post('/',
   body('username', filters.username),
   body('password', filters.password),
   body('mfa', filters.boolean),
-  body('role', value => Object.keys(core.acl.roles).includes(value)),
+  body('role', value => Object.keys(config.get('core.acl.roles')).includes(value)),
   async (req, res) =>
   {
     return res.json(await controller.create(req.body.username, req.body.password, req.body.mfa, req.body.role));
@@ -98,7 +99,7 @@ router.patch('/:id',
     username: filters.username,
     password: filters.password,
     mfa: filters.boolean,
-    role: value => Object.keys(core.acl.roles).includes(value)
+    role: value => Object.keys(config.get('core.acl.roles')).includes(value)
   }),
   async (req, res) =>
   {

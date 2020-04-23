@@ -10,8 +10,10 @@ files
 # Logs
 logs
 
-# Config
-config.js
+# Config files
+config/*
+!config/default.js
+!config/default-development.js
 
 # Istanbul
 .nyc_output

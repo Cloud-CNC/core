@@ -3,11 +3,11 @@
  */
 
 //Imports
+const config = require('config');
 const file = require('../models/file');
 const hash = require('../lib/hash');
 const model = require('../models/account');
 const speakeasy = require('speakeasy');
-const {core} = require('../../config');
 
 //Export
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
    */
   roles: () =>
   {
-    return {roles: Object.keys(core.acl.roles)};
+    return {roles: Object.keys(config.get('core.acl.roles'))};
   },
 
   /**
@@ -128,7 +128,7 @@ module.exports = {
     if (data.role != null)
     {
       const sourceRole = (await model.findById(source)).role;
-      const roles = Object.keys(core.acl.roles);
+      const roles = Object.keys(config.get('core.acl.roles'));
       if (!roles.includes(data.role) || roles.indexOf(data.role) < roles.indexOf(sourceRole))
       {
         return {

@@ -3,14 +3,14 @@
  */
 
 //Imports
+const config = require('config');
 const cors = require('cors');
 const helmet = require('helmet');
 const router = require('express').Router();
-const {core} = require('../../config.js');
 
 //CORS
 router.use(cors({
-  origin: `https://${core.domain}`
+  origin: `https://${config.get('core.server.domain')}`
 }));
 
 //Helmet

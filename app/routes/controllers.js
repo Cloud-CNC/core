@@ -8,7 +8,7 @@ const model = require('../models/controller');
 const mongoose = require('mongoose');
 const permission = require('../middleware/permission');
 const router = require('express').Router();
-const {filters} = require('../../config');
+const filters = require('../lib/filters');
 const {onePlus, body} = require('../middleware/validator');
 
 //Get target controller

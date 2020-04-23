@@ -5,7 +5,7 @@
 //Imports
 const idValidator = require('mongoose-id-validator');
 const mongoose = require('mongoose');
-const {filters} = require('../../config.js');
+const filters = require('../lib/filters');
 
 //Schema
 const schema = new mongoose.Schema({

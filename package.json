@@ -17,6 +17,7 @@
   "dependencies": {
     "argon2": "^0.24.1",
     "colors": "^1.4.0",
+    "config": "^3.3.1",
     "connect-mongodb-session": "^2.3.1",
     "cors": "^2.8.5",
     "cross-env": "^7.0.2",

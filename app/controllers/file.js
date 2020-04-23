@@ -4,7 +4,7 @@
 
 //Imports
 const account = require('../models/account');
-const config = require('../../config');
+const config = require('config');
 const fs = require('fs').promises;
 const model = require('../models/file');
 const path = require('path');
@@ -52,7 +52,7 @@ module.exports = {
       await doc.save();
 
       //Write to disk
-      await fs.writeFile(path.join(config.data.filesystem, doc.id) + '.gcode', raw);
+      await fs.writeFile(path.join(config.get('core.data.filesystem'), doc.id) + '.gcode', raw);
 
       return {_id: doc._id};
     }
@@ -67,7 +67,7 @@ module.exports = {
     const doc = await model.findById(_id, ['name', 'description']);
 
     //Get from disk
-    const raw = await fs.readFile(path.join(config.data.filesystem, _id) + '.gcode', 'utf8');
+    const raw = await fs.readFile(path.join(config.get('core.data.filesystem'), _id) + '.gcode', 'utf8');
 
     return {...doc.toJSON(), raw};
   },
