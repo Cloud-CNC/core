@@ -4,10 +4,13 @@
 [![issues](https://img.shields.io/github/issues/Cloud-CNC/core)](https://github.com/Cloud-CNC/core/issues)
 [![last commit](https://img.shields.io/github/last-commit/Cloud-CNC/core)](https://github.com/Cloud-CNC/core/commits/master)
 
-This repository contains all files for running a core server instance. The core server is typically ran on a VPS.
+## Production
 
+View guides, documentation and more at [cloud-cnc.github.io](https://cloud-cnc.github.io)
 
 ## Development
+
+*Note: This repository contains all files for running a core server instance. The core server is typically ran on a VPS.*
 
 ### Environment Setup
 1. Setup a [Mongo](https://www.mongodb.com) database
