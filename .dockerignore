@@ -13,7 +13,7 @@ logs
 # Config files
 config/*
 !config/default.js
-!config/default-development.js
+!config/development.js
 
 # Istanbul
 .nyc_output
