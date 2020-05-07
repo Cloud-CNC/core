@@ -3,7 +3,6 @@
  */
 
 //Imports
-const config = require('config');
 const expect = require('chai').expect;
 const ws = require('ws');
 
@@ -15,13 +14,10 @@ let socket;
 //Export
 module.exports = () =>
 {
-  //Get domain
-  const domain = config.get('core.server.domain');
-
   it('should deny controller for missing key', done =>
   {
     //Connect
-    socket = new ws(`wss://${domain}`, {
+    socket = new ws('wss://127.0.0.1', {
       headers: {
         _id: process.env.controllerID
       }
@@ -38,7 +34,7 @@ module.exports = () =>
   it('should deny controller for missing ID', done =>
   {
     //Connect
-    socket = new ws(`wss://${domain}`, {
+    socket = new ws('wss://127.0.0.1', {
       headers: {
         key: key1
       }
@@ -55,7 +51,7 @@ module.exports = () =>
   it('should deny controller for invalid key', done =>
   {
     //Connect
-    socket = new ws(`wss://${domain}`, {
+    socket = new ws('wss://127.0.0.1', {
       headers: {
         _id: process.env.controllerID,
         key: key2
@@ -73,7 +69,7 @@ module.exports = () =>
   it('should deny controller for invalid ID', done =>
   {
     //Connect
-    socket = new ws(`wss://${domain}`, {
+    socket = new ws('wss://127.0.0.1', {
       headers: {
         _id: '5e2a7820b815352e8aeb5e53',
         key: key1
@@ -91,7 +87,7 @@ module.exports = () =>
   it('should accept controller for valid key and ID', done =>
   {
     //Connect
-    socket = new ws(`wss://${domain}`, {
+    socket = new ws('wss://127.0.0.1', {
       headers: {
         _id: process.env.controllerID,
         key: key1

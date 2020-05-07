@@ -109,7 +109,7 @@ const main = async () =>
     type: 'text',
     name: 'secretDirectory',
     message: 'Session secret directory',
-    initial: './crypto/secret.txt',
+    initial: './config/secret.txt',
     validate: value => /^(.+)\/([^/]+)$/.test(value) || 'Must be a valid directory!'
   }, {onCancel});
 
@@ -158,8 +158,8 @@ const main = async () =>
       //Edit config
       config = config
         .replace('[DOMAIN]', address)
-        .replace('[CERT_DIRECTORY]', './crypto/cert.cer')
-        .replace('[KEY_DIRECTORY]', './crypto/key.pem');
+        .replace('[CERT_DIRECTORY]', './config/cert.cer')
+        .replace('[KEY_DIRECTORY]', './config/key.pem');
 
       //Create certificate
       const certificate = selfsigned.generate([
@@ -185,8 +185,8 @@ const main = async () =>
       });
 
       //Save certificate
-      await safeWrite(path.resolve(__dirname, '../../crypto/cert.cer'), certificate.cert);
-      await safeWrite(path.resolve(__dirname, '../../crypto/key.pem'), certificate.private);
+      await safeWrite(path.resolve(__dirname, '../../config/cert.cer'), certificate.cert);
+      await safeWrite(path.resolve(__dirname, '../../config/key.pem'), certificate.private);
 
       success('Generated self-signed certificates!');
     }
@@ -199,14 +199,14 @@ const main = async () =>
           type: 'text',
           name: 'certificateDirectory',
           message: 'TLS certificate directory',
-          initial: './crypto/cert.cer',
+          initial: './config/cert.cer',
           validate: value => /^(.+)\/([^/]+)$/.test(value) || 'Must be a valid directory!'
         },
         {
           type: 'text',
           name: 'keyDirectory',
           message: 'TLS key directory',
-          initial: './crypto/key.pem',
+          initial: './config/key.pem',
           validate: value => /^(.+)\/([^/]+)$/.test(value) || 'Must be a valid directory!'
         }
       ], {onCancel});
@@ -231,7 +231,7 @@ const main = async () =>
   success('Saved modified config!');
 
   //Generate salt
-  await safeWrite(path.resolve(__dirname, '../../crypto/secret.txt'), crypto.randomBytes(512).toString('base64'));
+  await safeWrite(path.resolve(__dirname, '../../config/secret.txt'), crypto.randomBytes(512).toString('base64'));
   success('Generated salt for session secrets!');
 
   //Prompt user

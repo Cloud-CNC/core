@@ -26,7 +26,7 @@ module.exports = () =>
 
   it('should use CORS', () =>
   {
-    expect(headers).to.haveOwnProperty('access-control-allow-origin', `https://${config.get('core.server.domain')}`);
+    expect(headers).to.haveOwnProperty('access-control-allow-origin', config.get('core.server.cors').join(','));
   });
 
   it('should use CSP', () =>

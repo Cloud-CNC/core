@@ -60,8 +60,8 @@ module.exports = {
     //Cryptography options
     cryptography: {
       //TLS certificate	and key location (PEM encoded)
-      cert: './crypto/cert.cer',
-      key: './crypto/key.pem',
+      cert: './config/cert.cer',
+      key: './config/key.pem',
 
       //Self signed (Temporarily trust certificate when running healthcheck and tests)
       selfSigned: true,
@@ -70,7 +70,7 @@ module.exports = {
       tls: true,
 
       //Session secret location	(Used to generate session cookies, should be at least 512 bytes long)
-      secret: './crypto/secret.txt',
+      secret: './config/secret.txt',
 
       //[ADVANCED USERS ONLY] Length of OTP/MFA secret (Bytes)	
       otpSecretLength: 32,
@@ -93,8 +93,11 @@ module.exports = {
 
     //TLS/Websocket server options
     server: {
-      //Domain (Used for CORS, sessions, and tests)	
-      domain: '127.0.0.1',
+      //Allowed CORS domains/addresses
+      cors: [
+        'https://127.0.0.1',
+        'https://127.0.0.1:8443'
+      ],
 
       //Listening port	
       port: 443,

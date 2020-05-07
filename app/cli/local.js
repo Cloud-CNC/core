@@ -93,8 +93,9 @@ module.exports = {
 
     //TLS/Websocket server options
     server: {
-      //Domain (Used for CORS, sessions, and tests)	
-      domain: '[DOMAIN]',
+      cors: [
+        'https://[DOMAIN]'
+      ],
 
       //Listening port	
       port: [PORT],

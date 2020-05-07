@@ -10,7 +10,8 @@ const router = require('express').Router();
 
 //CORS
 router.use(cors({
-  origin: `https://${config.get('core.server.domain')}`
+  credentials: true,
+  origin: config.get('core.server.cors')
 }));
 
 //Helmet

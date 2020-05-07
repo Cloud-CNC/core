@@ -83,7 +83,7 @@ module.exports = () =>
   before(done =>
   {
     //Connect
-    socket = new ws(`wss://${config.get('core.server.domain')}`, {
+    socket = new ws(`wss://127.0.0.1`, {
       headers: {
         _id: process.env.controllerID,
         key: key

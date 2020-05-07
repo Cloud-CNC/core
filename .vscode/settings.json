@@ -12,7 +12,6 @@
     "**/.cache/**",
     "**/.github/**",
     "**/.vscode/**",
-    "**/crypto/**",
     "**/files/**",
     "**/dist/**",
     "**/node_modules/**",

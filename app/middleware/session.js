@@ -14,7 +14,6 @@ const store = require('connect-mongodb-session')(session);
 router.use(session({
   name: 'session',
   cookie: {
-    domain: config.get('core.server.domain'),
     httpOnly: true,
     maxAge: config.get('core.server.sessionExpire'),
     sameSite: true,
