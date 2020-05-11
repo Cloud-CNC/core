@@ -1,6 +1,7 @@
 # Core
 ![status](https://img.shields.io/badge/status-under%20development-yellow)
-[![tests](https://img.shields.io/github/workflow/status/Cloud-CNC/core/Tests)](https://github.com/Cloud-CNC/core/actions)
+[![tests](https://img.shields.io/github/workflow/status/Cloud-CNC/core/Tests?label=tests)](https://github.com/Cloud-CNC/core/actions)
+[![tests](https://img.shields.io/github/workflow/status/Cloud-CNC/core/Docker?label=docker)](https://github.com/Cloud-CNC/core/actions)
 [![issues](https://img.shields.io/github/issues/Cloud-CNC/core)](https://github.com/Cloud-CNC/core/issues)
 [![last commit](https://img.shields.io/github/last-commit/Cloud-CNC/core)](https://github.com/Cloud-CNC/core/commits/master)
 
