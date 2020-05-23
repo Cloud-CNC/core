@@ -6,14 +6,15 @@
 const config = require('config');
 const express = require('express');
 const fs = require('fs');
+const http = require('http');
 const https = require('https');
 const middleware = require('./app/middleware/index.js');
 const routes = require('./app/routes/index.js');
 const websocket = require('./app/websocket/index.js');
 const ws = require('ws');
-let mongo = require('./app/lib/mongo.js');
 
 //Bootstrap mongo client
+let mongo = require('./app/lib/mongo.js');
 mongo().then(mongoose =>
 {
   mongo = mongoose;
@@ -21,10 +22,21 @@ mongo().then(mongoose =>
 
 //Express
 const app = express();
-const server = https.createServer({
-  cert: fs.readFileSync(config.get('core.cryptography.cert'), 'utf8'),
-  key: fs.readFileSync(config.get('core.cryptography.key'), 'utf8')
-}, app).listen(config.get('core.server.port'));
+let server;
+
+if (config.get('core.cryptography.tls'))
+{
+  server = https.createServer({
+    cert: fs.readFileSync(config.get('core.cryptography.cert'), 'utf8'),
+    key: fs.readFileSync(config.get('core.cryptography.key'), 'utf8')
+  }, app);
+}
+else
+{
+  server = http.createServer(app);
+}
+
+server.listen(config.get('core.server.port'));
 
 //Websocket
 const wss = new ws.Server({
