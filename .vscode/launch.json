@@ -14,13 +14,6 @@
       ]
     },
     {
-      "type": "chrome",
-      "request": "launch",
-      "name": "Chrome",
-      "url": "https://127.0.0.1",
-      "webRoot": "${workspaceFolder}"
-    },
-    {
       "type": "node",
       "request": "launch",
       "name": "Healthcheck",
