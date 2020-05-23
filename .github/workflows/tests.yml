@@ -15,15 +15,13 @@ jobs:
       - uses: stefanoeb/eslint-action@1.0.2
         name: ESLint
       - name: Install MongoDB
-        run: sudo apt install -y mongodb
+        run: sudo apt install -y mongodb && sudo mkdir /data/db -p
       - name: Install Modules
         run: sudo npm ci
-      - name: Create Directories
-        run: mkdir crypto files && sudo mkdir /data/db -p
       - name: Generate Salt
-        run: cd crypto && openssl rand -out secret.txt -base64 512
+        run: cd config && openssl rand -out secret.txt -base64 512
       - name: Generate Certificate
-        run: cd crypto && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.cer
+        run: cd config && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.cer
       - uses: paambaati/codeclimate-action@v2.6.0
         name: Test
         env:
