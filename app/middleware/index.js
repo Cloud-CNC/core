@@ -19,10 +19,7 @@ router.use(json({
   limit: config.get('core.server.uploadLimit')
 }));
 router.use(security);
-if (process.env.NODE_ENV != 'development')
-{
-  router.use('/api', limit);
-}
+router.use('/api', limit);
 router.use('/api', session);
 
 //Export

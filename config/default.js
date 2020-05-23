@@ -107,7 +107,7 @@ module.exports = {
       //Rate limit window (Milliseconds)	
       rateLimitWindow: 1000 * 60 * 15,
 
-      //Maximum requests per rate limit window
+      //Maximum requests per rate limit window (0 to disable)
       rateLimitRequests: 100,
 
       //Max upload size	(How big are your files going to be)

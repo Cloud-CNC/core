@@ -15,7 +15,7 @@ router.use(rateLimit({
   message: {
     error: {
       name: 'Rate Limit',
-      description: 'You\'ve hit a rate limit, please wait before trying again!'
+      description: `You've hit a rate limit, please wait ${config.get('core.server.rateLimitWindow')/(1000 * 60)} minutes before trying again!`
     }
   },
   store: new rateLimitMongo({
