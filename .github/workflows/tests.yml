@@ -15,9 +15,11 @@ jobs:
       - uses: stefanoeb/eslint-action@1.0.2
         name: ESLint
       - name: Install MongoDB
-        run: sudo apt install -y mongodb && sudo mkdir /data/db -p
+        run: sudo apt install -y mongodb
       - name: Install Modules
         run: sudo npm ci
+      - name: Create Directories
+        run: mkdir files && sudo mkdir /data/db -p
       - name: Generate Salt
         run: cd config && openssl rand -out secret.txt -base64 512
       - name: Generate Certificate

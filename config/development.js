@@ -82,7 +82,7 @@ module.exports = {
     //Persistant data storage
     data: {
       //MongoDB URI	
-      database: `mongodb://localhost:27017/${process.env.NODE_ENV}`,
+      database: 'mongodb://localhost:27017/cloud-cnc-development',
 
       //Filesystem (Used for storing user files)	
       filesystem: './files/',
@@ -95,7 +95,6 @@ module.exports = {
     server: {
       //Allowed CORS domains/addresses
       cors: [
-        'https://127.0.0.1',
         'https://127.0.0.1:8443'
       ],
 

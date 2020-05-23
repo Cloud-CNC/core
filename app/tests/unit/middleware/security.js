@@ -20,19 +20,26 @@ module.exports = () =>
   //Get headers
   before(async () =>
   {
-    const res = await agent.get('/');
+    const res = await agent.get('/').set('origin', 'https://127.0.0.1');
     headers = res.header;
   });
 
-  it('should use CORS', () =>
+  it('should use CORS and allow request', () =>
   {
-    expect(headers).to.haveOwnProperty('access-control-allow-origin', config.get('core.server.cors').join(','));
+    expect(headers).to.haveOwnProperty('access-control-allow-origin', 'https://127.0.0.1');
+  });
+
+  it('should use CORS and block request', async () =>
+  {
+    const res2 = await agent.get('/').set('origin', 'https://example.com');
+
+    expect(res2.header).to.not.haveOwnProperty('access-control-allow-origin');
   });
 
   it('should use CSP', () =>
   {
     const csp = 'connect-src \'self\'; default-src \'self\'; style-src \'self\' \'unsafe-inline\'; worker-src \'self\' \'unsafe-inline\'; font-src \'self\' data:; script-src \'self\' \'unsafe-inline\' storage.googleapis.com';
-    
+
     expect(csp).to.be.oneOf([headers['content-security-policy'], headers['x-content-security-policy'], headers['x-webkit-csp']]);
   });
 
