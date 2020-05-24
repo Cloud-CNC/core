@@ -11,7 +11,11 @@
       "program": "${workspaceFolder}/app.js",
       "skipFiles": [
         "<node_internals>/**"
-      ]
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "outputCapture": "std"
     },
     {
       "type": "node",
