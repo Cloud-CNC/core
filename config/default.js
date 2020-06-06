@@ -64,7 +64,7 @@ module.exports = {
       key: './config/key.pem',
 
       //Self signed (Temporarily trust certificate when running healthcheck and tests)
-      selfSigned: true,
+      selfSigned: false,
 
       //Enable TLS (If enabled, you must provide TLS certificates)
       tls: true,
