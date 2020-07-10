@@ -3,6 +3,7 @@
 [![tests](https://img.shields.io/github/workflow/status/Cloud-CNC/core/tests)](https://github.com/Cloud-CNC/core/actions)
 [![issues](https://img.shields.io/github/issues/Cloud-CNC/core)](https://github.com/Cloud-CNC/core/issues)
 [![last commit](https://img.shields.io/github/last-commit/Cloud-CNC/core)](https://github.com/Cloud-CNC/core/commits/master)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FCloud-CNC%2Fcore.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FCloud-CNC%2Fcore?ref=badge_shield)
 
 This repository contains all files for running a core server instance. The core server is typically ran on a VPS.
 
@@ -34,3 +35,6 @@ Name | Description
 --- | ---
 `start` | Run server
 `test` | Run all tests
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FCloud-CNC%2Fcore.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FCloud-CNC%2Fcore?ref=badge_large)
