@@ -1,8 +1,8 @@
 name: Tests
 on: push
 jobs:
-  build:
-    name: Test with Node ${{ matrix.node }}
+  unit-test:
+    name: Unit test with Node ${{ matrix.node }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,3 +30,88 @@ jobs:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
         with:
           coverageCommand: sudo npm run coverage
+  e2e-test:
+    name: E2E test with Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    needs: unit-test
+    strategy:
+      matrix:
+        node: [13, 14]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      #Generate a certificate (Used by frontend and cor)
+      - name: Generate Certificate
+        run: openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.cer
+
+      #Setup the frontend
+      - name: Clone frontend
+        uses: actions/checkout@v2.1.0
+        with:
+          ref: ${{ github.ref }}
+          repository: 'cloud-cnc/frontend'
+          path: frontend
+
+      - name: Install frontend modules
+        working-directory: ./frontend
+        run: sudo npm ci --unsafe-perm=true --allow-root
+
+      - name: Link frontend TLS certificate
+        working-directory: ./frontend/config
+        run: |
+          ln -s ../../cert.cer ./
+          ln -s ../../key.pem ./
+
+      #Setup the controller
+      - name: Clone controller
+        uses: actions/checkout@v2.1.0
+        with:
+          ref: ${{ github.ref }}
+          repository: 'cloud-cnc/controller'
+          path: controller
+
+      - name: Install controller modules
+        working-directory: ./controller
+        run: sudo npm ci --unsafe-perm=true --allow-root
+
+      #Used to whitelist the self signed certificate
+      - name: Link controller TLS certificate
+        working-directory: ./controller/config
+        run: |
+          ln -s ../../cert.cer ./
+
+      #Setup the core
+      - name: Install MongoDB
+        run: sudo apt install -y mongodb
+
+      - name: Clone core
+        uses: actions/checkout@v2.1.0
+        with:
+          ref: ${{ github.ref }}
+          repository: 'cloud-cnc/core'
+          path: core
+
+      - name: Create files directory
+        working-directory: ./core
+        run: mkdir files
+
+      - name: Install core modules
+        working-directory: ./core
+        run: sudo npm ci --unsafe-perm=true --allow-root
+
+      - name: Link core TLS certificate
+        working-directory: ./core/config
+        run: |
+          ln -s ../../cert.cer ./
+          ln -s ../../key.pem ./
+
+      - name: Generate Salt
+        working-directory: ./core/config
+        run: openssl rand -out secret.txt -base64 512
+
+      #Run unit + E2E tests
+      - name: Run Tests
+        working-directory: ./frontend
+        run: npm run test:e2e:cli
