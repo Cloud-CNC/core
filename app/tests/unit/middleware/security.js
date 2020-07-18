@@ -20,13 +20,12 @@ module.exports = () =>
   //Get headers
   before(async () =>
   {
-    const res = await agent.get('/').set('origin', 'https://127.0.0.1');
-    headers = res.header;
+    headers = (await agent.get('/').set('origin', 'https://127.0.0.1:8443')).header;
   });
 
   it('should use CORS and allow request', () =>
   {
-    expect(headers).to.haveOwnProperty('access-control-allow-origin', 'https://127.0.0.1');
+    expect(headers).to.haveOwnProperty('access-control-allow-origin', 'https://127.0.0.1:8443');
   });
 
   it('should use CORS and block request', async () =>
@@ -75,7 +74,7 @@ module.exports = () =>
 
   it('should use CT', () =>
   {
-    expect(headers).to.haveOwnProperty('expect-ct', 'enforce, max-age=0');
+    expect(headers).to.haveOwnProperty('expect-ct', `enforce, max-age=${config.get('core.cryptography.ct')}`);
   });
 
   it('should use referrer policy', () =>
@@ -85,6 +84,6 @@ module.exports = () =>
 
   it('should use HSTS', () =>
   {
-    expect(headers).to.haveOwnProperty('strict-transport-security', 'max-age=5184000');
+    expect(headers).to.haveOwnProperty('strict-transport-security', `max-age=${config.get('core.cryptography.hsts')}`);
   });
 };

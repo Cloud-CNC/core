@@ -69,6 +69,12 @@ module.exports = {
       //Enable TLS (If enabled, you must provide TLS certificates)
       tls: true,
 
+      //CT maximum age (Seconds)
+      ct: 60 * 60 * 24 * 30,
+
+      //HSTS maximum age (Seconds)
+      hsts: 60 * 60 * 24 * 30,
+
       //Session secret location	(Used to generate session cookies, should be at least 512 bytes long)
       secret: './config/secret.txt',
 
@@ -98,7 +104,7 @@ module.exports = {
         'https://127.0.0.1:8443'
       ],
 
-      //Listening port	
+      //Listening port
       port: 443,
 
       //Session expire time (How long a login is good for) (Milliseconds)	

@@ -6,11 +6,11 @@
   "private": true,
   "scripts": {
     "config": "node ./app/cli/index.js",
-    "coverage": "nyc --reporter=lcov npm test",
-    "start": "cross-env NODE_ENV=production node app.js",
-    "start:development": "cross-env NODE_ENV=development node app.js",
-    "start:docker": "cross-env NODE_ENV=docker node app.js",
-    "test": "mocha --colors --exit --timeout 60000 ./app/tests/index.js"
+    "coverage": "nyc --reporter=lcov npm run test",
+    "start:development": "cross-env NODE_ENV=development LOG=console node app.js",
+    "start:docker": "cross-env NODE_ENV=production LOG=console node app.js",
+    "start": "cross-env NODE_ENV=production LOG=file node app.js",
+    "test": "cross-env NODE_ENV=development LOG=silent mocha --colors --exit --timeout 60000 ./app/tests/index.js"
   },
   "author": "Cloud CNC",
   "license": "MIT",

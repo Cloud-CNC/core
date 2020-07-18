@@ -5,16 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "launch",
       "name": "App",
-      "program": "${workspaceFolder}/app.js",
+      "request": "launch",
+      "runtimeArgs": [
+        "run-script",
+        "start:development"
+      ],
+      "runtimeExecutable": "npm",
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "env": {
-        "NODE_ENV": "development"
-      },
+      "type": "pwa-node",
       "outputCapture": "std"
     },
     {
@@ -41,7 +42,11 @@
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": [
         "<node_internals>/**"
-      ]
+      ],
+      "env": {
+        "NODE_ENV": "development",
+        "LOG": "console"
+      }
     }
   ]
 }

@@ -18,7 +18,7 @@ router.use(cors({
 router.use(helmet());
 
 router.use(helmet.hsts({
-  maxAge: 5184000,
+  maxAge: config.get('core.cryptography.hsts'),
   includeSubDomains: false
 }));
 
@@ -36,7 +36,8 @@ router.use(helmet.contentSecurityPolicy({
 router.use(helmet.permittedCrossDomainPolicies());
 
 router.use(helmet.expectCt({
-  enforce: true
+  enforce: true,
+  maxAge: config.get('core.cryptography.ct')
 }));
 
 router.use(helmet.referrerPolicy({

@@ -2,9 +2,6 @@
  * @fileoverview Tests
  */
 
-//Environment variable (NOTE: Must be set before config)
-process.env.NODE_ENV = 'testing';
-
 //Imports
 const chai = require('chai');
 const chaiHttp = require('chai-http');
