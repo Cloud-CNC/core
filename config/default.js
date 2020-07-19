@@ -17,12 +17,12 @@ module.exports = {
 
           //What permissions this role gains
           rules: [
-            'accounts:admin',
             'accounts:all',
             'accounts:create',
             'accounts:impersonate:start',
             'controllers:all',
             'controllers:create',
+            'controllers:key',
             'controllers:get',
             'controllers:update',
             'controllers:remove',

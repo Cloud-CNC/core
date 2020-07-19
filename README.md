@@ -17,8 +17,8 @@ View guides, documentation and more at [cloud-cnc.github.io](https://cloud-cnc.g
 1. Setup a [Mongo](https://www.mongodb.com) database
 2. Install Node Gyp (Using [these](https://github.com/nodejs/node-gyp#installation) instructions)
 3. Install dependencies via running `npm i`
-4. Run `npm run config` to generate some salt, a certificate, and a valid config file
-7. Run `npm start` to start the web server
+4. Generate an X509 certificate (`certificate.cer`) and key (`key.pem`), and 512 bytes of crypto-safe random text (`secret.txt`) in the [`config`](./config) directory
+7. Run `npm start` to start the API server in production
 
 ### Recommended IDE Extensions
 Name | VS Code | Atom
@@ -32,9 +32,8 @@ Help with writing documentation | [GitHub Markdown Preview](https://marketplace.
 ### NPM Scripts
 Name | Description
 --- | ---
-`config` | Generate some salt, a certificate, and a valid config file
 `coverage` | Generate test coverage using Istanbul
-`start` | Run server in production mode (PWA and file logging)
-`start:development` | Run server in development mode (No PWA)
+`start` | Run server in production mode
+`start:development` | Run server in development mode
 `start:docker` | Run server in production mode with console logging
-`test` | Run all tests
+`test` | Run unit + integration tests (E2E tests are ran from the [frontend](https://github.com/cloud-cnc/frontend) repository)

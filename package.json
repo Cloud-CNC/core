@@ -5,7 +5,6 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "config": "node ./app/cli/index.js",
     "coverage": "nyc --reporter=lcov npm run test",
     "start:development": "cross-env NODE_ENV=development LOG=console node app.js",
     "start:docker": "cross-env NODE_ENV=production LOG=console node app.js",
@@ -16,7 +15,6 @@
   "license": "MIT",
   "dependencies": {
     "argon2": "^0.24.1",
-    "colors": "^1.4.0",
     "config": "^3.3.1",
     "connect-mongodb-session": "^2.3.1",
     "cors": "^2.8.5",
@@ -26,12 +24,9 @@
     "express-sanitizer": "^1.0.5",
     "express-session": "^1.17.1",
     "helmet": "^3.22.0",
-    "ip": "^1.1.5",
     "mongoose": "^5.9.12",
     "mongoose-id-validator": "^0.5.4",
-    "prompts": "^2.3.2",
     "rate-limit-mongo": "^2.1.0",
-    "selfsigned": "^1.10.7",
     "speakeasy": "^2.0.0",
     "syswide-cas": "^5.3.0",
     "winston": "^3.2.1",
