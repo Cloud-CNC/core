@@ -40,22 +40,37 @@ module.exports = {
    */
   create: async (username, password, mfa, role) =>
   {
-    //MFA
-    const secret = mfa ? speakeasy.generateSecret({
-      name: 'Cloud CNC',
-      length: 64
-    }) : null;
+    //Check for duplicate
+    const existingAccounts = await model.find({username});
 
-    const doc = new model({
-      username,
-      hash: await hash(password),
-      mfa,
-      secret: mfa ? secret.base32 : null,
-      role
-    });
+    if (existingAccounts.length > 0)
+    {
+      return {
+        error: {
+          name: 'Duplicate Username',
+          description: 'You\'re attempting to create an account with an existing username!'
+        }
+      };
+    }
+    else
+    {
+      //MFA
+      const secret = mfa ? speakeasy.generateSecret({
+        name: 'Cloud CNC',
+        length: 64
+      }) : null;
 
-    await doc.save();
-    return mfa ? {_id: doc._id, otpauth: secret.otpauth_url} : {_id: doc._id};
+      const doc = new model({
+        username,
+        hash: await hash(password),
+        mfa,
+        secret: mfa ? secret.base32 : null,
+        role
+      });
+
+      await doc.save();
+      return mfa ? {_id: doc._id, otpauth: secret.otpauth_url} : {_id: doc._id};
+    }
   },
 
   impersonate: {

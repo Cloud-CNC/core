@@ -61,6 +61,28 @@ module.exports = () =>
     id = res.body._id;
   });
 
+  it('should allow accounts with identical usernames', async () =>
+  {
+    const res = await agent
+      .post('/api/accounts')
+      .send({
+        role: 'user',
+        username: 'rst',
+        password: 'Testingpassword123!',
+        mfa: true
+      });
+
+    expect(res).to.have.status(200);
+    expect(res).to.be.json;
+
+    expect(res.body).to.eql({
+      error: {
+        name: 'Duplicate Username',
+        description: 'You\'re attempting to create an account with an existing username!'
+      }
+    });
+  });
+
   it('should start impersonating an account', async () =>
   {
     await agent
