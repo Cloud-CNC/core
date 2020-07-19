@@ -15,13 +15,13 @@ module.exports = {
    */
   all: async () =>
   {
-    const docs = await model.find(null);
+    const docs = await model.find(null, ['name']);
     return docs.map(doc => doc.toJSON());
   },
   /**
    * Create a controller
    * @param {String} name Controller name
-   * @returns {Promise<{_id: String, key: String}>}
+   * @returns {Promise<{_id: String}>}
    */
   create: async name =>
   {
@@ -34,16 +34,26 @@ module.exports = {
     });
 
     await doc.save();
-    return {_id: doc._id, key};
+    return {_id: doc._id};
+  },
+  /**
+   * Get a controller's key by its ID
+   * @param {String} _id Controller ID
+   * @returns {Promise<{_id: String, key: String}>}
+   */
+  key: async _id =>
+  {
+    const doc = await model.findById(_id, ['key']);
+    return doc.toJSON();
   },
   /**
    * Get a controller by its ID
    * @param {String} _id Controller ID
-   * @returns {Promise<{name: String}>}
+   * @returns {Promise<{_id: String, name: String}>}
    */
   get: async _id =>
   {
-    const doc = await model.findById(_id);
+    const doc = await model.findById(_id, ['name']);
     return doc.toJSON();
   },
   /**

@@ -88,7 +88,7 @@ module.exports = {
     //Persistant data storage
     data: {
       //MongoDB URI	
-      database: 'mongodb://localhost:27017/cloud-cnc-development',
+      database: `mongodb://localhost:27017/${process.env.E2E == 'true' ? 'cloud-cnc-e2e' : 'cloud-cnc-development'}`,
 
       //Filesystem (Used for storing user files)	
       filesystem: './files/',

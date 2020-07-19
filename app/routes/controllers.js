@@ -49,6 +49,14 @@ router.post('/',
     return res.json(await controller.create(req.body.name));
   });
 
+//Get a controller's key
+router.get('/:id/key',
+  permission('controllers:key'),
+  async (req, res) =>
+  {
+    return res.json(await controller.key(req.controller));
+  });
+
 //Get a controller
 router.get('/:id',
   permission('controllers:get'),
