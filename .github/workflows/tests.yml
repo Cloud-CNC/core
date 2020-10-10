@@ -14,6 +14,10 @@ jobs:
           node-version: ${{ matrix.node }}
       - uses: stefanoeb/eslint-action@1.0.2
         name: ESLint
+      - name: MongoDB Debug
+        run: |
+          sudo systemctl status mongodb
+          mongod --help
 #      - name: Install MongoDB
 #        run: sudo apt install -y mongodb
       - name: Install Modules
