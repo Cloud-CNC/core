@@ -16,6 +16,7 @@ jobs:
         name: ESLint
       - name: MongoDB Debug
         run: |
+          sudo systemctl status mongod
           mongod --help
 #      - name: Install MongoDB
 #        run: sudo apt install -y mongodb
