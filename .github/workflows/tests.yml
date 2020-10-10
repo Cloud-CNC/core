@@ -14,8 +14,8 @@ jobs:
           node-version: ${{ matrix.node }}
       - uses: stefanoeb/eslint-action@1.0.2
         name: ESLint
-      - name: Install MongoDB
-        run: sudo apt install -y mongodb
+#      - name: Install MongoDB
+#        run: sudo apt install -y mongodb
       - name: Install Modules
         run: sudo npm ci
       - name: Create Directories
@@ -83,8 +83,8 @@ jobs:
           ln -s ../../cert.cer ./
 
       #Setup the core
-      - name: Install MongoDB
-        run: sudo apt install -y mongodb
+#      - name: Install MongoDB
+#        run: sudo apt install -y mongodb
 
       - name: Clone core
         uses: actions/checkout@v2.1.0
