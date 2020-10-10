@@ -8,26 +8,23 @@ jobs:
       matrix:
         node: [13, 14]
     steps:
-      - uses: actions/checkout@v2.1.0
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
-      - uses: stefanoeb/eslint-action@1.0.2
-        name: ESLint
-      - name: MongoDB Debug
-        run: |
-          sudo systemctl start mongod
-#      - name: Install MongoDB
-#        run: sudo apt install -y mongodb
+      - name: Enable MongoDB
+        run: sudo systemctl start mongod
       - name: Install Modules
         run: sudo npm ci
+      - name: ESLint
+        run: npm lint
       - name: Create Directories
         run: mkdir files && sudo mkdir /data/db -p
       - name: Generate Salt
         run: cd config && openssl rand -out secret.txt -base64 512
       - name: Generate Certificate
         run: cd config && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.cer
-      - uses: paambaati/codeclimate-action@v2.6.0
+      - uses: paambaati/codeclimate-action@v2
         name: Test
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
@@ -51,7 +48,7 @@ jobs:
 
       #Setup the frontend
       - name: Clone frontend
-        uses: actions/checkout@v2.1.0
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
           repository: 'cloud-cnc/frontend'
@@ -69,7 +66,7 @@ jobs:
 
       #Setup the controller
       - name: Clone controller
-        uses: actions/checkout@v2.1.0
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
           repository: 'cloud-cnc/controller'
@@ -86,11 +83,11 @@ jobs:
           ln -s ../../cert.cer ./
 
       #Setup the core
-#      - name: Install MongoDB
-#        run: sudo apt install -y mongodb
+      - name: Enable MongoDB
+        run: sudo systemctl start mongod
 
       - name: Clone core
-        uses: actions/checkout@v2.1.0
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
           repository: 'cloud-cnc/core'
