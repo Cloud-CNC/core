@@ -24,7 +24,7 @@ jobs:
         run: cd config && openssl rand -out secret.txt -base64 512
       - name: Generate Certificate
         run: cd config && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.cer
-      - uses: paambaati/codeclimate-action@v2
+      - uses: paambaati/codeclimate-action@v2.7.4
         name: Test
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
