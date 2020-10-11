@@ -37,7 +37,7 @@ module.exports = {
   remove: async _id =>
   {
     //Remove from disk
-    await fs.unlink(path.join(config.get('core.data.filesystem'), _id) + '.gcode');
+    await fs.unlink(path.join(config.get('core.data.filesystem'), _id) + '.raw');
 
     await model.findByIdAndDelete(_id);
   }

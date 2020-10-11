@@ -65,7 +65,7 @@ module.exports = () =>
 
     await file.save();
 
-    await fs.writeFile(`${path.join(config.get('core.data.filesystem'), file._id.toJSON())}.gcode`, ';TEST FILE');
+    await fs.writeFile(`${path.join(config.get('core.data.filesystem'), file._id.toJSON())}.raw`, ';TEST FILE');
   });
 
   //Login
@@ -192,7 +192,7 @@ module.exports = () =>
     await account.remove();
     await machine.remove();
     await file.remove();
-    await fs.unlink(`${path.join(config.get('core.data.filesystem'), file._id.toJSON())}.gcode`);
+    await fs.unlink(`${path.join(config.get('core.data.filesystem'), file._id.toJSON())}.raw`);
     await agent
       .post('/api/sessions/logout')
       .send();

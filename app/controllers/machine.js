@@ -62,7 +62,7 @@ module.exports = {
   /**
    * Send a command to a machine by ID
    * @param {String} _id Machine ID
-   * @param {String} command GCODE Command
+   * @param {String} command Command
    * @returns {Promise<String>|Promise<{error: {name: String, description: String}}>} Machine response
    */
   command: async (_id, command) =>
@@ -103,7 +103,7 @@ module.exports = {
     else
     {
       //Get file
-      const raw = await fs.readFile(path.join(config.get('core.data.filesystem'), _file) + '.gcode', 'utf8');
+      const raw = await fs.readFile(path.join(config.get('core.data.filesystem'), _file) + '.raw', 'utf8');
 
       //Send command
       try
