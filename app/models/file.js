@@ -12,7 +12,8 @@ const schema = new mongoose.Schema({
   status: {type: Number, default: 0, validate: filters.status, required: true},
   owner: {type: mongoose.Types.ObjectId, validate: mongoose.Types.ObjectId.isValid, ref: 'account', required: true},
   name: {type: String, validate: filters.name, required: true},
-  description: {type: String, validate: filters.description}
+  description: {type: String, validate: filters.description},
+  extension: {type: String, validate: filters.extension, required: true}
 });
 
 //Plugins

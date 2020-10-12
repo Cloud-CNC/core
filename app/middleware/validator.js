@@ -97,6 +97,39 @@ module.exports = {
   },
 
   /**
+   * Validate form field
+   * @param {Object} fields The fields to check against
+   * @param {String} name Name of field
+   * @param {RegExp|Function} filter Regex filter or boolean returning function
+   * @returns {true|Object} If `true`, the field was valid otherwise this will return the appropriate error message
+   */
+  form: (fields, name, filter) =>
+  {
+    if (validate(fields, name, filter))
+    {
+      return true;
+    }
+    else if (fields[name] != null)
+    {
+      return {
+        error: {
+          name: 'Invalid form field',
+          description: `"${name}" must match the defined filters!`
+        }
+      };
+    }
+    else
+    {
+      return {
+        error: {
+          name: 'Missing form field',
+          description: `"${name}" wasn't found!`
+        }
+      };
+    }
+  },
+
+  /**
    * Validate query parameter
    * @param {String} name Name of parameter
    * @param {RegExp|Function} filter Regex filter
@@ -129,11 +162,11 @@ module.exports = {
   },
 
   /**
- * Validate route parameter
- * @param {String} name Name of parameter
- * @param {RegExp|Function} filter Regex filter
- * @returns {Function} Express middleware
- */
+   * Validate route parameter
+   * @param {String} name Name of parameter
+   * @param {RegExp|Function} filter Regex filter
+   * @returns {Function} Express middleware
+   */
   route: (name, filter) => (req, res, next) =>
   {
     if (validate(req.route, name, filter))
@@ -158,5 +191,5 @@ module.exports = {
         }
       });
     }
-  }
+  },
 };

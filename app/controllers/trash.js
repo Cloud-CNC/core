@@ -13,11 +13,11 @@ module.exports = {
   /**
    * Get all trashed files owned by an account
    * @param {String} owner Account owner ID
-   * @returns {Promise<Array<{name: String, description: String}>>}
+   * @returns {Promise<Array<{name: String, description: String, extension: String}>>}
    */
   all: async owner =>
   {
-    const docs = await model.find({owner, status: 1}, ['name', 'description']);
+    const docs = await model.find({owner, status: 1}, ['name', 'description', 'extension']);
     return docs.map(doc => doc.toJSON());
   },
   /**

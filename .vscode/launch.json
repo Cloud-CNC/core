@@ -44,8 +44,9 @@
         "<node_internals>/**"
       ],
       "env": {
-        "NODE_ENV": "development",
-        "LOG": "console"
+        "DB": "cloud-cnc-unit",
+        "LOG": "console",
+        "NODE_ENV": "development"
       }
     }
   ]

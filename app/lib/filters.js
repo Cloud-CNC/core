@@ -1,12 +1,13 @@
 /**
  * @fileoverview Regex filters used for backend validation
- * If you modify any filters here, you probably want to update your frontend config as well
+ * If you modify any filters here, you probably want to update your frontend filters as well
  */
 
 //Export
 module.exports = {
   boolean: /^true|false$/,
   description: /^(.|\s){0,1000}$/,
+  extension: /^\w+$/,
   key: /^[A-z0-9+/]+={0,3}$/,
   name: /^.{3,30}$/,
   otp: /^\d{6}$/,

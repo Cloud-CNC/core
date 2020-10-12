@@ -39,7 +39,8 @@ module.exports = () =>
     const doc = new model({
       owner: account._id,
       name: 'abc',
-      description: 'def'
+      description: 'def',
+      extension: 'ghi'
     });
     await doc.validate(err =>
     {

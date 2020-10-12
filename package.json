@@ -24,6 +24,7 @@
     "express-rate-limit": "^5.1.3",
     "express-sanitizer": "^1.0.5",
     "express-session": "^1.17.1",
+    "formidable": "^1.2.2",
     "helmet": "^3.23.3",
     "mongoose": "^5.10.4",
     "mongoose-id-validator": "^0.5.4",

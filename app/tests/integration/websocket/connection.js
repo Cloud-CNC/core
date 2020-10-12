@@ -60,7 +60,8 @@ module.exports = () =>
     file = new fileModel({
       owner: account._id,
       name: 'abc',
-      description: 'def'
+      description: 'def',
+      extension: 'ghi'
     });
 
     await file.save();

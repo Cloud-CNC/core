@@ -43,6 +43,7 @@ module.exports = {
             'files:all',
             'files:create',
             'files:get',
+            'files:raw',
             'files:update',
             'files:remove',
             'trash:all',
