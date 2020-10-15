@@ -97,35 +97,56 @@ module.exports = {
   },
 
   /**
-   * Validate form field
-   * @param {Object} fields The fields to check against
+   * Validate multipart fields
    * @param {String} name Name of field
    * @param {RegExp|Function} filter Regex filter or boolean returning function
-   * @returns {true|Object} If `true`, the field was valid otherwise this will return the appropriate error message
+   * @returns {Function} Express middleware
    */
-  form: (fields, name, filter) =>
+  field: (name, filter) => (req, res, next) =>
   {
-    if (validate(fields, name, filter))
+    if (validate(req.fields, name, filter))
     {
-      return true;
+      next();
     }
-    else if (fields[name] != null)
+    else if (req.fields[name] != null)
     {
-      return {
+      return res.json({
         error: {
-          name: 'Invalid form field',
+          name: 'Invalid multipart field',
           description: `"${name}" must match the defined filters!`
         }
-      };
+      });
     }
     else
     {
-      return {
+      return res.json({
         error: {
-          name: 'Missing form field',
+          name: 'Missing multipart field',
           description: `"${name}" wasn't found!`
         }
-      };
+      });
+    }
+  },
+
+  /**
+   * Validate multipart files
+   * @param {String} name Name of file
+   * @returns {Function} Express middleware
+   */
+  file: name => (req, res, next) =>
+  {
+    if (req.files[name] != null)
+    {
+      next();
+    }
+    else
+    {
+      return res.json({
+        error: {
+          name: 'Invalid multipart file',
+          description: `"${name}" must match the defined filters!`
+        }
+      });
     }
   },
 

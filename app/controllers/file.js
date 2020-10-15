@@ -44,12 +44,20 @@ module.exports = {
     }
     else
     {
-      const doc = new model({
+      const data = {
         owner,
         name,
         description,
         extension
-      });
+      };
+
+      //Add description if not null
+      if (description != null)
+      {
+        data.description = description;
+      }
+
+      const doc = new model(data);
 
       await doc.save();
 

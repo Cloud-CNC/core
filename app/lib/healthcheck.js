@@ -14,7 +14,7 @@ if (config.get('core.cryptography.selfSigned'))
 }
 
 //Test
-https.get({host: '127.0.0.1', port: 443, timeout: 10}, res =>
+https.get({host: '127.0.0.1', port: config.get('core.server.port'), timeout: 10}, res =>
 {
   if (res.statusCode == 200)
   {

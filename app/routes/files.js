@@ -3,13 +3,13 @@
  */
 
 //Imports
-const {onePlus, form} = require('../middleware/validator');
+const {onePlus, field, file} = require('../middleware/validator');
 const controller = require('../controllers/file');
 const filters = require('../lib/filters');
-const {IncomingForm} = require('formidable');
 const logger = require('../lib/logger');
 const model = require('../models/file');
 const mongoose = require('mongoose');
+const multipart = require('../middleware/multipart');
 const permission = require('../middleware/permission');
 const router = require('express').Router();
 
@@ -45,62 +45,13 @@ router.get('/all',
 //Create a file
 router.post('/',
   permission('files:create'),
+  multipart(),
+  field('name', filters.name),
+  field('description', filters.description),
+  file('raw'),
   async (req, res) =>
   {
-    const parser = new IncomingForm();
-
-    //Parse upload with formidable
-    const responseJSON = await new Promise(resolve => parser.parse(req, (err, fields, files) =>
-    {
-      //Handle error
-      if (err)
-      {
-        logger.error(`Formidable error ${err} while uploading file`);
-
-        return resolve({
-          error: {
-            name: 'Upload Error',
-            description: 'An error occurred while uploading the file! Please try again or contact your administrator.'
-          }
-        });
-      }
-
-      if (files.raw == null)
-      {
-        return resolve({
-          error: {
-            name: 'File Upload',
-            description: 'Expected the file to be indexed by the "raw" multipart field!'
-          }
-        });
-      }
-
-      //Input validation
-      const nameValidation = form(fields, 'name', filters.name);
-      const descriptionValidation = form(fields, 'description', filters.description);
-      const extensionValidation = form(fields, 'extension', filters.extension);
-
-      if (nameValidation != true)
-      {
-        return resolve(nameValidation);
-      }
-
-      if (descriptionValidation != true)
-      {
-        return resolve(descriptionValidation);
-      }
-
-      if (extensionValidation != true)
-      {
-        return resolve(extensionValidation);
-      }
-
-      //Execute controller
-      return resolve(controller.create(req.user._id, fields.name, fields.description, files.raw.path, fields.extension));
-    }));
-
-    //Respond with JSON
-    return res.json(responseJSON);
+    return res.json(await controller.create(req.user._id, req.fields.name, req.fields.description, req.files.raw.path, req.fields.extension));
   });
 
 //Get a file's metadata
