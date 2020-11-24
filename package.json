@@ -24,7 +24,7 @@
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^3.10.0",
     "ws": "^7.2.1",
-    "snyk": "^1.316.1"
+    "snyk": "^1.425.4"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.1.1",
