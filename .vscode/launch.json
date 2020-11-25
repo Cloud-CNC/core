@@ -5,20 +5,27 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "App",
+      "request": "launch",
+      "runtimeArgs": [
+        "run-script",
+        "start:development"
+      ],
+      "runtimeExecutable": "npm",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "pwa-node",
+      "outputCapture": "std"
+    },
+    {
       "type": "node",
       "request": "launch",
-      "name": "App",
-      "program": "${workspaceFolder}/app.js",
+      "name": "Healthcheck",
+      "program": "${workspaceFolder}/app/lib/healthcheck.js",
       "skipFiles": [
         "<node_internals>/**"
       ]
-    },
-    {
-      "type": "chrome",
-      "request": "launch",
-      "name": "Chrome",
-      "url": "https://localhost:443",
-      "webRoot": "${workspaceFolder}"
     },
     {
       "type": "node",
@@ -35,7 +42,12 @@
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": [
         "<node_internals>/**"
-      ]
+      ],
+      "env": {
+        "DB": "cloud-cnc-unit",
+        "LOG": "console",
+        "NODE_ENV": "development"
+      }
     }
   ]
 }

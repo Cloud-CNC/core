@@ -1,79 +1,97 @@
 /**
- * @fileoverview Files routes
+ * @fileoverview File Routes
  */
 
 //Imports
-const accountModel = require('../models/account.js');
-const controller = require('../controllers/file.js');
-const fileModel = require('../models/file.js');
+const {onePlus, field, file} = require('../middleware/validator');
+const controller = require('../controllers/file');
+const filters = require('../lib/filters');
+const logger = require('../lib/logger');
+const model = require('../models/file');
 const mongoose = require('mongoose');
-const permission = require('../middleware/permission.js');
+const multipart = require('../middleware/multipart');
+const permission = require('../middleware/permission');
 const router = require('express').Router();
 
-//Get target account
-router.use(async (req, res, next) =>
-{
-  if (mongoose.Types.ObjectId.isValid(req.body.account))
+//Get target file
+router.param('id',
+  async (req, res, next, param) =>
   {
-    if (req.user.role == 'admin')
+    //Validate ID
+    if (mongoose.Types.ObjectId.isValid(param) && await model.findById(param) != null)
     {
-      req.account = await accountModel.findById(req.body.account);
+      req.file = param;
       next();
     }
     else
     {
-      res.status(401);
-      return res.json({
+      return res.status(404).json({
         error: {
-          name: 'Insufficient Permissions',
-          description: 'You don\'t have the required permissions to perform this action!'
+          name: 'Invalid File',
+          description: 'The specified file doesn\'t exist!'
         }
       });
     }
-  }
-  else
-  {
-    req.account = req.user;
-    next();
-  }
-});
+  });
 
-//Get file
-router.param('id', async (req, res, next, param) =>
-{
-  const doc = await fileModel.findById(param);
+//Get all files
+router.get('/all',
+  permission('files:all'),
+  async (req, res) =>
+  {
+    return res.json(await controller.all(req.user._id));
+  });
 
-  if (doc == null)
+//Create a file
+router.post('/',
+  permission('files:create'),
+  multipart(),
+  field('name', filters.name),
+  field('description', filters.description),
+  file('raw'),
+  async (req, res) =>
   {
-    return res.status(404).json({
-      error: {
-        name: 'Invalid File',
-        description: 'The specified file doesn\'t exist!'
-      }
-    });
-  }
-  else if (!req.account._id.equals(doc.owner))
-  {
-    return res.status(403).json({
-      error: {
-        name: 'Insufficient Permissions',
-        description: 'You don\'t have the required permissions to perform this action!'
-      }
-    });
-  }
-  else
-  {
-    req.file = doc;
-    next();
-  }
-});
+    return res.json(await controller.create(req.user._id, req.fields.name, req.fields.description, req.files.raw.path, req.fields.extension));
+  });
 
-//Routes
-router.get('/all', permission('files:all'), controller.getAll);
-router.post('/', permission('files:create'), controller.create);
-router.get('/:id', permission('files:get'), controller.get);
-router.patch('/:id', permission('files:update'), controller.update);
-router.delete('/:id', permission('files:remove'), controller.remove);
+//Get a file's metadata
+router.get('/:id',
+  permission('files:get'),
+  async (req, res) =>
+  {
+    return res.json(await controller.get(req.file));
+  });
+
+//Get a raw file
+router.get('/:id/raw',
+  permission('files:raw'),
+  async (req, res) =>
+  {
+    return res.sendFile(controller.raw(req.file));
+  });
+
+//Update a file
+router.patch('/:id',
+  permission('files:update'),
+  onePlus('body', {
+    name: filters.name,
+    description: filters.description,
+    extension: filters.extension
+  }),
+  async (req, res) =>
+  {
+    await controller.update(req.file, req.data);
+    return res.end();
+  });
+
+//Remove a file
+router.delete('/:id',
+  permission('files:remove'),
+  async (req, res) =>
+  {
+    await controller.remove(req.file);
+    return res.end();
+  });
 
 //Export
 module.exports = router;

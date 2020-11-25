@@ -40,8 +40,19 @@ module.exports = () =>
     expect(res).to.be.json;
 
     expect(res.body).to.haveOwnProperty('_id');
-    expect(res.body).to.haveOwnProperty('key');
     id = res.body._id;
+  });
+
+  it('should get a controller key', async () =>
+  {
+    const res = await agent
+      .get(`/api/controllers/${id}/key`)
+      .send();
+
+    expect(res).to.have.status(200);
+    expect(res).to.be.json;
+
+    expect(res.body).to.haveOwnProperty('key');
   });
 
   it('should get a controller', async () =>
@@ -54,7 +65,6 @@ module.exports = () =>
     expect(res).to.be.json;
 
     expect(res.body).to.haveOwnProperty('name', 'abc');
-    expect(res.body).to.haveOwnProperty('key');
   });
 
   it('should get all controllers', async () =>
@@ -69,7 +79,6 @@ module.exports = () =>
     expect(res.body).to.have.length(1);
 
     expect(res.body[0]).to.haveOwnProperty('name', 'abc');
-    expect(res.body[0]).to.haveOwnProperty('key');
   });
 
   it('should update a controller', async () =>
@@ -84,7 +93,6 @@ module.exports = () =>
 
     const doc = await model.findOne();
     expect(doc._doc).to.haveOwnProperty('name', 'xyz');
-    expect(doc._doc).to.haveOwnProperty('key');
   });
 
   it('should remove a controler', async () =>

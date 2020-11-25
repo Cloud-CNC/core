@@ -5,8 +5,8 @@
 //Imports
 const app = require('../../../../app.js');
 const chai = require('chai');
+const config = require('config');
 const expect = require('chai').expect;
-const {domain} = require('../../../../config.js').core;
 
 //Agent
 const agent = chai.request.agent(app);
@@ -17,23 +17,29 @@ let headers;
 //Export
 module.exports = () =>
 {
+  //Get headers
   before(async () =>
   {
-    const res = await agent.get('/');
-    headers = res.header;
+    headers = (await agent.get('/').set('origin', 'https://127.0.0.1:8443')).header;
   });
 
-  it('should use CORS', () =>
+  it('should use CORS and allow request', () =>
   {
-    expect(headers).to.haveOwnProperty('access-control-allow-origin', `https://${domain}`);
+    expect(headers).to.haveOwnProperty('access-control-allow-origin', 'https://127.0.0.1:8443');
+  });
+
+  it('should use CORS and block request', async () =>
+  {
+    const res2 = await agent.get('/').set('origin', 'https://example.com');
+
+    expect(res2.header).to.not.haveOwnProperty('access-control-allow-origin');
   });
 
   it('should use CSP', () =>
   {
-    const csp = 'connect-src \'self\'; default-src \'self\'; style-src \'self\' \'unsafe-inline\'; worker-src \'self\' \'unsafe-inline\'; font-src \'self\' data:; script-src \'self\' \'unsafe-inline\'';
-    expect(headers).to.haveOwnProperty('content-security-policy', csp);
-    expect(headers).to.haveOwnProperty('x-content-security-policy', csp);
-    expect(headers).to.haveOwnProperty('x-webkit-csp', csp);
+    const csp = 'connect-src \'self\'; default-src \'self\'; style-src \'self\' \'unsafe-inline\'; worker-src \'self\' \'unsafe-inline\'; font-src \'self\' data:; script-src \'self\' \'unsafe-inline\' storage.googleapis.com';
+
+    expect(csp).to.be.oneOf([headers['content-security-policy'], headers['x-content-security-policy'], headers['x-webkit-csp']]);
   });
 
   it('shouldn\'t allow mime sniffing', () =>
@@ -68,7 +74,7 @@ module.exports = () =>
 
   it('should use CT', () =>
   {
-    expect(headers).to.haveOwnProperty('expect-ct', 'enforce, max-age=0');
+    expect(headers).to.haveOwnProperty('expect-ct', `enforce, max-age=${config.get('core.cryptography.ct')}`);
   });
 
   it('should use referrer policy', () =>
@@ -78,6 +84,6 @@ module.exports = () =>
 
   it('should use HSTS', () =>
   {
-    expect(headers).to.haveOwnProperty('strict-transport-security', 'max-age=5184000');
+    expect(headers).to.haveOwnProperty('strict-transport-security', `max-age=${config.get('core.cryptography.hsts')}`);
   });
 };

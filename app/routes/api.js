@@ -6,12 +6,12 @@
 const router = require('express').Router();
 
 //Bind routes to file
-router.use('/accounts', require('./accounts.js'));
-router.use('/controllers', require('./controllers.js'));
-router.use('/files', require('./files.js'));
-router.use('/machines', require('./machines.js'));
-router.use('/sessions', require('./sessions.js'));
-router.use('/trash', require('./trash.js'));
+router.use('/accounts', require('./accounts'));
+router.use('/controllers', require('./controllers'));
+router.use('/files', require('./files'));
+router.use('/machines', require('./machines'));
+router.use('/sessions', require('./sessions'));
+router.use('/trash', require('./trash'));
 
 //Export
 module.exports = router;

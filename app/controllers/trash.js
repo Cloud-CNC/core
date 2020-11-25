@@ -1,30 +1,44 @@
 /**
- * @fileoverview Trash controller
+ * @fileoverview Trash Controller
  */
 
 //Imports
-const config = require('../../config.js');
+const config = require('config');
 const fs = require('fs').promises;
-const model = require('../models/file.js');
+const model = require('../models/file');
 const path = require('path');
 
-//Logic
+//Export
 module.exports = {
-  getAll: async function (req, res)
+  /**
+   * Get all trashed files owned by an account
+   * @param {String} owner Account owner ID
+   * @returns {Promise<Array<{name: String, description: String, extension: String}>>}
+   */
+  all: async owner =>
   {
-    const docs = await model.find({status: 1}).exec();
-    return res.json(docs.map(doc => doc.toJSON()));
+    const docs = await model.find({owner, status: 1}, ['name', 'description', 'extension']);
+    return docs.map(doc => doc.toJSON());
   },
-  recover: async function (req, res)
+  /**
+   * Recover a file by ID
+   * @param {String} _id File ID
+   * @returns {Promise<void>}
+   */
+  recover: async _id =>
   {
-    req.file.status = 0;
-    await req.file.save();
-    return res.end();
+    await model.findByIdAndUpdate(_id, {status: 0});
   },
-  remove: async function (req, res)
+  /**
+   * Remove a file by its ID (Permanently delete)
+   * @param {String} _id File ID
+   * @returns {Promise<void>}
+   */
+  remove: async _id =>
   {
-    await fs.unlink(`${path.join(config.data.filesystem, req.file.id)}.gcode`);
-    await req.file.remove();
-    return res.end();
+    //Remove from disk
+    await fs.unlink(path.join(config.get('core.data.filesystem'), _id) + '.raw');
+
+    await model.findByIdAndDelete(_id);
   }
 };

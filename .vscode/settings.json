@@ -2,45 +2,17 @@
   //C Spell
   "cSpell.allowCompoundWords": true,
   "cSpell.language": "en-US,en",
-  "cSpell.words": [
-    "Vuelidate",
-    "vuetify"
-  ],
   //Editor
   "editor.tabSize": 2,
   "editor.quickSuggestions": {
     "strings": false
   },
-  //TODO Highlight (Theme: nordtheme.com)
-  "todohighlight.keywords": [
-    {
-      "text": "FIXME",
-      "backgroundColor": "#81A1C1",
-      "color": "#D8DEE9"
-    },
-    {
-      "text": "NOTE",
-      "backgroundColor": "#5E81AC",
-      "color": "#ECEFF4"
-    },
-    {
-      "text": "TODO",
-      "backgroundColor": "#88C0D0",
-      "color": "#D8DEE9"
-    }
-  ],
-  //Vetur
-  "vetur.format.defaultFormatter.js": "vscode-typescript",
-  "vetur.format.options.tabSize": 2,
-  "vetur.format.defaultFormatter.ts": "vscode-typescript",
-  "vetur.format.defaultFormatter.html": "js-beautify-html",
   //VS Code Counter
   "VSCodeCounter.exclude": [
     "**/.cache/**",
     "**/.github/**",
     "**/.vscode/**",
-    "**/crypto/**",
-    "**/data/**",
+    "**/files/**",
     "**/dist/**",
     "**/node_modules/**",
     "package-lock.json",

@@ -1,80 +1,187 @@
 /**
- * @fileoverview Account controller
+ * @fileoverview Account Controller
  */
 
 //Imports
-const create = require('../lib/create.js');
-const fileModel = require('../models/file.js');
-const hash = require('../lib/hash.js');
-const model = require('../models/account.js');
-const update = require('../lib/update.js');
-const {filters} = require('../../config.js');
+const config = require('config');
+const file = require('../models/file');
+const hash = require('../lib/hash');
+const model = require('../models/account');
+const speakeasy = require('speakeasy');
 
-//Logic
+//Export
 module.exports = {
-  getAll: async function (req, res)
+  /**
+   * Get all accounts
+   * @returns {Promise<Array<{username: String, mfa: Boolean, role: String}>>} Array of accounts
+   */
+  all: async () =>
   {
-    const docs = await model.find();
-    return res.json(docs.map(doc => doc.toJSON()));
+    const docs = await model.find(null, ['username', 'mfa', 'role']);
+    return docs.map(doc => doc.toJSON());
   },
-  create: async function (req, res)
-  {
-    const constructor = create(req.body, {
-      role: filters.role,
-      username: filters.username,
-      password: filters.password,
-      firstName: filters.name,
-      lastName: filters.name
-    }, res);
 
-    if (constructor != null)
+  /**
+   * Get all roles
+   * @returns {Array<String>}
+   */
+  roles: () =>
+  {
+    return {roles: Object.keys(config.get('core.acl.roles'))};
+  },
+
+  /**
+   * Create an account
+   * @param {String} username Account username
+   * @param {String} password Account password
+   * @param {Boolean} mfa MFA enabled
+   * @param {String} role Account role
+   * @returns {Promise<{_id: String, otpauth?: String}>} Contains `_id` and optionally `otpauth` (URL) if mfa was requested
+   */
+  create: async (username, password, mfa, role) =>
+  {
+    //Check for duplicate
+    const existingAccounts = await model.find({username});
+
+    if (existingAccounts.length > 0)
     {
-      constructor.hmac = await hash(constructor.password);
-      delete constructor.password;
-
-      const doc = new model(constructor);
-      await doc.save();
-      return res.json({_id: doc.id});
-    }
-  },
-  get: function (req, res)
-  {
-    return res.json(req.account.toJSON());
-  },
-  update: async function (req, res)
-  {
-    const success = update(req.body, req.account, {
-      role: filters.role,
-      username: filters.username,
-      password: filters.password,
-      firstName: filters.name,
-      lastName: filters.name
-    }, res);
-
-    if (success)
-    {
-      await req.account.save();
-      return res.end();
-    }
-  },
-  remove: async function (req, res)
-  {
-    //Make sure no child files exist
-    const files = await fileModel.find({owner: req.account._id});
-
-    if (files.length > 0)
-    {
-      return res.status(409).json({
+      return {
         error: {
-          name: 'Child Files',
-          description: 'The account you\'re trying to remove still owns file(s). Please remove them before retrying.'
+          name: 'Duplicate Username',
+          description: 'You\'re attempting to create an account with an existing username!'
         }
-      });
+      };
     }
     else
     {
-      await req.account.remove();
-      return res.end();
+      //MFA
+      const secret = mfa ? speakeasy.generateSecret({
+        name: 'Cloud CNC',
+        length: 64
+      }) : null;
+
+      const doc = new model({
+        username,
+        hash: await hash(password),
+        mfa,
+        secret: mfa ? secret.base32 : null,
+        role
+      });
+
+      await doc.save();
+      return mfa ? {_id: doc._id, otpauth: secret.otpauth_url} : {_id: doc._id};
+    }
+  },
+
+  impersonate: {
+    /**
+     * Start impersonating account
+     * @param {Object} session Persistent session
+     * @param {String} _id ID of the account to impersonate
+     */
+    start: async (session, _id) =>
+    {
+      session.impersonate = _id;
+    },
+
+    /**
+     * Stop impersonating account
+     * @param {Object} session Persistent session
+     */
+    stop: async session =>
+    {
+      session.impersonate = null;
+    }
+  },
+
+  /**
+   * Get an account by its ID
+   * @param {String} _id Account ID
+   * @returns {Promise<{username :String, mfa: Boolean, role: String}>} Where `mfa` represents if the user has MFA enabled
+   */
+  get: async _id =>
+  {
+    const doc = await model.findById(_id, ['username', 'mfa', 'role']);
+    return doc.toJSON();
+  },
+
+  /**
+   * Update an account by its ID
+   * @param {String} _id Account ID
+   * @param {String} source Source account ID (To check for permission escalation)
+   * @param {Object} data Data to update account with
+   * @returns {Promise<{otpauth?: String}>} Optionally contains `otpauth` (URL) if mfa was requested
+   */
+  update: async (_id, source, data) =>
+  {
+    let secret = {};
+
+    //Generate MFA secret
+    if (data.mfa)
+    {
+      secret = speakeasy.generateSecret({
+        name: 'Cloud CNC',
+        length: 64
+      });
+
+      data.secret = secret.base32;
+    }
+    //Erase secret of MFA no longer needed
+    else if (data.mfa == false)
+    {
+      data.secret = null;
+    }
+
+    //Hash password
+    if (data.password != null)
+    {
+      data.hash = await hash(data.password);
+      delete data.password;
+    }
+
+    //Prevent privilege escalation
+    if (data.role != null)
+    {
+      const sourceRole = (await model.findById(source)).role;
+      const roles = Object.keys(config.get('core.acl.roles'));
+      if (!roles.includes(data.role) || roles.indexOf(data.role) < roles.indexOf(sourceRole))
+      {
+        return {
+          error: {
+            name: 'Privilege Escalation',
+            description: 'You\'re trying to increase the permissions of your own account!'
+          }
+        };
+      }
+    }
+
+    //Update
+    await model.findByIdAndUpdate(_id, data);
+
+    return {otpauth: secret.otpauth_url};
+  },
+
+  /**
+   * Remove account by its ID
+   * @param {String} _id Account ID
+   * @returns {Promise<void|{error: {name: String, description: String}}>}
+   */
+  remove: async _id =>
+  {
+    const files = await file.find({owner: _id});
+
+    if (files.length > 0)
+    {
+      return {
+        error: {
+          name: 'Child Files',
+          description: 'The account you\'re trying to remove still owns file(s). Please remove them before retrying!'
+        }
+      };
+    }
+    else
+    {
+      await model.findByIdAndDelete(_id);
     }
   }
 };

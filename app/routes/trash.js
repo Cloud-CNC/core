@@ -1,68 +1,60 @@
 /**
- * @fileoverview Trash routes
+ * @fileoverview Trash Routes
  */
 
 //Imports
-const accountModel = require('../models/account.js');
-const controller = require('../controllers/trash.js');
-const fileModel = require('../models/file.js');
+const controller = require('../controllers/trash');
+const model = require('../models/file');
 const mongoose = require('mongoose');
-const permission = require('../middleware/permission.js');
+const permission = require('../middleware/permission');
 const router = require('express').Router();
 
-//Get file
-router.param('id', async (req, res, next, param) =>
-{
-  const doc = await fileModel.findById(param);
-
-  if (doc == null)
+//Get target file
+router.param('id',
+  async (req, res, next, param) =>
   {
-    return res.status(404).json({
-      error: {
-        name: 'Invalid File',
-        description: 'The specified file doesn\'t exist!'
-      }
-    });
-  }
-  else
-  {
-    req.file = doc;
-    next();
-  }
-});
-
-//Get target account
-router.use(async (req, res, next) =>
-{
-  if (mongoose.Types.ObjectId.isValid(req.body.account))
-  {
-    if (req.user.role == 'admin')
+    //Validate ID
+    if (mongoose.Types.ObjectId.isValid(param) && await model.findById(param) != null)
     {
-      req.account = await accountModel.findById(req.body.account);
+      req.file = param;
       next();
     }
     else
     {
-      res.status(401);
-      return res.json({
+      return res.status(404).json({
         error: {
-          name: 'Insufficient Permissions',
-          description: 'You don\'t have the required permissions to perform this action!'
+          name: 'Invalid File',
+          description: 'The specified file doesn\'t exist!'
         }
       });
     }
-  }
-  else
-  {
-    req.account = req.user;
-    next();
-  }
-});
+  });
 
-//Routes
-router.get('/all', permission('trash:all'), controller.getAll);
-router.put('/:id', permission('trash:recover'), controller.recover);
-router.delete('/:id', permission('trash:remove'), controller.remove);
+//Get all trash
+router.get('/all',
+  permission('trash:all'),
+  async (req, res) =>
+  {
+    return res.json(await controller.all(req.user._id));
+  });
+
+//Recover a file
+router.put('/:id',
+  permission('trash:recover'),
+  async (req, res) =>
+  {
+    await controller.recover(req.file);
+    return res.end();
+  });
+
+//Remove a file permanently
+router.delete('/:id',
+  permission('trash:remove'),
+  async (req, res) =>
+  {
+    await controller.remove(req.file);
+    return res.end();
+  });
 
 //Export
 module.exports = router;

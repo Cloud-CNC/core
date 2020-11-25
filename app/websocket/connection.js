@@ -5,7 +5,7 @@
 //Imports
 const logger = require('../lib/logger.js');
 const store = require('./store.js');
-const {delay} = require('../../config.js').controller;
+const config = require('config');
 
 /**
 * Connection event handler
@@ -32,29 +32,9 @@ module.exports = (socket, req) =>
         logger.warn(`Link with controller ${id} broke!`);
       }
     });
-  }, delay);
+  }, config.get('controller.timeout'));
 
   logger.info(`Controller ${id} successfully bound!`);
-
-  //Events
-  socket.on('message', message =>
-  {
-    message = JSON.parse(message);
-    switch (message.event)
-    {
-      //Command response
-      case 'response:command': {
-        socket.emit('response:command', message);
-        break;
-      }
-
-      //Execute response
-      case 'response:execute': {
-        socket.emit('response:execute', message);
-        break;
-      }
-    }
-  });
 
   //Delete socket from store on disconnect
   socket.once('close', () =>

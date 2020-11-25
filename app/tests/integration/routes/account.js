@@ -5,6 +5,7 @@
 //Imports
 const app = require('../../../../app.js');
 const chai = require('chai');
+const config = require('config');
 const expect = require('chai').expect;
 const model = require('../../../models/account.js');
 
@@ -28,6 +29,20 @@ module.exports = () =>
       });
   });
 
+  it('should get all roles', async () =>
+  {
+    const res = await agent
+      .get('/api/accounts/roles')
+      .send();
+
+    expect(res).to.have.status(200);
+    expect(res).to.be.json;
+
+    expect(res.body).to.be.eql({
+      roles: Object.keys(config.get('core.acl.roles'))
+    });
+  });
+
   it('should create an account', async () =>
   {
     const res = await agent
@@ -35,9 +50,8 @@ module.exports = () =>
       .send({
         role: 'user',
         username: 'rst',
-        firstName: 'uvw',
-        lastName: 'xyz',
-        password: 'Testingpassword123!'
+        password: 'Testingpassword123!',
+        mfa: true
       });
 
     expect(res).to.have.status(200);
@@ -45,6 +59,68 @@ module.exports = () =>
 
     expect(res.body).haveOwnProperty('_id');
     id = res.body._id;
+  });
+
+  it('should allow accounts with identical usernames', async () =>
+  {
+    const res = await agent
+      .post('/api/accounts')
+      .send({
+        role: 'user',
+        username: 'rst',
+        password: 'Testingpassword123!',
+        mfa: true
+      });
+
+    expect(res).to.have.status(200);
+    expect(res).to.be.json;
+
+    expect(res.body).to.eql({
+      error: {
+        name: 'Duplicate Username',
+        description: 'You\'re attempting to create an account with an existing username!'
+      }
+    });
+  });
+
+  it('should start impersonating an account', async () =>
+  {
+    await agent
+      .post(`/api/accounts/${id}/impersonate/start`)
+      .send({
+        enabled: true
+      });
+
+    const res = await agent
+      .get('/api/accounts/own')
+      .send();
+
+    expect(res).to.have.status(200);
+    expect(res).to.be.json;
+
+    expect(res.body).to.haveOwnProperty('role', 'user');
+    expect(res.body).to.haveOwnProperty('username', 'rst');
+    expect(res.body).to.haveOwnProperty('mfa', true);
+  });
+
+  it('should stop impersonating an account', async () =>
+  {
+    await agent
+      .post('/api/accounts/impersonate/stop')
+      .send({
+        enabled: false
+      });
+
+    const res = await agent
+      .get('/api/accounts/own')
+      .send();
+
+    expect(res).to.have.status(200);
+    expect(res).to.be.json;
+
+    expect(res.body).to.haveOwnProperty('role', 'admin');
+    expect(res.body).to.haveOwnProperty('username', 'abc');
+    expect(res.body).to.haveOwnProperty('mfa', false);
   });
 
   it('should get own account', async () =>
@@ -58,8 +134,7 @@ module.exports = () =>
 
     expect(res.body).to.haveOwnProperty('role', 'admin');
     expect(res.body).to.haveOwnProperty('username', 'abc');
-    expect(res.body).to.haveOwnProperty('firstName', 'def');
-    expect(res.body).to.haveOwnProperty('lastName', 'ghi');
+    expect(res.body).to.haveOwnProperty('mfa', false);
   });
 
   it('should get an account', async () =>
@@ -73,8 +148,7 @@ module.exports = () =>
 
     expect(res.body).to.haveOwnProperty('role', 'user');
     expect(res.body).to.haveOwnProperty('username', 'rst');
-    expect(res.body).to.haveOwnProperty('firstName', 'uvw');
-    expect(res.body).to.haveOwnProperty('lastName', 'xyz');
+    expect(res.body).to.haveOwnProperty('mfa', true);
   });
 
   it('should get all accounts', async () =>
@@ -90,13 +164,11 @@ module.exports = () =>
 
     expect(res.body[0]).to.haveOwnProperty('role', 'admin');
     expect(res.body[0]).to.haveOwnProperty('username', 'abc');
-    expect(res.body[0]).to.haveOwnProperty('firstName', 'def');
-    expect(res.body[0]).to.haveOwnProperty('lastName', 'ghi');
+    expect(res.body[0]).to.haveOwnProperty('mfa', false);
 
     expect(res.body[1]).to.haveOwnProperty('role', 'user');
     expect(res.body[1]).to.haveOwnProperty('username', 'rst');
-    expect(res.body[1]).to.haveOwnProperty('firstName', 'uvw');
-    expect(res.body[1]).to.haveOwnProperty('lastName', 'xyz');
+    expect(res.body[1]).to.haveOwnProperty('mfa', true);
   });
 
   it('should update an account', async () =>
@@ -106,9 +178,8 @@ module.exports = () =>
       .send({
         role: 'admin',
         username: 'jkl',
-        firstName: 'mno',
-        lastName: 'pqr',
-        password: 'Testingpassword321!'
+        password: 'Testingpassword321!',
+        mfa: false
       });
 
     expect(res).to.have.status(200);
@@ -116,8 +187,7 @@ module.exports = () =>
     const doc = (await model.find())[1];
     expect(doc._doc).to.haveOwnProperty('role', 'admin');
     expect(doc._doc).to.haveOwnProperty('username', 'jkl');
-    expect(doc._doc).to.haveOwnProperty('firstName', 'mno');
-    expect(doc._doc).to.haveOwnProperty('lastName', 'pqr');
+    expect(doc._doc).to.haveOwnProperty('mfa', false);
   });
 
   it('should remove an account', async () =>

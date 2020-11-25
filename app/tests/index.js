@@ -5,14 +5,18 @@
 //Imports
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const config = require('config');
+const syswideCA = require('syswide-cas');
 
-//Environment variable
-process.env.NODE_ENV = 'testing';
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+//Enable self signed certificate
+if (config.get('core.cryptography.selfSigned'))
+{
+  syswideCA.addCAs(config.get('core.cryptography.cert'));
+}
 
 //Chai
 chai.use(chaiHttp);
 
 //Tests
 describe('Unit', require('./unit/index.js'));
-//describe('Integration', require('./integration/index.js'));
+describe('Integration', require('./integration/index.js'));

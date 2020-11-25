@@ -1,178 +1,166 @@
 /**
- * @fileoverview Machine controller
+ * @fileoverview Machine Controller
  */
 
 //Imports
-const config = require('../../config.js');
-const controller = require('../models/controller.js');
-const create = require('../lib/create.js');
+const config = require('config');
+const controller = require('../models/controller');
+const file = require('../models/file');
 const fs = require('fs').promises;
-const model = require('../models/machine.js');
-const mongoose = require('mongoose');
+const model = require('../models/machine');
 const path = require('path');
-const store = require('../websocket/store.js');
-const update = require('../lib/update.js');
+const websocket = require('./websocket');
 
-//Logic
+//Export
 module.exports = {
-  getAll: async function (req, res)
+  /**
+   * Get all machines
+   * @returns {Promise<Array<{controller: String, name: String, tags: Array<String>, length: Number, width: Number, height: Number}>>}
+   */
+  all: async () =>
   {
-    //Get all documents
-    let docs = await model.find().exec();
-
-    //Populate controller
-    docs = await docs.map(async doc => (await doc.populate('controller').execPopulate()).toJSON());
-
-    //Each element is a document resolving promise, resolve each one
-    docs = await Promise.all(docs);
-
-    return res.json(docs);
+    const docs = await model.find();
+    return docs.map(doc => doc.toJSON());
   },
-  create: async function (req, res)
+  /**
+   * Create a machine
+   * @param {String} _controller Controller ID
+   * @param {String} name Machine name
+   * @param {Array<String>} tags Machine tags
+   * @param {Number} length Machine working area length
+   * @param {Number} width Machine working area width
+   * @param {Number} height Machine working area height
+   * @returns {Promise<{error: {name: String, description: String}}>|Promise<{_id: String}>}
+   */
+  create: async (_controller, name, tags, length, width, height) =>
   {
-    const constructor = create(req.body, {
-      controller: value => mongoose.Types.ObjectId.isValid(value),
-      name: config.filters.name,
-      tags: config.filters.tags,
-      length: value => typeof value == 'number',
-      width: value => typeof value == 'number',
-      height: value => typeof value == 'number'
-    }, res);
-
-    if (constructor != null)
+    //Verify controller
+    if (await controller.findById(_controller) == null)
     {
-      //Ensure controller exists
-      const controllerDoc = await controller.findById(constructor.controller);
-      if (controllerDoc == null)
-      {
-        return res.status(404).json({
-          error: {
-            name: 'Unrecognized Controller',
-            description: 'The specified controller doesn\'t exist!'
-          }
-        });
-      }
-      else
-      {
-        constructor.controller = new mongoose.Types.ObjectId(constructor.controller);
-        const doc = new model(constructor);
-
-        await doc.save();
-        return res.json({_id: doc.id, controller: controllerDoc.toJSON()});
-      }
-    }
-  },
-  get: function (req, res)
-  {
-    return res.json(req.machine.toJSON());
-  },
-  command: function (req, res)
-  {
-    //Get socket
-    const socket = store.get(req.machine.controller.id);
-
-    //Disconnected controller
-    if (socket == null)
-    {
-      return res.json({
+      return {
         error: {
-          name: 'Disconnected Controller',
-          description: 'The machine you\'re trying to command is attached to a controller that isn\'t connected!'
+          name: 'Invalid Controller',
+          description: 'The machine you\'re trying to create belongs to an invalid controller!'
         }
-      });
+      };
     }
-
-    //Generate conversation ID
-    const id = new mongoose.Types.ObjectId();
-
-    //Register response
-    socket.once('response:command', function callback(message)
+    else
     {
-      if (message._id == id)
-      {
-        socket.off('response:command', callback);
-        return res.json({response: message.response});
-      }
-    });
+      const doc = new model({
+        controller: _controller,
+        name,
+        tags,
+        length,
+        width,
+        height
+      });
 
+      await doc.save();
+      return {_id: doc._id};
+    }
+  },
+  /**
+   * Send a command to a machine by ID
+   * @param {String} _id Machine ID
+   * @param {String} command Command
+   * @returns {Promise<String>|Promise<{error: {name: String, description: String}}>} Machine response
+   */
+  command: async (_id, command) =>
+  {
     //Send command
-    socket.send(JSON.stringify({
-      _id: id,
-      event: 'command',
-      machine: req.machine._id,
-      command: req.body.command
-    }));
-  },
-  execute: async function (req, res)
-  {
-    //Get socket
-    const socket = store.get(req.machine.controller.id);
-
-    //Disconnected controller
-    if (socket == null)
+    try
     {
-      return res.json({
-        error: {
-          name: 'Disconnected Controller',
-          description: 'The machine you\'re trying to execute a file on is attached to a controller that isn\'t connected!'
-        }
+      const response = await websocket(_id, {
+        event: 'command',
+        command
       });
+
+      return {response: response.response};
     }
-
-    //Generate conversation ID
-    const id = new mongoose.Types.ObjectId();
-
-    //Register response
-    socket.once('response:execute', function callback(message)
+    catch (error)
     {
-      if (message._id == id)
-      {
-        socket.off('response:execute', callback);
-        return res.json({success: message.success});
-      }
-    });
-
-    //Get file
-    const file = await fs.readFile(`${path.join(config.data.filesystem, req.body.file)}.gcode`, 'utf8');
-
-    //Send file
-    socket.send(JSON.stringify({
-      _id: id,
-      event: 'execute',
-      machine: req.machine._id,
-      file
-    }));
-  },
-  update: async function (req, res)
-  {
-    const success = update(req.body, req.machine, {
-      controller: value => mongoose.Types.ObjectId.isValid(value),
-      name: config.filters.name,
-      tags: config.filters.tags,
-      length: value => typeof value == 'number',
-      width: value => typeof value == 'number',
-      height: value => typeof value == 'number'
-    }, res);
-
-    if (success)
-    {
-      //Update controller
-      if (req.body.controller != null)
-      {
-        req.machine.controller = new mongoose.Types.ObjectId(req.body.controller);
-      }
-      else
-      {
-        req.machine.controller = req.machine.controller._id;
-      }
-
-      await req.machine.save();
-      return res.end();
+      return error;
     }
   },
-  remove: async function (req, res)
+  /**
+  * Send a file to a machine by ID
+  * @param {String} _id Machine ID
+  * @param {String} _file File ID
+  * @returns {Promise<Boolean>} Machine success
+  */
+  execute: async (_id, _file) =>
   {
-    await req.machine.remove();
-    return res.end();
+    //Verify file
+    if (await file.findById(_file) == null)
+    {
+      return {
+        error: {
+          name: 'Invalid File',
+          description: 'The file you\'re trying to execute doesn\'t exist!'
+        }
+      };
+    }
+    else
+    {
+      //Get file
+      const raw = await fs.readFile(path.join(config.get('core.data.filesystem'), _file) + '.raw', 'utf8');
+
+      //Send command
+      try
+      {
+        const response = await websocket(_id, {
+          event: 'execute',
+          file: raw
+        });
+        
+        return {success: response.success};
+      }
+      catch (error)
+      {
+        return error;
+      }
+    }
+  },
+  /**
+   * Get a machine by its ID
+   * @param {String} _id Machine ID
+   * @returns {Promise<{controller: String, name: String, tags: Array<String>, length: Number, width: Number, height: Number}>}
+   */
+  get: async _id =>
+  {
+    const doc = await model.findById(_id);
+    return doc.toJSON();
+  },
+  /**
+   * Update a machine by its ID
+   * @param {String} _id Machine Id
+   * @param {Object} data Data to update machine with
+   * @returns {Promise<void>|Promise<{error: {name: String, description: String}}>}
+   */
+  update: async (_id, data) =>
+  {
+    //Verify controller
+    if (data.controller != null && await controller.findById(data.controller) == null)
+    {
+      return {
+        error: {
+          name: 'Invalid Controller',
+          description: 'The machine you\'re trying to create belongs to an invalid controller!'
+        }
+      };
+    }
+    else
+    {
+      await model.findByIdAndUpdate(_id, data);
+    }
+  },
+  /**
+   * Remove a machine by its ID
+   * @param {String} _id
+   * @returns {Promise<void>}
+   */
+  remove: async _id =>
+  {
+    await model.findByIdAndDelete(_id);
   }
 };

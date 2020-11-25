@@ -3,28 +3,43 @@
  */
 
 //Imports
-const config = require('./config.js');
+const config = require('config');
 const express = require('express');
 const fs = require('fs');
+const http = require('http');
 const https = require('https');
 const middleware = require('./app/middleware/index.js');
-const mongo = require('./app/lib/mongo.js');
 const routes = require('./app/routes/index.js');
 const websocket = require('./app/websocket/index.js');
 const ws = require('ws');
 
 //Bootstrap mongo client
-mongo();
+let mongo = require('./app/lib/mongo.js');
+mongo().then(mongoose =>
+{
+  mongo = mongoose;
+});
 
 //Express
 const app = express();
-const server = https.createServer({
-  cert: fs.readFileSync(config.core.cert, 'utf8'),
-  key: fs.readFileSync(config.core.key, 'utf8')
-}, app).listen(config.core.port);
+let server;
+
+if (config.get('core.cryptography.tls'))
+{
+  server = https.createServer({
+    cert: fs.readFileSync(config.get('core.cryptography.cert'), 'utf8'),
+    key: fs.readFileSync(config.get('core.cryptography.key'), 'utf8')
+  }, app);
+}
+else
+{
+  server = http.createServer(app);
+}
+
+server.listen(config.get('core.server.port'));
 
 //Websocket
-new ws.Server({
+const wss = new ws.Server({
   server: server,
   verifyClient: websocket.authenticate
 }).on('connection', websocket.connection);
@@ -37,6 +52,20 @@ app.disable('x-powered-by');
 
 //Routes
 app.use(routes);
+
+//Shutdown
+const shutdown = async () =>
+{
+  //Close servers
+  wss.close();
+  server.close();
+
+  //Close Mongo
+  mongo.disconnect();
+};
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
 
 //Export
 module.exports = server;

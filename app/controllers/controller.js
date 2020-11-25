@@ -1,71 +1,92 @@
 /**
- * @fileoverview "Controller" controller
+ * @fileoverview "Controller" Controller
  */
 
 //Imports
-const config = require('../../config.js');
-const create = require('../lib/create.js');
 const crypto = require('crypto');
-const machineModel = require('../models/machine.js');
-const model = require('../models/controller.js');
-const update = require('../lib/update.js');
+const machine = require('../models/machine');
+const model = require('../models/controller');
 
-//Logic
+//Export
 module.exports = {
-  getAll: async function (req, res)
+  /**
+   * Get all controllers
+   * @returns {Promise<Array<{name: String}>>}
+   */
+  all: async () =>
   {
-    const docs = await model.find();
-    return res.json(docs.map(doc => doc.toJSON()));
+    const docs = await model.find(null, ['name']);
+    return docs.map(doc => doc.toJSON());
   },
-  create: async function (req, res)
+  /**
+   * Create a controller
+   * @param {String} name Controller name
+   * @returns {Promise<{_id: String}>}
+   */
+  create: async name =>
   {
-    const constructor = create(req.body, {
-      name: config.filters.name
-    }, res);
+    //Generate key
+    const key = crypto.randomBytes(512).toString('base64');
 
-    if (constructor != null)
-    {
-      constructor.key = crypto.randomBytes(config.controller.keyLength).toString('base64');
+    const doc = new model({
+      name,
+      key
+    });
 
-      const doc = new model(constructor);
-      await doc.save();
-      return res.json({_id: doc.id, key: doc.key});
-    }
+    await doc.save();
+    return {_id: doc._id};
   },
-  get: function (req, res)
+  /**
+   * Get a controller's key by its ID
+   * @param {String} _id Controller ID
+   * @returns {Promise<{_id: String, key: String}>}
+   */
+  key: async _id =>
   {
-    return res.json(req.controller.toJSON());
+    const doc = await model.findById(_id, ['key']);
+    return doc.toJSON();
   },
-  update: async function (req, res)
+  /**
+   * Get a controller by its ID
+   * @param {String} _id Controller ID
+   * @returns {Promise<{_id: String, name: String}>}
+   */
+  get: async _id =>
   {
-    const success = update(req.body, req.controller, {
-      name: config.filters.name
-    }, res);
-
-    if (success)
-    {
-      await req.controller.save();
-      return res.end();
-    }
+    const doc = await model.findById(_id, ['name']);
+    return doc.toJSON();
   },
-  remove: async function (req, res)
+  /**
+   * Update a controller by its ID
+   * @param {String} _id Controller ID
+   * @param {Object} data Data to update controller with
+   * @returns {Promise<Void>}
+   */
+  update: async (_id, data) =>
   {
-    //Make sure no child machines exist
-    const machines = await machineModel.find({controller: req.controller._id});
+    await model.findByIdAndUpdate(_id, data);
+  },
+  /**
+   * Remove a controller by its ID
+   * @param {String} _id Controller ID
+   * @returns {Promise<void|{error: {name: String, description: String}}>}
+   */
+  remove: async _id =>
+  {
+    const machines = await machine.find({controller: _id});
 
     if (machines.length > 0)
     {
-      return res.status(409).json({
+      return {
         error: {
           name: 'Child Machines',
-          description: 'The controller you\'re attempting to remove still owns machine(s). Please update or remove them before retrying.'
+          description: 'The controller you\'re trying to remove still owns machine(s). Please remove them before retrying!'
         }
-      });
+      };
     }
     else
     {
-      await req.controller.remove();
-      return res.end();
+      await model.findByIdAndDelete(_id);
     }
   }
 };

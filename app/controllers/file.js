@@ -1,59 +1,110 @@
 /**
- * @fileoverview File controller
+ * @fileoverview File Controller
  */
 
 //Imports
-const config = require('../../config.js');
-const create = require('../lib/create.js');
+const account = require('../models/account');
+const config = require('config');
 const fs = require('fs').promises;
-const model = require('../models/file.js');
+const model = require('../models/file');
 const path = require('path');
-const update = require('../lib/update.js');
 
-//Logic
+//Export
 module.exports = {
-  getAll: async function (req, res)
+  /**
+   * Get all non-trashed files owned by an account
+   * @param {String} owner Account owner ID
+   * @returns {Promise<Array<{name: String, description: String, extension: String}>>}
+   */
+  all: async owner =>
   {
-    const docs = await model.find({owner: req.account._id, status: 0}).exec();
-    return res.json(docs.map(doc => doc.toJSON()));
+    const docs = await model.find({owner, status: 0}, ['name', 'description', 'extension']);
+    return docs.map(doc => doc.toJSON());
   },
-  create: async function (req, res)
+  /**
+   * Create a file
+   * @param {String} owner Account owner ID
+   * @param {String} name File name
+   * @param {String} description File description
+   * @param {String} temp Path of the temporary file
+   * @param {String} extension The file extension
+   * @returns {Promise<{error: {name: String, description: String}}>|Promise<{_id: String}>}
+   */
+  create: async (owner, name, description, temp, extension) =>
   {
-    const constructor = create(req.body, {
-      name: config.filters.name,
-      description: config.filters.description
-    }, res);
-
-    if (constructor != null)
+    //Verify owner
+    if (await account.findById(owner) == null)
     {
-      constructor.owner = req.account._id;
+      return {
+        error: {
+          name: 'Invalid Account',
+          description: 'The file you\'re trying to create belongs to an invalid account!'
+        }
+      };
+    }
+    else
+    {
+      const data = {
+        owner,
+        name,
+        description,
+        extension
+      };
 
-      const doc = new model(constructor);
+      //Add description if not null
+      if (description != null)
+      {
+        data.description = description;
+      }
+
+      const doc = new model(data);
+
       await doc.save();
 
-      await fs.writeFile(`${path.join(config.data.filesystem, doc.id)}.gcode`, req.body.raw);
+      //Move to persistante storage
+      await fs.rename(temp, path.join(config.get('core.data.filesystem'), doc.id) + '.raw');
 
-      return res.json({_id: doc.id});
+      return {_id: doc._id};
     }
   },
-  get: async function (req, res)
+  /**
+   * Get a file's metadata by its ID
+   * @param {String} _id File ID
+   * @returns {Promise<{name: String, description: String, extension: String}>}
+   */
+  get: async _id =>
   {
-    const raw = await fs.readFile(`${path.join(config.data.filesystem, req.file.id)}.gcode`, 'utf8');
-    return res.json({...req.file.toJSON(), raw});
+    const doc = await model.findById(_id, ['name', 'description', 'extension']);
+    return doc.toJSON();
   },
-  update: async function (req, res)
+  /**
+   * Get a file name by its ID
+   * @param {String} _id File ID
+   * @returns {Promise<String>}
+   */
+  raw: _id =>
   {
-    update(req.body, req.file, {
-      name: config.filters.name,
-      description: config.filters.description
-    }, res);
-    await req.file.save();
-    return res.end();
+    //Generate file name
+    const name = path.resolve(path.join(config.get('core.data.filesystem'), _id) + '.raw');
+
+    return name;
   },
-  remove: async function (req, res)
+  /**
+   * Update a file by its ID
+   * @param {String} _id File ID
+   * @param {Object} data Data to update file with
+   * @returns {Promise<void>}
+   */
+  update: async (_id, data) =>
   {
-    req.file.status = 1;
-    await req.file.save();
-    return res.end();
+    await model.findByIdAndUpdate(_id, data);
+  },
+  /**
+   * Remove a file by its ID (Move to trash)
+   * @param {String} _id File ID
+   */
+  remove: async _id =>
+  {
+    await model.findByIdAndUpdate(_id, {status: 1});
   }
 };

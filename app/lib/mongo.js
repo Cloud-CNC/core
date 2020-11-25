@@ -3,7 +3,7 @@
  */
 
 //Imports
-const {database} = require('../../config.js').data;
+const config = require('config');
 const logger = require('./logger.js');
 const mongoose = require('mongoose');
 
@@ -13,6 +13,9 @@ const mongoose = require('mongoose');
  */
 module.exports = () =>
 {
+  //Get database URI
+  const database = config.get('core.data.database');
+
   //Register events
   mongoose.connection.on('connected', () =>
   {
@@ -35,6 +38,7 @@ module.exports = () =>
   //Connect to database
   return mongoose.connect(database, {
     useCreateIndex: true,
+    useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true
   });

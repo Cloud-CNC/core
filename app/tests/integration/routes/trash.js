@@ -41,6 +41,7 @@ module.exports = () =>
 
     expect(res.body[0]).to.have.property('name', 'rst');
     expect(res.body[0]).to.have.property('description', 'uvw');
+    expect(res.body[0]).to.have.property('extension', 'xyz');
 
     id = res.body[0]._id;
   });
@@ -57,6 +58,7 @@ module.exports = () =>
     expect(doc._doc).to.haveOwnProperty('status', 0);
     expect(doc._doc).to.haveOwnProperty('name', 'rst');
     expect(doc._doc).to.haveOwnProperty('description', 'uvw');
+    expect(doc._doc).to.haveOwnProperty('extension', 'xyz');
   });
 
   it('should remove a file', async () =>

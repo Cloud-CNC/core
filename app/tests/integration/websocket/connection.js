@@ -6,7 +6,7 @@
 const accountModel = require('../../../models/account.js');
 const app = require('../../../../app.js');
 const chai = require('chai');
-const config = require('../../../../config.js');
+const config = require('config');
 const expect = require('chai').expect;
 const fileModel = require('../../../models/file.js');
 const fs = require('fs').promises;
@@ -32,10 +32,10 @@ module.exports = () =>
     account = new accountModel({
       role: 'admin',
       username: 'abc',
-      firstName: 'def',
-      lastName: 'ghi',
-      hmac: '$argon2id$v=19$m=65536,t=3,p=12$dMaFGvt1Bq3utN1FSQS3Ag$PIArM+hQPWCgM1xnUUvIqX8fK03A37mmLuSo7AoyK6I',
+      hash: '$argon2id$v=19$m=65536,t=3,p=12$dMaFGvt1Bq3utN1FSQS3Ag$PIArM+hQPWCgM1xnUUvIqX8fK03A37mmLuSo7AoyK6I',
+      mfa: false
     });
+    
     await account.save();
   });
 
@@ -60,12 +60,13 @@ module.exports = () =>
     file = new fileModel({
       owner: account._id,
       name: 'abc',
-      description: 'def'
+      description: 'def',
+      extension: 'ghi'
     });
 
     await file.save();
 
-    await fs.writeFile(`${path.join(config.data.filesystem, file._id.toJSON())}.gcode`, ';TEST FILE');
+    await fs.writeFile(`${path.join(config.get('core.data.filesystem'), file._id.toJSON())}.raw`, ';TEST FILE');
   });
 
   //Login
@@ -83,7 +84,7 @@ module.exports = () =>
   before(done =>
   {
     //Connect
-    socket = new ws(`wss://${config.core.domain}`, {
+    socket = new ws('wss://127.0.0.1', {
       headers: {
         _id: process.env.controllerID,
         key: key
@@ -166,7 +167,7 @@ module.exports = () =>
     expect(res.body).to.eql({
       error: {
         name: 'Disconnected Controller',
-        description: 'The machine you\'re trying to command is attached to a controller that isn\'t connected!'
+        description: 'The machine you\'re trying to contact is attached to a controller that isn\'t connected!'
       }
     });
   });
@@ -181,7 +182,7 @@ module.exports = () =>
     expect(res.body).to.eql({
       error: {
         name: 'Disconnected Controller',
-        description: 'The machine you\'re trying to execute a file on is attached to a controller that isn\'t connected!'
+        description: 'The machine you\'re trying to contact is attached to a controller that isn\'t connected!'
       }
     });
   });
@@ -192,7 +193,7 @@ module.exports = () =>
     await account.remove();
     await machine.remove();
     await file.remove();
-    await fs.unlink(`${path.join(config.data.filesystem, file._id.toJSON())}.gcode`);
+    await fs.unlink(`${path.join(config.get('core.data.filesystem'), file._id.toJSON())}.raw`);
     await agent
       .post('/api/sessions/logout')
       .send();

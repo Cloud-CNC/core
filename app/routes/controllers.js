@@ -1,40 +1,89 @@
 /**
- * @fileoverview Controllers routes
+ * @fileoverview Controller Routes
  */
 
 //Imports
-const controller = require('../controllers/controller.js');
-const model = require('../models/controller.js')
-const permission = require('../middleware/permission.js');;
+const controller = require('../controllers/controller');
+const model = require('../models/controller');
+const mongoose = require('mongoose');
+const permission = require('../middleware/permission');
 const router = require('express').Router();
+const filters = require('../lib/filters');
+const {onePlus, body} = require('../middleware/validator');
 
-//Get controller
-router.param('id', async (req, res, next, param) =>
-{
-  const doc = await model.findById(param);
-
-  if (doc == null)
+//Get target controller
+router.param('id',
+  async (req, res, next, param) =>
   {
-    return res.status(404).json({
-      error: {
-        name: 'Invalid Controller',
-        description: 'The specified controller doesn\'t exist!'
-      }
-    });
-  }
-  else
-  {
-    req.controller = doc;
-    next();
-  }
-});
+    //Validate ID
+    if (mongoose.Types.ObjectId.isValid(param) && await model.findById(param) != null)
+    {
+      req.controller = param;
+      next();
+    }
+    else
+    {
+      return res.status(404).json({
+        error: {
+          name: 'Invalid Controller',
+          description: 'The specified controller doesn\'t exist!'
+        }
+      });
+    }
+  });
 
-//Routes
-router.get('/all', permission('controllers:all'), controller.getAll);
-router.post('/', permission('controllers:create'), controller.create);
-router.get('/:id', permission('controllers:get'), controller.get);
-router.patch('/:id', permission('controllers:update'), controller.update);
-router.delete('/:id', permission('controllers:remove'), controller.remove);
+//Get all controllers
+router.get('/all',
+  permission('controllers:all'),
+  async (req, res) =>
+  {
+    return res.json(await controller.all());
+  });
+
+//Create a controller
+router.post('/',
+  permission('controllers:create'),
+  body('name', filters.name),
+  async (req, res) =>
+  {
+    return res.json(await controller.create(req.body.name));
+  });
+
+//Get a controller's key
+router.get('/:id/key',
+  permission('controllers:key'),
+  async (req, res) =>
+  {
+    return res.json(await controller.key(req.controller));
+  });
+
+//Get a controller
+router.get('/:id',
+  permission('controllers:get'),
+  async (req, res) =>
+  {
+    return res.json(await controller.get(req.controller));
+  });
+
+//Update a controller
+router.patch('/:id',
+  permission('controllers:update'),
+  onePlus('body', {
+    name: filters.name
+  }),
+  async (req, res) =>
+  {
+    await controller.update(req.controller, req.data);
+    return res.end();
+  });
+
+//Remove a controller
+router.delete('/:id',
+  permission('controllers:remove'),
+  async (req, res) =>
+  {
+    return res.json(await controller.remove(req.controller));
+  });
 
 //Export
 module.exports = router;

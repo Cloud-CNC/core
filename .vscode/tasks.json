@@ -7,7 +7,13 @@
       "isBackground": true,
       "label": "Mongo",
       "type": "shell",
-      "command": "mkdir logs; mongod --config ./mongo.conf"
+      "command": "mkdir logs; mongod --config ./mongo.conf",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": []
     }
   ]
 }
