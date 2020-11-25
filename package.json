@@ -56,5 +56,6 @@
   "bugs": {
     "url": "https://github.com/Cloud-CNC/core/issues"
   },
-  "homepage": "https://github.com/Cloud-CNC/core#readme"
+  "homepage": "https://github.com/Cloud-CNC/core#readme",
+  "snyk": true
 }
