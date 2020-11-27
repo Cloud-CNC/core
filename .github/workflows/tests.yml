@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [13, 14]
+        node: [14, 15]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -30,13 +30,14 @@ jobs:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
         with:
           coverageCommand: sudo npm run coverage
+
   e2e-test:
     name: E2E test with Node ${{ matrix.node }}
     runs-on: ubuntu-latest
     needs: unit-test
     strategy:
       matrix:
-        node: [13, 14]
+        node: [14, 15]
     steps:
       - uses: actions/setup-node@v1
         with:
@@ -50,7 +51,6 @@ jobs:
       - name: Clone frontend
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.ref }}
           repository: 'cloud-cnc/frontend'
           path: frontend
 
@@ -68,7 +68,6 @@ jobs:
       - name: Clone controller
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.ref }}
           repository: 'cloud-cnc/controller'
           path: controller
 
@@ -89,7 +88,6 @@ jobs:
       - name: Clone core
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.ref }}
           repository: 'cloud-cnc/core'
           path: core
 
@@ -111,7 +109,15 @@ jobs:
         working-directory: ./core/config
         run: openssl rand -out secret.txt -base64 512
 
-      #Run unit + E2E tests
+      #Run tests
       - name: Run Tests
         working-directory: ./frontend
         run: sudo npm run test:e2e:cli
+
+      #Archive E2E videos on fail
+      - uses: actions/upload-artifact@v2
+        name: Archive E2E videos
+        if: ${{ failure() }}
+        with:
+          name: e2e-videos
+          path: ./frontend/tests/e2e/videos/
