@@ -14,6 +14,9 @@ logs
 config/*
 !config/default.js
 !config/development.js
+!config/docker.js
+!config/e2e.js
+!config/unit.js
 
 # Istanbul
 .nyc_output

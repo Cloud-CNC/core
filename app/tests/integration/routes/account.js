@@ -38,7 +38,7 @@ module.exports = () =>
     expect(res).to.have.status(200);
     expect(res).to.be.json;
 
-    expect(res.body).to.be.eql({
+    expect(res.body).to.eql({
       roles: Object.keys(config.get('core.acl.roles'))
     });
   });

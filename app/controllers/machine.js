@@ -9,7 +9,7 @@ const file = require('../models/file');
 const fs = require('fs').promises;
 const model = require('../models/machine');
 const path = require('path');
-const websocket = require('./websocket');
+const socket = require('./socket');
 
 //Export
 module.exports = {
@@ -70,12 +70,11 @@ module.exports = {
     //Send command
     try
     {
-      const response = await websocket(_id, {
-        event: 'command',
-        command
+      const response = await socket(_id, 'command', {
+        payload: command
       });
 
-      return {response: response.response};
+      return {response};
     }
     catch (error)
     {
@@ -108,12 +107,11 @@ module.exports = {
       //Send command
       try
       {
-        const response = await websocket(_id, {
-          event: 'execute',
-          file: raw
+        const response = await socket(_id, 'execute', {
+          payload: raw
         });
         
-        return {success: response.success};
+        return {response};
       }
       catch (error)
       {

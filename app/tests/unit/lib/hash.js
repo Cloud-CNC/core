@@ -1,5 +1,5 @@
 /**
- * @fileoverview Hasher tests
+ * @fileoverview Hash tests
  */
 
 //Imports

@@ -5,15 +5,13 @@
 //Imports
 const expect = require('chai').expect;
 const mongo = require('../../../lib/mongo.js');
+const mongoose = require('mongoose');
 
 //Export
 module.exports = () =>
 {
-  it('should connect to database', () =>
+  it('will access MongoDB', () =>
   {
-    mongo().then(mongoose =>
-    {
-      expect(mongoose.connection.readyState).to.equal(1);
-    });
+    expect(mongo.connect().connection.readyState).to.equal(mongoose.STATES.connected);
   });
 };

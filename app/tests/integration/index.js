@@ -6,5 +6,5 @@
 module.exports = () =>
 {
   describe('Routes', require('./routes/index.js'));
-  describe('Websocket', require('./websocket/index.js'));
+  describe('Socket', require('./socket/index.js'));
 };

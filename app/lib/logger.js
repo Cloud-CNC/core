@@ -10,21 +10,34 @@ require('winston-daily-rotate-file');
 const logger = winston.createLogger();
 
 //Switch between different logging targets
-switch (process.env.LOG)
+switch (config.get('core.logger.mode'))
 {
-  case 'file': {
+  //Log to console
+  case 'console': {
+    logger.format = winston.format.combine(
+      winston.format.colorize(),
+      winston.format.cli());
+
+    logger.add(new winston.transports.Console());
+    break;
+  }
+
+  //Log to file
+  case 'file':
+  default: {
     logger.format = winston.format.combine(
       winston.format.timestamp(),
       winston.format.json());
 
     logger.add(new winston.transports.DailyRotateFile({
       datePattern: 'HH-MM-DD-YYYY',
-      filename: config.get('core.data.logs') + '%DATE%.txt',
+      filename: config.get('core.logger.directory') + '%DATE%.txt',
       maxSize: '100m'
     }));
     break;
   }
 
+  //Don't log
   case 'silent': {
     logger.add(new winston.transports.Console());
 
@@ -32,16 +45,6 @@ switch (process.env.LOG)
     {
       transport.silent = true;
     });
-    break;
-  }
-
-  default:
-  case 'console': {
-    logger.format = winston.format.combine(
-      winston.format.colorize(),
-      winston.format.cli());
-
-    logger.add(new winston.transports.Console());
     break;
   }
 }

@@ -1,6 +1,6 @@
 /**	
- * @fileoverview Production Cloud CNC Core Config
- * This config file uses sain defaults
+ * @fileoverview Unit Testing Cloud CNC Core Config
+ * This config file does NOT use sain defaults
  */
 
 //Export	
@@ -66,7 +66,13 @@ module.exports = {
       key: './config/key.pem',
 
       //Self signed (Temporarily trust certificate when running healthcheck and tests)
-      selfSigned: false,
+      selfSigned: true,
+
+      //CT maximum age (Seconds)
+      ct: 60 * 60 * 24 * 30,
+
+      //HSTS maximum age (Seconds)
+      hsts: 60 * 60 * 24 * 30,
 
       //Session secret location	(Used to generate session cookies, should be at least 512 bytes long)
       secret: './config/secret.txt',
@@ -84,9 +90,9 @@ module.exports = {
       filesystem: './files/',
 
       //MongoDB URI	(Used to store entities)
-      mongodb: 'mongodb://localhost:27017/cloud-cnc',
+      mongodb: 'mongodb://localhost:27017/cloud-cnc-unit',
 
-      //RedisDB URI (Used to store sessions and for socket sharing)
+      ////RedisDB URI (Used to store sessions and socket sharing)
       redisdb: 'redis://localhost:6379'
     },
 
@@ -96,15 +102,17 @@ module.exports = {
       directory: './logs/',
 
       //Logging mode (file = log to file, console = log to console, silent = don't log)
-      mode: 'file'
+      mode: 'silent'
     },
 
     //HTTP/Socket server options
     server: {
       //Allowed CORS domains/addresses
-      cors: [],
+      cors: [
+        'https://127.0.0.1:8443'
+      ],
 
-      //Listening port	
+      //Listening port
       port: 443,
 
       //Session expire time (How long a login is good for) (Milliseconds)	
@@ -114,7 +122,7 @@ module.exports = {
       rateLimitWindow: 1000 * 60 * 15,
 
       //Maximum requests per rate limit window (0 to disable)
-      rateLimitRequests: 100,
+      rateLimitRequests: 0,
 
       //Max upload size	(How big are your files going to be)
       uploadLimit: '100mb'

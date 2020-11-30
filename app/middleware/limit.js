@@ -5,7 +5,8 @@
 //Imports
 const config = require('config');
 const rateLimit = require('express-rate-limit');
-const rateLimitMongo = require('rate-limit-mongo');
+const rateLimitRedis = require('rate-limit-redis');
+const redis = require('../lib/redis').client;
 const router = require('express').Router();
 
 //Middleware
@@ -18,9 +19,9 @@ router.use(rateLimit({
       description: `You've hit a rate limit, please wait ${config.get('core.server.rateLimitWindow')/(1000 * 60)} minutes before trying again!`
     }
   },
-  store: new rateLimitMongo({
-    collectionName: 'limits',
-    uri: config.get('core.data.database')
+  store: new rateLimitRedis({
+    client: redis,
+    prefix: 'limits#'
   })
 }));
 

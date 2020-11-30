@@ -1,5 +1,5 @@
 /**	
- * @fileoverview Production Cloud CNC Core Config
+ * @fileoverview Docker Production Cloud CNC Core Config
  * This config file uses sain defaults
  */
 
@@ -86,7 +86,7 @@ module.exports = {
       //MongoDB URI	(Used to store entities)
       mongodb: 'mongodb://localhost:27017/cloud-cnc',
 
-      //RedisDB URI (Used to store sessions and for socket sharing)
+      //RedisDB URI (Used to store sessions and socket sharing)
       redisdb: 'redis://localhost:6379'
     },
 
@@ -96,7 +96,7 @@ module.exports = {
       directory: './logs/',
 
       //Logging mode (file = log to file, console = log to console, silent = don't log)
-      mode: 'file'
+      mode: 'console'
     },
 
     //HTTP/Socket server options

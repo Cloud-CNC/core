@@ -9,7 +9,7 @@ const router = require('express').Router();
 //Route
 router.use((req, res, next) =>
 {
-  logger.warn(`Received request for invalid endpoint: ${req.baseUrl}`);
+  logger.warn(`Received request for invalid endpoint: ${req.path}`);
   
   res.status(404);
   return res.json({

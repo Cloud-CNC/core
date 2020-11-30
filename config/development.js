@@ -1,10 +1,11 @@
 /**	
- * @fileoverview Default development Cloud CNC core config
- * This config file uses sain defaults
+ * @fileoverview Development Cloud CNC Core Config
+ * This config file does NOT use sain defaults
  */
 
 //Export	
 module.exports = {
+  //Settings for this core instance
   core: {
     //Access Control List (Controls what permissions each role has)	
     acl: {
@@ -67,9 +68,6 @@ module.exports = {
       //Self signed (Temporarily trust certificate when running healthcheck and tests)
       selfSigned: true,
 
-      //Enable TLS (If enabled, you must provide TLS certificates)
-      tls: true,
-
       //CT maximum age (Seconds)
       ct: 60 * 60 * 24 * 30,
 
@@ -88,17 +86,26 @@ module.exports = {
 
     //Persistant data storage
     data: {
-      //MongoDB URI	
-      database: `mongodb://localhost:27017/${process.env.DB || 'cloud-cnc-development'}`,
-
       //Filesystem (Used for storing user files)	
       filesystem: './files/',
 
-      //Logging directory to store logs (Only used in non-Docker production)	
-      logs: './logs/'
+      //MongoDB URI	(Used to store entities)
+      mongodb: 'mongodb://localhost:27017/cloud-cnc-development',
+
+      ////RedisDB URI (Used to store sessions and for socket sharing)
+      redisdb: 'redis://localhost:6379'
     },
 
-    //TLS/Websocket server options
+    //Logging settings
+    logger: {
+      //Logging directory (Only used when mode = file)
+      directory: './logs/',
+
+      //Logging mode (file = log to file, console = log to console, silent = don't log)
+      mode: 'console'
+    },
+
+    //HTTP/Socket server options
     server: {
       //Allowed CORS domains/addresses
       cors: [
@@ -121,6 +128,8 @@ module.exports = {
       uploadLimit: '100mb'
     }
   },
+
+  //Settings for connecting to controller(s)
   controller: {
     //How long to wait after pinging a controller before declaring it offline (Milliseconds)	
     timeout: 1000 * 3,

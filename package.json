@@ -7,17 +7,17 @@
   "scripts": {
     "coverage": "nyc --reporter=lcov npm run test",
     "lint": "eslint .",
-    "start:development": "cross-env NODE_ENV=development LOG=console node app.js",
-    "start:docker": "cross-env NODE_ENV=production LOG=console node app.js",
-    "start": "cross-env NODE_ENV=production LOG=file node app.js",
-    "test": "cross-env NODE_ENV=development DB=cloud-cnc-unit LOG=silent mocha --colors --exit --timeout 60000 ./app/tests/index.js"
+    "start": "cross-env NODE_ENV=production node app.js",
+    "start:development": "cross-env NODE_ENV=development node app.js",
+    "start:docker": "cross-env NODE_ENV=docker node app.js",
+    "test": "cross-env NODE_ENV=unit mocha --colors --exit --timeout 60000 ./app/tests/index.js"
   },
   "author": "Cloud CNC",
   "license": "MIT",
   "dependencies": {
     "argon2": "^0.24.1",
     "config": "^3.3.1",
-    "connect-mongodb-session": "^2.4.1",
+    "connect-redis": "^5.0.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.2",
     "express": "^4.17.1",
@@ -28,19 +28,23 @@
     "helmet": "^3.23.3",
     "mongoose": "^5.10.4",
     "mongoose-id-validator": "^0.5.4",
-    "rate-limit-mongo": "^2.2.0",
+    "rate-limit-redis": "^2.0.0",
+    "redis": "^3.0.2",
+    "socket.io": "^3.0.3",
+    "socket.io-redis": "^6.0.1",
     "speakeasy": "^2.0.0",
     "syswide-cas": "^5.3.0",
+    "uid2": "^0.0.3",
     "winston": "^3.3.3",
-    "winston-daily-rotate-file": "^3.10.0",
-    "ws": "^7.3.1"
+    "winston-daily-rotate-file": "^3.10.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "eslint": "^6.8.0",
     "mocha": "^6.2.3",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "socket.io-client": "^3.0.3"
   },
   "browserslist": [
     "last 1 Chrome version"

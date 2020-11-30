@@ -6,9 +6,10 @@
 const config = require('config');
 const fs = require('fs');
 const model = require('../models/account.js');
+const redis = require('../lib/redis').client;
 const router = require('express').Router();
 const session = require('express-session');
-const store = require('connect-mongodb-session')(session);
+const store = require('connect-redis')(session);
 
 //Session
 router.use(session({
@@ -20,8 +21,8 @@ router.use(session({
     secure: true
   },
   store: new store({
-    uri: config.get('core.data.database'),
-    collection: 'sessions'
+    client: redis,
+    prefix: 'sessions#'
   }),
   resave: false,
   saveUninitialized: false,

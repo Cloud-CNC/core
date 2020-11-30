@@ -4,8 +4,8 @@ FROM node:alpine3.10
 #Create directory
 WORKDIR /usr/src/core
 
-#Copy dependencies
-COPY package*.json ./
+#Copy source
+COPY . .
 
 #Install Node-Gyp
 RUN apk add make gcc g++ python
@@ -17,14 +17,12 @@ RUN npm install
 #Create directories
 RUN mkdir files
 
-#Bundle source code
-COPY . .
-
 #Expose port 443
 EXPOSE 443
 
-#Run server
-CMD ["npm", "run", "start:docker"]
+#Run server (Without NPM)
+ENV NODE_ENV=docker
+CMD ["node", "app/app.js"]
 
 #Health check
 HEALTHCHECK --interval=30s --timeout=5s CMD [ "node", "app/lib/healthcheck" ]

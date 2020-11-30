@@ -25,7 +25,8 @@
       "program": "${workspaceFolder}/app/lib/healthcheck.js",
       "skipFiles": [
         "<node_internals>/**"
-      ]
+      ],
+      "outputCapture": "std"
     },
     {
       "type": "node",
@@ -44,10 +45,9 @@
         "<node_internals>/**"
       ],
       "env": {
-        "DB": "cloud-cnc-unit",
-        "LOG": "console",
-        "NODE_ENV": "development"
-      }
+        "NODE_ENV": "unit"
+      },
+      "outputCapture": "std"
     }
   ]
 }

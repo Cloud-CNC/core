@@ -21,22 +21,13 @@ View guides, documentation and more at [cloud-cnc.github.io](https://cloud-cnc.g
 4. Generate an X509 certificate (`certificate.cer`) and key (`key.pem`), and 512 bytes of crypto-safe random text (`secret.txt`) in the [`config`](./config) directory
 7. Run `npm start` to start the API server in production
 
-### Recommended IDE Extensions
-Name | VS Code | Atom
---- | --- | ---
-ESLint | [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) | [ESLint](https://atom.io/packages/eslint)
-Spell Checker | [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker) (Enable cSpell.allowCompoundWords) | [Spell Check](https://atom.io/packages/spell-check)
-Mark code for review, take notes, add todo items, etc. | [Comment Anchors](https://marketplace.visualstudio.com/items?itemName=ExodiusStudios.comment-anchors) | [language-todo-extra-words](https://atom.io/packages/language-todo-extra-words)
-Colorize pairs of brackets | [Bracket Colorizer 2](https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2) | [Bracket Colorizer](https://atom.io/packages/bracket-colorizer)
-Help with writing documentation | [GitHub Markdown Preview](https://marketplace.visualstudio.com/items?itemName=bierner.github-markdown-preview) | [Markdown Preview](https://atom.io/packages/markdown-preview)
-
 ### NPM Scripts
 Name | Description
 --- | ---
-`coverage` | Generate test coverage using Istanbul
-`start` | Run server in production mode
-`start:development` | Run server in development mode
-`start:docker` | Run server in production mode with console logging
+`coverage` | Run all unit tests and generate coverage reports
+`start` | Run the server in production mode
+`start:development` | Run the server in development mode
+`start:docker` | Run server in production mode - logs to console instead of files (Docker containers don't actually use this command but it uses the exact same environment variables as the Docker containers)
 `test` | Run unit + integration tests (E2E tests are ran from the [frontend](https://github.com/cloud-cnc/frontend) repository)
 
 ## License
