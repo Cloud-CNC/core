@@ -14,6 +14,10 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Enable MongoDB
         run: sudo systemctl start mongod
+      - name: Install & Enable RedisDB
+        run: |
+          sudo apt install redis-server
+          sudo systemctl start redis-server
       - name: Install Modules
         run: sudo npm ci
       - name: ESLint
@@ -84,6 +88,11 @@ jobs:
       #Setup the core
       - name: Enable MongoDB
         run: sudo systemctl start mongod
+
+      - name: Install & Enable RedisDB
+        run: |
+          sudo apt install redis-server
+          sudo systemctl start redis-server
 
       - name: Clone core
         uses: actions/checkout@v2
