@@ -4,6 +4,7 @@
 
 //Imports
 const config = require('config');
+const crypto = require('crypto');
 const express = require('express');
 const fs = require('fs');
 const https = require('https');
@@ -12,14 +13,47 @@ const mongo = require('./app/lib/mongo.js').connect();
 const redis = require('./app/lib/redis.js').connect();
 const socket = require('./app/socket/server.js');
 
+//Ensure storage directory exists
+const storagePath = config.get('core.data.filesystem');
+if (!fs.existsSync(storagePath))
+{
+  logger.warn(`Storage directory (${storagePath}) does not exist, creating it!`);
+  fs.mkdirSync(storagePath);
+}
+
+//Ensure JWT secret exists
+const secretPath = config.get('core.cryptography.secret');
+if (!fs.existsSync(secretPath))
+{
+  logger.warn(`JWT secret at ${secretPath} does not exist, creating it!`);
+
+  //Generate secret
+  const secret = crypto.randomBytes(512).toString('base64');
+
+  //Save
+  fs.writeFileSync(secretPath, secret);
+}
+
+//Ensure certificates exist
+const certPath = config.get('core.cryptography.cert');
+const keyPath = config.get('core.cryptography.key');
+
+if (!fs.existsSync(certPath) || !fs.existsSync(keyPath))
+{
+  logger.error(`TLS certificate at ${certPath} or key at ${keyPath} does not exist!
+To create one with Open SSL (For development/testing purposes only!), run:
+openssl req -x509 -newkey rsa:4096 -addext "subjectAltName = DNS:localhost, IP:127.0.0.1" -nodes -sha256 -days 365 -keyout ${keyPath} -out ${certPath}`);
+  process.exit(1);
+}
+
 //Get port number
 const port = config.get('core.server.port');
 
 //Express
 const app = express();
 const server = https.createServer({
-  cert: fs.readFileSync(config.get('core.cryptography.cert'), 'utf8'),
-  key: fs.readFileSync(config.get('core.cryptography.key'), 'utf8')
+  cert: fs.readFileSync(certPath, 'utf8'),
+  key: fs.readFileSync(keyPath, 'utf8')
 }, app).listen(port);
 
 //Socket
@@ -37,14 +71,6 @@ app.disable('x-powered-by');
 
 //Routes
 app.use(routes);
-
-//Ensure directory for storing uploaded files exists
-const storageDirectory = config.get('core.data.filesystem');
-if (!fs.existsSync(storageDirectory))
-{
-  logger.error(`Filesystem storage directory (${storageDirectory}) does not exist, please create it!`);
-  process.exit(1);
-}
 
 //Shutdown
 const shutdown = async () =>
