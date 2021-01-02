@@ -42,6 +42,7 @@ module.exports = () =>
       description: 'def',
       extension: 'ghi'
     });
+    await doc.save();
     await doc.validate(err =>
     {
       expect(err).to.be.null;
