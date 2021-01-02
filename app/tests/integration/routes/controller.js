@@ -91,7 +91,7 @@ module.exports = () =>
 
     expect(res).to.have.status(200);
 
-    const doc = await model.findOne();
+    const doc = await model.findById(id);
     expect(doc._doc).to.haveOwnProperty('name', 'xyz');
   });
 

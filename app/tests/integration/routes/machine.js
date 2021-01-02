@@ -108,7 +108,7 @@ module.exports = () =>
 
     expect(res).to.have.status(200);
 
-    const doc = await (await model.findOne()).populate('controller').execPopulate();
+    const doc = await (await model.findById(id)).populate('controller').execPopulate();
     expect(doc._doc).to.haveOwnProperty('controller');
     expect(doc._doc).to.haveOwnProperty('name', 'rst');
     expect(doc._doc).to.deep.haveOwnProperty('tags', ['uvw', 'xyz']);

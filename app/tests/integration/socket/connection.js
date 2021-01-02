@@ -43,8 +43,6 @@ module.exports = () =>
 
     await account.save();
 
-    console.log(`[integration/socket/connection.js:46] ID: ${account._id}`);
-
     //Create controller
     controller = new controllerModel({
       name: 'abc',

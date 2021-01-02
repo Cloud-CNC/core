@@ -100,7 +100,7 @@ module.exports = () =>
 
     expect(res).to.have.status(200);
 
-    const doc = await model.findOne();
+    const doc = await model.findById(id);
     expect(doc._doc).to.haveOwnProperty('name', 'rst');
     expect(doc._doc).to.haveOwnProperty('description', 'uvw');
     expect(doc._doc).to.haveOwnProperty('extension', 'xyz');
@@ -114,7 +114,7 @@ module.exports = () =>
 
     expect(res).to.have.status(200);
 
-    const doc = await model.findOne();
+    const doc = await model.findById(id);
     expect(doc._doc).to.haveOwnProperty('status', 1);
     expect(doc._doc).to.haveOwnProperty('name', 'rst');
     expect(doc._doc).to.haveOwnProperty('description', 'uvw');
