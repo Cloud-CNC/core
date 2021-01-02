@@ -23,8 +23,9 @@ module.exports = () =>
       mfa: false
     });
     await account.save();
+    console.log('[unit/models/file.js:26] Created!');
 
-    console.log(`[unit/models/file.js:27] ID: ${account._id}`);
+    console.log(`[unit/models/file.js:28] ID: ${account._id}`);
   });
 
   it('should reject null parameters', async () =>
@@ -38,7 +39,7 @@ module.exports = () =>
 
   it('should accept valid parameters', async () =>
   {
-    console.log(`[unit/models/file.js:41] ID: ${account._id}`);
+    console.log(`[unit/models/file.js:42] ID: ${account._id}`);
 
     const doc = new model({
       owner: account._id,
@@ -55,6 +56,7 @@ module.exports = () =>
   //Cleanup
   after(async () =>
   {
+    console.log('[unit/models/file.js:59] Destroying!');
     await account.remove();
   });
 };
