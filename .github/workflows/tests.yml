@@ -31,7 +31,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
         with:
-          coverageCommand: sudo npm run test
+          coverageCommand: sudo npm run coverage
 
   e2e-test:
     name: E2E test with Node ${{ matrix.node }}
