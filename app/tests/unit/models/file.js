@@ -23,9 +23,9 @@ module.exports = () =>
       mfa: false
     });
     await account.save();
-    console.log('[unit/models/file.js:26] Created!');
 
-    console.log(`[unit/models/file.js:28] ID: ${account._id}`);
+    const temp = await accountModel.findById(account._id);
+    console.log(`[unit/models/file.js:28] ${JSON.stringify(temp)} ID: ${account._id}`);
   });
 
   it('should reject null parameters', async () =>
