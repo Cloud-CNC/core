@@ -8,6 +8,9 @@ const controllerModel = require('../../../models/controller.js');
 const expect = require('chai').expect;
 const io = require('socket.io-client');
 
+//Get address
+const address = `https://127.0.0.1:${config.get('core.server.port')}`;
+
 //Data
 let controller;
 const key1 = 'at592VFeO0ogmSOalVNHGTpw8TcXpZFgySWVTlHYhLIqHQbMO2fh63HihfSd8Zgx53WS6G2NbSX5sLUeNCJPN3evPePTGCI9YgbzwGWiEJg0M25mCGIfPsbrXN0qTGQO4sbgZWJQGEExKZttXCgOwY47Lb42zCBB9RKXO9XnO6DJcx6YRuRhVSS7wcxMp5rBOGZ4li2Zl2gM30upbZstzfTh06SHwE2HIut30FAgjA572xzvFtkyqP0kgcfuM9A0GEDJaVNFYAgd08FczeAyB3jn61nR5INn80td5nm3jMToIsVMwjonojL9ytYV1yh4eu0Xje7xppBP51AZKayscFsOaFp4VHuocfKSdcAGsDPqEXZxUBGGQTZvCnrLIrdIseuYKLR7CdDFUaeLqz3B9Hl600I5gvmFKfmW8KywKxlJQhEWwPEpSOTxS4N6y6T9MRGRq5pX12h2eVYSHrKgP9ReBOBha1WEd7o9akw2RhMHuzohOpoY1EHUnCbWa6MD';
@@ -31,7 +34,7 @@ module.exports = () =>
   it('should deny controller for missing key', done =>
   {
     //Connect
-    socket = io.connect('https://127.0.0.1', {
+    socket = io.connect(address, {
       auth: {
         _id: controller._id.toJSON()
       },
@@ -49,7 +52,7 @@ module.exports = () =>
   it('should deny controller for missing ID', done =>
   {
     //Connect
-    socket = io.connect('https://127.0.0.1', {
+    socket = io.connect(address, {
       auth: {
         key: key1
       },
@@ -67,7 +70,7 @@ module.exports = () =>
   it('should deny controller for invalid key', done =>
   {
     //Connect
-    socket = io.connect('https://127.0.0.1', {
+    socket = io.connect(address, {
       auth: {
         _id: controller._id.toJSON(),
         key: key2
@@ -86,7 +89,7 @@ module.exports = () =>
   it('should deny controller for invalid ID', done =>
   {
     //Connect
-    socket = io.connect('https://127.0.0.1', {
+    socket = io.connect(address, {
       auth: {
         _id: '5e2a7820b815352e8aeb5e53',
         key: key1
@@ -105,7 +108,7 @@ module.exports = () =>
   it('should accept controller for valid key and ID', done =>
   {
     //Connect
-    socket = io.connect('https://127.0.0.1', {
+    socket = io.connect(address, {
       auth: {
         _id: controller._id.toJSON(),
         key: key1

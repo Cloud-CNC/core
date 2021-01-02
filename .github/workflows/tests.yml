@@ -23,9 +23,7 @@ jobs:
       - name: ESLint
         run: npm run lint
       - name: Create Directories
-        run: mkdir files && sudo mkdir /data/db -p
-      - name: Generate Salt
-        run: cd config && openssl rand -out secret.txt -base64 512
+        run: sudo mkdir /data/db -p
       - name: Generate Certificate
         run: cd config && openssl req -newkey rsa:2048 -nodes -x509 -subj "/CN=127.0.0.1" -addext "subjectAltName = IP:127.0.0.1" -keyout key.pem -out cert.cer
       - uses: paambaati/codeclimate-action@v2.7.4
@@ -99,10 +97,6 @@ jobs:
         with:
           repository: 'cloud-cnc/core'
           path: core
-
-      - name: Create files directory
-        working-directory: ./core
-        run: mkdir files
 
       - name: Install core modules
         working-directory: ./core

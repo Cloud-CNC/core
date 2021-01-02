@@ -14,9 +14,6 @@ RUN npm install node-gyp -g
 #Install dependencies
 RUN npm install
 
-#Create directories
-RUN mkdir files
-
 #Expose port 443
 EXPOSE 443
 

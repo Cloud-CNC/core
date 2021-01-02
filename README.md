@@ -18,7 +18,7 @@ View guides, documentation and more at [cloud-cnc.github.io](https://cloud-cnc.g
 1. Setup a [Mongo](https://www.mongodb.com) database
 2. Install Node Gyp (Using [these](https://github.com/nodejs/node-gyp#installation) instructions)
 3. Install dependencies via running `npm i`
-4. Generate an X509 certificate (`certificate.cer`) and key (`key.pem`), and 512 bytes of crypto-safe random text (`secret.txt`) in the [`config`](./config) directory
+4. Generate an X509 certificate (`certificate.cer`) and key (`key.pem`) in the [`config`](./config) directory
 7. Run `npm start` to start the API server in production
 
 ### NPM Scripts

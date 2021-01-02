@@ -15,6 +15,9 @@ const io = require('socket.io-client');
 const machineModel = require('../../../models/machine.js');
 const path = require('path');
 
+//Get address
+const address = `https://127.0.0.1:${config.get('core.server.port')}`;
+
 //Agent
 const agent = chai.request.agent(app);
 
@@ -81,7 +84,7 @@ module.exports = () =>
       });
 
     //Bind controller
-    socket = io.connect('https://127.0.0.1', {
+    socket = io.connect(address, {
       auth: {
         _id: controller._id.toJSON(),
         key: key
