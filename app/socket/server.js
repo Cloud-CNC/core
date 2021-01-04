@@ -4,9 +4,20 @@
 
 //Imports
 const authenticate = require('./authenticate');
+const config = require('config');
 const connection = require('./connection');
 const io = require('socket.io');
-const redis = require('../lib/redis').client;
+const session = require('../middleware/session');
+
+/**
+ * Wrap Express middleware for use with SocketIO
+ * @param {express.Middleware} middleware
+ */
+const wrapExpress = middleware => (socket, next) =>
+{
+  //Call the middleware
+  middleware(socket.request, socket.request.res, next);
+};
 
 //Instance variables
 /**
@@ -35,7 +46,7 @@ module.exports = {
   },
   /**
    * Start/get the socket server
-   * @param {io.Server} http The HTTP(S) server
+   * @param {http.Server} http The HTTP(S) server
    * @returns {io.Server}
    */
   connect: http =>
@@ -44,9 +55,15 @@ module.exports = {
     if (http != null && server == null)
     {
       //Instantiate the socket
-      server = new io.Server(http);
+      server = new io.Server(http, {
+        cors: {
+          credentials: true,
+          origin: config.get('core.server.cors')
+        }
+      });
 
       //Middleware
+      server.use(wrapExpress(session.generic));
       server.use(authenticate);
 
       //On connection

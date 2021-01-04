@@ -53,7 +53,9 @@ module.exports = {
             'machines:all',
             'machines:get',
             'machines:command',
-            'machines:execute'
+            'machines:execute',
+            'machines:startOutput',
+            'machines:stopOutput'
           ]
         }
       }

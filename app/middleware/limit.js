@@ -7,10 +7,9 @@ const config = require('config');
 const rateLimit = require('express-rate-limit');
 const rateLimitRedis = require('rate-limit-redis');
 const redis = require('../lib/redis').client;
-const router = require('express').Router();
 
-//Middleware
-router.use(rateLimit({
+//Export
+module.exports = rateLimit({
   windowMs: config.get('core.server.rateLimitWindow'),
   max: config.get('core.server.rateLimitRequests'),
   message: {
@@ -23,7 +22,4 @@ router.use(rateLimit({
     client: redis,
     prefix: 'limits#'
   })
-}));
-
-//Export
-module.exports = router;
+});

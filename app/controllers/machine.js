@@ -3,13 +3,8 @@
  */
 
 //Imports
-const config = require('config');
 const controller = require('../models/controller');
-const file = require('../models/file');
-const fs = require('fs').promises;
 const model = require('../models/machine');
-const path = require('path');
-const socket = require('./socket');
 
 //Export
 module.exports = {
@@ -57,66 +52,6 @@ module.exports = {
 
       await doc.save();
       return {_id: doc._id};
-    }
-  },
-  /**
-   * Send a command to a machine by ID
-   * @param {String} _id Machine ID
-   * @param {String} command Command
-   * @returns {Promise<String>|Promise<{error: {name: String, description: String}}>} Machine response
-   */
-  command: async (_id, command) =>
-  {
-    //Send command
-    try
-    {
-      const response = await socket(_id, 'command', {
-        payload: command
-      });
-
-      return {response};
-    }
-    catch (error)
-    {
-      return error;
-    }
-  },
-  /**
-  * Send a file to a machine by ID
-  * @param {String} _id Machine ID
-  * @param {String} _file File ID
-  * @returns {Promise<Boolean>} Machine success
-  */
-  execute: async (_id, _file) =>
-  {
-    //Verify file
-    if (await file.findById(_file) == null)
-    {
-      return {
-        error: {
-          name: 'Invalid File',
-          description: 'The file you\'re trying to execute doesn\'t exist!'
-        }
-      };
-    }
-    else
-    {
-      //Get file
-      const raw = await fs.readFile(path.join(config.get('core.data.filesystem'), _file) + '.raw', 'utf8');
-
-      //Send command
-      try
-      {
-        const response = await socket(_id, 'execute', {
-          payload: raw
-        });
-        
-        return {response};
-      }
-      catch (error)
-      {
-        return error;
-      }
     }
   },
   /**

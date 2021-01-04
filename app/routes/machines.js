@@ -3,13 +3,13 @@
  */
 
 //Imports
+const {onePlus, body} = require('../lib/validator');
 const controller = require('../controllers/machine');
+const filters = require('../lib/filters');
 const model = require('../models/machine');
 const mongoose = require('mongoose');
 const permission = require('../middleware/permission');
 const router = require('express').Router();
-const filters = require('../lib/filters');
-const {onePlus, body} = require('../middleware/validator');
 
 //Get target machine
 router.param('id',

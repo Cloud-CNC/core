@@ -25,51 +25,19 @@ module.exports = () =>
     await controller.save();
   });
 
-  it('should deny controller for missing key', done =>
-  {
-    authenticate({
-      handshake: {
-        address: 'TESTING-IP',
-        auth: {
-          _id: controller._id
-        }
-      }
-    }, err =>
-    {
-      expect(err.message).to.equal('Missing authentication information');
-      done();
-    });
-  });
-
-  it('should deny controller for missing ID', done =>
-  {
-    authenticate({
-      handshake: {
-        address: 'TESTING-IP',
-        auth: {
-          key: key1
-        }
-      }
-    }, err =>
-    {
-      expect(err.message).to.equal('Missing authentication information');
-      done();
-    });
-  });
-
   it('should deny controller for invalid key', done =>
   {
     authenticate({
       handshake: {
         address: 'TESTING-IP',
         auth: {
-          _id: controller._id,
+          _id: controller._id.toJSON(),
           key: key2
         }
       }
     }, err =>
     {
-      expect(err.message).to.equal('Invalid key or ID');
+      expect(err.message).to.equal('Auth header field "key" was either not found or did not match the defined filters!');
       done();
     });
   });
@@ -97,7 +65,7 @@ module.exports = () =>
       handshake: {
         address: 'TESTING-IP',
         auth: {
-          _id: controller._id,
+          _id: controller._id.toJSON(),
           key: key1
         }
       }

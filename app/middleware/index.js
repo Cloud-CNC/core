@@ -20,7 +20,10 @@ router.use(json({
 }));
 router.use(security);
 router.use('/api', limit);
-router.use('/api', session);
+router.use('/api', [
+  session.generic,
+  session.http
+]);
 
 //Export
 module.exports = router;

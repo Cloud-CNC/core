@@ -5,8 +5,8 @@
 //Imports
 const logger = require('../lib/logger.js');
 
-module.exports = (req, res, next) =>
+module.exports = (req, _, next) =>
 {
-  logger.info(`New request, method: ${req.method} Endpoint: ${req.path} IP: ${req.ip}`);
+  logger.info(`New HTTP request, method: ${req.method}, endpoint: ${req.path}, IP: ${req.ip}`);
   next();
 };

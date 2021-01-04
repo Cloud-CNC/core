@@ -44,6 +44,9 @@ module.exports = () =>
     //Mock socket
     const socket = new EventEmitter();
 
+    //Mock connection type
+    socket.connectionType = 'controller';
+
     //Mock room
     socket.join = rooms =>
     {

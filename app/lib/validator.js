@@ -17,6 +17,34 @@ function validate(source, name, filter)
 //Export
 module.exports = {
   /**
+   * Validate websocket auth header field
+   * @param {io.Socket} socket
+   * @param {String} name
+   * @param {RegExp|Function} filter
+   */
+  auth: (socket, name, filter) =>
+  {
+    if (!validate(socket.handshake.auth, name, filter))
+    {
+      return new Error(`Auth header field "${name}" was either not found or did not match the defined filters!`);
+    }
+  },
+
+  /**
+   * Validate websocket message
+   * @param {Object} message 
+   * @param {String} name 
+   * @param {RegExp|Function} filter 
+   */
+  message: (message, name, filter) =>
+  {
+    if (!validate(message, name, filter))
+    {
+      return new Error(`Message field "${name}" was either not found or did not match the defined filters!`);
+    }
+  },
+
+  /**
    * Validate only one or more of the parameters from the specified source
    * Also strips away extraneous data (Sanitizer)
    * Sets req.data to sanitized data

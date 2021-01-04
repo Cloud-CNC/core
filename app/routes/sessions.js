@@ -3,7 +3,7 @@
  */
 
 //Imports
-const {body} = require('../middleware/validator');
+const {body} = require('../lib/validator');
 const controller = require('../controllers/session.js');
 const filters = require('../lib/filters');
 const router = require('express').Router();

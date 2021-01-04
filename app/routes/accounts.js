@@ -3,7 +3,7 @@
  */
 
 //Imports
-const {onePlus, body} = require('../middleware/validator');
+const {onePlus, body} = require('../lib/validator');
 const config = require('config');
 const controller = require('../controllers/account');
 const filters = require('../lib/filters');

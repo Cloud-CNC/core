@@ -3,10 +3,9 @@
  */
 
 //Imports
-const {onePlus, field, file} = require('../middleware/validator');
+const {onePlus, field, file} = require('../lib/validator');
 const controller = require('../controllers/file');
 const filters = require('../lib/filters');
-const logger = require('../lib/logger');
 const model = require('../models/file');
 const mongoose = require('mongoose');
 const multipart = require('../middleware/multipart');
