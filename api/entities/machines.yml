@@ -1,0 +1,217 @@
+# Machine entity
+
+# Types
+meta:
+  description: Machine metadata
+  type: object
+  properties:
+    slicer:
+      description: Whether or not to enable [Cura WASM](https://github.com/cloud-cnc/cura-wasm)
+      type: boolean
+    length:
+      description: Machine area/volume length (Required if `slicer` is enabled)
+      type: number
+    width:
+      description: Machine area/volume width (Required if `slicer` is enabled)
+      type: number
+    height:
+      description: Machine volume height (Required if `slicer` is enabled)
+      type: number
+
+# Routes
+all:
+  get:
+    operationId: GetAllMachines
+    tags:
+      - "machines"
+    summary: Get all machines
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                  - "id"
+                  - "name"
+                  - "controller"
+                  - "meta"
+                properties:
+                  id:
+                    type: string
+                    description: Machine ID
+                  name:
+                    type: string
+                    description: Machine name
+                  controller:
+                    type: string
+                    description: Controller ID
+                  meta:
+                    $ref: '#/meta'
+                    
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+create:
+  post:
+    operationId: CreateMachine
+    tags:
+      - "machines"
+    summary: Create a machine
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - "name"
+              - "controller"
+              - "meta"
+            properties:
+              name:
+                type: string
+                description: Machine name
+              controller:
+                type: string
+                description: Controller ID
+              meta:
+                $ref: '#/meta'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "id"
+                - "certificate"
+              properties:
+                id:
+                  type: string
+                  description: Machine ID
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+id:
+  get:
+    operationId: GetMachine
+    tags:
+      - "machines"
+    summary: Get a machine
+    parameters:
+      - name: id
+        description: Machine ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "name"
+                - "controller"
+                - "meta"
+              properties:
+                name:
+                  type: string
+                  description: Machine name
+                controller:
+                  type: string
+                  description: Controller ID
+                meta:
+                  $ref: '#/meta'
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  patch:
+    operationId: UpdateMachine
+    tags:
+      - "machines"
+    summary: Update a machine
+    parameters:
+      - name: id
+        description: Machine ID
+        in: path
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Machine name
+              controller:
+                type: string
+                description: Controller ID
+              meta:
+                $ref: '#/meta'
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  delete:
+    operationId: DeleteMachine
+    tags:
+      - "machines"
+    summary: Delete a machine
+    parameters:
+      - name: id
+        description: Machine ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"

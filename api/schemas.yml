@@ -1,0 +1,21 @@
+# Schemas
+
+error:
+  description: Generic error schema
+  type: object
+  required:
+    - "error"
+  properties:
+    error:
+      description: Error information
+      type: object
+      required:
+        - "name"
+        - "description"
+      properties:
+        name:
+          type: string
+          description: Short yet descriptive message
+        description:
+          type: string
+          description: Longer message, detailing how to avoid/fix the underlying cause for the error

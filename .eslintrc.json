@@ -1,7 +1,14 @@
+  
 {
+	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
-		"ecmaVersion": 10
+		"ecmaVersion": 10,
+		"sourceType": "module"
 	},
+	"plugins": [
+		"@typescript-eslint",
+		"eslint-plugin-import"
+	],
 	"rules": {
 		"arrow-parens": [
 			"warn",
@@ -22,6 +29,9 @@
 		"no-extra-semi": "error",
 		"object-curly-spacing": "warn",
 		"semi": "error",
+		"import/order": [
+			"error"
+		],
 		"quotes": [
 			"warn",
 			"single"
@@ -34,7 +44,6 @@
 		"prefer-const": "warn"
 	},
 	"env": {
-		"browser": true,
 		"node": true
 	}
 }

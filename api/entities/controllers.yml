@@ -1,0 +1,181 @@
+# Controller entity
+
+# Routes
+all:
+  get:
+    operationId: GetAllControllers
+    tags:
+      - "controllers"
+    summary: Get all controllers
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                  - "id"
+                  - "name"
+                properties:
+                  id:
+                    type: string
+                    description: Controller ID
+                  name:
+                    type: string
+                    description: Controller name
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+create:
+  post:
+    operationId: CreateController
+    tags:
+      - "controllers"
+    summary: Create a controller
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - "name"
+            properties:
+              name:
+                type: string
+                description: Controller name
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "id"
+                - "certificate"
+              properties:
+                id:
+                  type: string
+                  description: Controller ID
+                certificate:
+                  type: string
+                  description: |
+                    *Note: for security purposes, the certificate will not be revealed after
+                    creating the controller, even when updating it.*
+
+                    Controller certificate used for mutual TLS authentication when connecting
+                    over WebSockets
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+id:
+  get:
+    operationId: GetController
+    tags:
+      - "controllers"
+    summary: Get a controller
+    parameters:
+      - name: id
+        description: Controller ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "name"
+              properties:
+                name:
+                  type: string
+                  description: Controller name
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  patch:
+    operationId: UpdateController
+    tags:
+      - "controllers"
+    summary: Update a controller
+    parameters:
+      - name: id
+        description: Controller ID
+        in: path
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Controller name
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  delete:
+    operationId: DeleteController
+    tags:
+      - "controllers"
+    summary: Delete a controller
+    description: "*Note: this endpoint will kick the controller if it's connected and revoke future connections using the controller's certificate.*"
+    parameters:
+      - name: id
+        description: Controller ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"

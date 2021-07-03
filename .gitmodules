@@ -1,3 +1,0 @@
-[submodule "app/src/branding"]
-	path = app/src/branding
-	url = https://github.com/Cloud-CNC/branding.git

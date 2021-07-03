@@ -1,0 +1,189 @@
+# Role entity
+
+# Routes
+all:
+  get:
+    operationId: GetAllRoles
+    tags:
+      - "roles"
+    summary: Get all roles
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                  - "id"
+                  - "name"
+                  - "icon"
+                properties:
+                  id:
+                    type: string
+                    description: Role ID
+                  name:
+                    type: string
+                    description: Role name
+                  icon:
+                    type: string
+                    description: Role icon
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+create:
+  post:
+    operationId: CreateRole
+    tags:
+      - "roles"
+    summary: Create a role
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - "name"
+              - "icon"
+            properties:
+              name:
+                type: string
+                description: Role name
+              icon:
+                type: string
+                description: Role icon
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "id"
+              properties:
+                id:
+                  type: string
+                  description: Role ID
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+id:
+  get:
+    operationId: GetRole
+    tags:
+      - "roles"
+    summary: Get a role
+    parameters:
+      - name: id
+        description: Role ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "name"
+                - "icon"
+              properties:
+                name:
+                  type: string
+                  description: Role name
+                icon:
+                  type: string
+                  description: Role icon
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  patch:
+    operationId: UpdateRole
+    tags:
+      - "roles"
+    summary: Update a role
+    parameters:
+      - name: id
+        description: Role ID
+        in: path
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Role name
+              icon:
+                type: string
+                description: Role icon
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  delete:
+    operationId: DeleteRole
+    tags:
+      - "roles"
+    summary: Delete a role
+    parameters:
+      - name: id
+        description: Role ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"

@@ -1,0 +1,87 @@
+openapi: 3.0.3
+
+info:
+  title: Cloud CNC HTTP API
+  description: |
+    ## Glossary
+    * ACL: Access Control List
+    * MFA: Multi-Factor Authentication
+    * OTP: One Time Password
+  version: 2.0.0
+  license:
+    name: MIT
+    url: https://github.com/cloud-cnc/core/blob/main/LICENSE
+
+tags:
+  - name: sessions
+    description: User sessions
+
+  - name: accounts
+    description: User accounts
+
+  - name: roles
+    description: Account roles
+
+  - name: files
+    description: Model & machine files
+
+  - name: controllers
+    description: Machine controllers
+
+  - name: machines
+    description: CNC machines
+
+paths:
+  /sessions/login:
+    $ref: "./entities/sessions.yml/#/login"
+  /sessions/mfa:
+    $ref: "./entities/sessions.yml/#/mfa"
+  /sessions/logout:
+    $ref: "./entities/sessions.yml/#/logout"
+
+  /accounts/all:
+    $ref: "./entities/accounts.yml/#/all"
+  /accounts/create:
+    $ref: "./entities/accounts.yml/#/create"
+  /accounts/{id}/impersonate:
+    $ref: "./entities/accounts.yml/#/impersonate"
+  /accounts/{id}:
+    $ref: "./entities/accounts.yml/#/id"
+
+  /roles/all:
+    $ref: "./entities/roles.yml/#/all"
+  /roles/create:
+    $ref: "./entities/roles.yml/#/create"
+  /roles/{id}:
+    $ref: "./entities/roles.yml/#/id"
+
+  /files/all:
+    $ref: "./entities/files.yml/#/all"
+  /files/create:
+    $ref: "./entities/files.yml/#/create"
+  /files/{id}:
+    $ref: "./entities/files.yml/#/id"
+
+  /controllers/all:
+    $ref: "./entities/controllers.yml/#/all"
+  /controllers/create:
+    $ref: "./entities/controllers.yml/#/create"
+  /controllers/{id}:
+    $ref: "./entities/controllers.yml/#/id"
+
+  /machines/all:
+    $ref: "./entities/machines.yml/#/all"
+  /machines/create:
+    $ref: "./entities/machines.yml/#/create"
+  /machines/{id}:
+    $ref: "./entities/machines.yml/#/id"
+
+components:
+  securitySchemes:
+    jwt:
+      type: apiKey
+      in: cookie
+      name: jwt
+
+security:
+  - jwt: []

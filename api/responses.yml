@@ -1,0 +1,22 @@
+# Common HTTP responses
+
+bad-request:
+  description: Bad request
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/error"
+
+unauthorized:
+  description: Unauthorized
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/error"
+
+internal-error:
+  description: Internal server error
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/error"

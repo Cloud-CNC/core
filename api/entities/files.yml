@@ -1,0 +1,262 @@
+# File entity
+
+# Types
+file-status:
+  description: |
+    File lifecycle status
+    * `present`: the file is present; both the metadata and data is accessible
+    * `deleted`: the file is in the trash; only the metadata is accessible
+  type: string
+  enum:
+    - present
+    - deleted
+
+permission:
+  description: |
+    File permission
+    * `owner`: the entity can read, write, and delete the file and update the file"s ACL
+    * `write`: the entity can only read and edit the file
+    * `read`: the entity can only read the file
+  type: string
+  enum:
+    - owner
+    - write
+    - read
+
+acl:
+  description: |
+    File access control list
+    * Keys: entity (account/role) ID
+    * Values: permission
+  type: object
+  additionalProperties:
+    $ref: "#/permission"
+
+# Routes
+all:
+  get:
+    operationId: GetAllFiles
+    tags:
+      - "files"
+    summary: Get all files
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                  - "id"
+                  - "name"
+                  - "status"
+                  - "acl"
+                properties:
+                  id:
+                    type: string
+                    description: File ID
+                  name:
+                    type: string
+                    description: File name
+                  description:
+                    type: string
+                    description: File description
+                  status:
+                    $ref: "#/file-status"
+                  acl:
+                    $ref: "#/acl"
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+create:
+  post:
+    operationId: CreateFile
+    tags:
+      - "files"
+    summary: Create a file
+    description: "*Note: endpoint accepts a multipart form, not JSON.*"
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - "name"
+              - "acl"
+              - "raw"
+            properties:
+              name:
+                type: string
+                description: File name
+              description:
+                type: string
+                description: File description
+              acl:
+                $ref: "#/acl"
+              raw:
+                type: string
+                format: binary
+                description: Raw file
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "id"
+              properties:
+                id:
+                  type: string
+                  description: File ID
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+id:
+  get:
+    operationId: GetFile
+    tags:
+      - "files"
+    summary: Get a file
+    parameters:
+      - name: id
+        description: File ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "name"
+                - "status"
+                - "acl"
+                - "raw"
+              properties:
+                name:
+                  type: string
+                  description: File name
+                description:
+                  type: string
+                  description: File description
+                status:
+                  $ref: "#/file-status"
+                acl:
+                  $ref: "#/acl"
+                raw:
+                  type: string
+                  format: binary
+                  description: Raw file
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  patch:
+    operationId: UpdateFile
+    tags:
+      - "files"
+    summary: Update a file
+    description: |
+      *Note: endpoint accepts a multipart form, not JSON.*
+      
+      If the client is implementing a "trash" system, the client should use this endpoint
+      and update the file status to `deleted` to signify that the file is pending permanent
+      deletion instead of invoking the delete endpoint.
+    parameters:
+      - name: id
+        description: File ID
+        in: path
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: File name
+              description:
+                type: string
+                description: File description
+              status:
+                $ref: "#/file-status"
+              acl:
+                $ref: "#/acl"
+              raw:
+                type: string
+                format: binary
+                description: Raw file
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  delete:
+    operationId: DeleteFile
+    tags:
+      - "files"
+    summary: Delete a file
+    description: |
+      *Note: this endpoint permanently and irreversibly deletes the file.*
+
+      If the client is implementing a "trash" system, the client should use the update endpoint
+      and update the file status to `deleted` to signify that the file is pending permanent
+      deletion instead of invoking this endpoint.
+    parameters:
+      - name: id
+        description: File ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"

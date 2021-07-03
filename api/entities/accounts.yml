@@ -1,0 +1,260 @@
+# Account entity
+
+# Types
+roles:
+  description: "Account role ID's"
+  type: array
+  items:
+    type: string
+
+# Routes
+all:
+  get:
+    operationId: GetAllAccounts
+    tags:
+      - "accounts"
+    summary: Get all accounts
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                  - "id"
+                  - "role"
+                  - "username"
+                properties:
+                  id:
+                    type: string
+                    description: Account ID
+                  roles:
+                    $ref: '#/roles'
+                  username:
+                    type: string
+                    description: Account username
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+create:
+  post:
+    operationId: CreateAccount
+    tags:
+      - "accounts"
+    summary: Create an account
+    description: The client will need to invoke `/accounts/mfa-confirm` with a valid OTP otherwise MFA will be disabled to prevent accidental lockout.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - "role"
+              - "username"
+              - "password"
+              - "mfa"
+            properties:
+              roles:
+                $ref: '#/roles'
+              username:
+                type: string
+                description: Account username
+              password:
+                type: string
+                description: Account password
+              mfa:
+                type: boolean
+                description: Whether or not MFA is enabled
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "id"
+              properties:
+                id:
+                  type: string
+                  description: Account ID
+                mfa-secret:
+                  type: string
+                  description: MFA secret (Only present if MFA was requested)
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+impersonate:
+  post:
+    operationId: ImpersonateAccount
+    tags:
+      - "accounts"
+    summary: Start/stop impersonating an account
+    parameters:
+      - name: id
+        description: Account ID
+        in: path
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - "enabled"
+            properties:
+              enabled:
+                type: boolean
+                description: Whether to start impersonating or stop impersonating
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+id:
+  get:
+    operationId: GetAccount
+    tags:
+      - "accounts"
+    summary: Get an account
+    parameters:
+      - name: id
+        description: Account ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "role"
+                - "username"
+                - "mfa"
+              properties:
+                roles:
+                  $ref: '#/roles'
+                username:
+                  type: string
+                  description: Account username
+                mfa:
+                  type: boolean
+                  description: Whether or not MFA is enabled
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  patch:
+    operationId: UpdateAccount
+    tags:
+      - "accounts"
+    summary: Update an account
+    parameters:
+      - name: id
+        description: Account ID
+        in: path
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              roles:
+                $ref: '#/roles'
+              username:
+                type: string
+                description: Account username
+              password:
+                type: string
+                description: Account password
+              mfa:
+                type: boolean
+                description: Whether or not MFA is enabled
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mfa-secret:
+                  type: string
+                  description: MFA secret (Only present if MFA was requested)
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+  delete:
+    operationId: DeleteAccount
+    tags:
+      - "accounts"
+    summary: Delete an account
+    parameters:
+      - name: id
+        description: Account ID
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"

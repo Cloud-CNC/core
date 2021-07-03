@@ -1,0 +1,119 @@
+# Session entity
+
+# Routes
+login:
+  post:
+    operationId: Login
+    tags:
+      - "sessions"
+    summary: Log in to an account
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - "username"
+              - "password"
+            properties:
+              username:
+                type: string
+                description: The account"s username
+              password:
+                type: string
+                description: The account"s password
+    responses:
+      '200':
+        description: OK
+        headers:
+          Set-Cookie:
+            description: JWT cookie used for session management (Only present if MFA is disabled)
+            schema:
+              type: string
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "valid"
+                - "mfa"
+              properties:
+                valid:
+                  type: boolean
+                  description: Whether or not the username and password were valid
+                mfa:
+                  type: boolean
+                  description: Whether or not the account has MFA enabled (And therefore whether or not the client needs to make a request to `/sessions/mfa`)
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+mfa:
+  post:
+    operationId: LoginMFA
+    tags:
+      - "sessions"
+    summary: Log in to an account with MFA
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - "otp"
+            properties:
+              otp:
+                type: string
+                description: The OTP
+    responses:
+      '200':
+        description: OK
+        headers:
+          Set-Cookie:
+            description: JWT cookie used for session management
+            schema:
+              type: string
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "valid"
+              properties:
+                valid:
+                  type: boolean
+                  description: Whether or not the OTP was valid
+
+      '400':
+        $ref: "../responses.yml#/bad-request"
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
+
+logout:
+  post:
+    operationId: Logout
+    tags:
+      - "sessions"
+    summary: Log out of an account
+    responses:
+      '200':
+        description: OK
+
+      '401':
+        $ref: "../responses.yml#/unauthorized"
+
+      '500':
+        $ref: "../responses.yml#/internal-error"
