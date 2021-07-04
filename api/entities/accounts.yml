@@ -103,18 +103,18 @@ create:
         $ref: "../responses.yml#/internal-error"
 
 impersonate:
+  parameters:
+    - name: id
+      description: Account ID
+      in: path
+      required: true
+      schema:
+        type: string
   post:
     operationId: ImpersonateAccount
     tags:
       - "accounts"
     summary: Start/stop impersonating an account
-    parameters:
-      - name: id
-        description: Account ID
-        in: path
-        required: true
-        schema:
-          type: string
     requestBody:
       required: true
       content:
@@ -146,13 +146,6 @@ id:
     tags:
       - "accounts"
     summary: Get an account
-    parameters:
-      - name: id
-        description: Account ID
-        in: path
-        required: true
-        schema:
-          type: string
     responses:
       '200':
         description: OK
@@ -188,13 +181,6 @@ id:
     tags:
       - "accounts"
     summary: Update an account
-    parameters:
-      - name: id
-        description: Account ID
-        in: path
-        required: true
-        schema:
-          type: string
     requestBody:
       required: true
       content:
@@ -239,13 +225,6 @@ id:
     tags:
       - "accounts"
     summary: Delete an account
-    parameters:
-      - name: id
-        description: Account ID
-        in: path
-        required: true
-        schema:
-          type: string
     responses:
       '200':
         description: OK

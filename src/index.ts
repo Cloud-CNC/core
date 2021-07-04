@@ -4,17 +4,24 @@
 
 //Imports
 import Koa from 'koa';
+import generateServer from './server';
 import log from './log';
 import middleware from './middleware';
-import {debug, port} from './config';
+import socket from './socket';
+import {debug, http} from './config';
+
+//Generate the server
+const server = generateServer();
 
 //Koa setup
 const app = new Koa();
-
 app.use(middleware);
 
-//Start server
-app.listen(port);
+//SocketIO setup
+socket(server);
+
+//Start the server
+server.listen(http.port);
 
 //Log
-log.info(`Started Cloud CNC core on port ${port}. Running in ${debug ? 'debug' : 'production'} mode.`);
+log.info(`Started Cloud CNC core on port ${http.port}. Running in ${debug ? 'debug' : 'production'} mode.`);

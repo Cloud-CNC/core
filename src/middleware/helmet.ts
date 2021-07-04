@@ -5,7 +5,7 @@
 //Imports
 import compose from 'koa-compose';
 import {contentSecurityPolicy, expectCt, frameguard, hsts, ieNoOpen, noSniff, permittedCrossDomainPolicies, referrerPolicy, xssFilter} from 'koa-helmet';
-import {tls} from '../config';
+import {http} from '../config';
 
 //Middleware
 const middlewares = [
@@ -29,7 +29,7 @@ const middlewares = [
 ];
 
 //TLS-only middleware
-if (tls.enabled)
+if (http.tls)
 {
   middlewares.push(
     expectCt({

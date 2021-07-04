@@ -130,18 +130,18 @@ create:
         $ref: "../responses.yml#/internal-error"
 
 id:
+  parameters:
+    - name: id
+      description: File ID
+      in: path
+      required: true
+      schema:
+        type: string
   get:
     operationId: GetFile
     tags:
       - "files"
     summary: Get a file
-    parameters:
-      - name: id
-        description: File ID
-        in: path
-        required: true
-        schema:
-          type: string
     responses:
       '200':
         description: OK
@@ -189,13 +189,6 @@ id:
       If the client is implementing a "trash" system, the client should use this endpoint
       and update the file status to `deleted` to signify that the file is pending permanent
       deletion instead of invoking the delete endpoint.
-    parameters:
-      - name: id
-        description: File ID
-        in: path
-        required: true
-        schema:
-          type: string
     requestBody:
       required: true
       content:
@@ -241,13 +234,6 @@ id:
       If the client is implementing a "trash" system, the client should use the update endpoint
       and update the file status to `deleted` to signify that the file is pending permanent
       deletion instead of invoking this endpoint.
-    parameters:
-      - name: id
-        description: File ID
-        in: path
-        required: true
-        schema:
-          type: string
     responses:
       '200':
         description: OK

@@ -110,18 +110,18 @@ create:
         $ref: "../responses.yml#/internal-error"
 
 id:
+  parameters:
+    - name: id
+      description: Machine ID
+      in: path
+      required: true
+      schema:
+        type: string
   get:
     operationId: GetMachine
     tags:
       - "machines"
     summary: Get a machine
-    parameters:
-      - name: id
-        description: Machine ID
-        in: path
-        required: true
-        schema:
-          type: string
     responses:
       '200':
         description: OK
@@ -156,13 +156,6 @@ id:
     tags:
       - "machines"
     summary: Update a machine
-    parameters:
-      - name: id
-        description: Machine ID
-        in: path
-        required: true
-        schema:
-          type: string
     requestBody:
       required: true
       content:
@@ -196,13 +189,6 @@ id:
     tags:
       - "machines"
     summary: Delete a machine
-    parameters:
-      - name: id
-        description: Machine ID
-        in: path
-        required: true
-        schema:
-          type: string
     responses:
       '200':
         description: OK

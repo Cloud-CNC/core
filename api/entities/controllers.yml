@@ -85,18 +85,18 @@ create:
         $ref: "../responses.yml#/internal-error"
 
 id:
+  parameters:
+  - name: id
+    description: Controller ID
+    in: path
+    required: true
+    schema:
+      type: string
   get:
     operationId: GetController
     tags:
       - "controllers"
     summary: Get a controller
-    parameters:
-      - name: id
-        description: Controller ID
-        in: path
-        required: true
-        schema:
-          type: string
     responses:
       '200':
         description: OK
@@ -124,13 +124,6 @@ id:
     tags:
       - "controllers"
     summary: Update a controller
-    parameters:
-      - name: id
-        description: Controller ID
-        in: path
-        required: true
-        schema:
-          type: string
     requestBody:
       required: true
       content:
@@ -160,13 +153,6 @@ id:
       - "controllers"
     summary: Delete a controller
     description: "*Note: this endpoint will kick the controller if it's connected and revoke future connections using the controller's certificate.*"
-    parameters:
-      - name: id
-        description: Controller ID
-        in: path
-        required: true
-        schema:
-          type: string
     responses:
       '200':
         description: OK
