@@ -1,0 +1,63 @@
+/**
+ * @fileoverview {{inflect "titleize" (inflect "singularize" name)}} routes
+ */
+
+//Imports
+import Router from '@koa/router';
+import {DefaultState, ParameterizedContext} from 'koa';
+import model, {{literal "{"}}{{inflect "classify" (inflect "singularize" name)}}{{literal "}"}} from '../models/{{inflect "camelize" (inflect "pluralize" name)}}';
+
+//Route context
+interface Context extends ParameterizedContext
+{
+  {{#each routes}}
+  {{#each parameters}}
+  {{inflect "camelize" (inflect "singularize" @root.name)}}?: {{inflect "classify" (inflect "singularize" @root.name)}}
+  {{/each}}
+  {{/each}}
+}
+
+//Router setup
+const router = new Router<DefaultState, Context>();
+
+{{#each routes}}
+router
+  {{#each parameters}}
+  //Route level {{inflect "lowercase" (inflect "pluralize" @root.name)}}
+  .param('{{name}}', async ({{name}}, ctx: Context, next) =>
+  {
+    //Get the {{inflect "lowercase" (inflect "singularize" @root.name)}} by its {{name}}
+    {{#unless (equals name "id") }}
+    const {{inflect "camelize" (inflect "singularize" @root.name)}} = await model.findOne({
+      {{name}}
+    });
+    {{/unless}}
+    {{#if (equals name "id") }}
+    const {{inflect "camelize" (inflect "singularize" @root.name)}} = await model.findById({{name}});
+    {{/if}}
+
+    //Ensure the {{name}} was valid
+    if ({{inflect "camelize" (inflect "singularize" @root.name)}} == null)
+    {
+      return ctx.throw('Invalid {{inflect "humanize" (inflect "singularize" @root.name)}} {{name}}', 402);
+    }
+
+    //Update the context
+    ctx.{{inflect "camelize" (inflect "singularize" @root.name)}} = {{inflect "camelize" (inflect "singularize" @root.name)}};
+
+    return next();
+  })
+
+  {{/each}}
+  {{#each endpoints}}
+  //{{description}}
+  .{{method}}('{{parameter path}}', ctx =>
+  {
+
+  }){{#unless @last}}
+  {{/unless}}{{#if @last}};{{/if}}
+  {{/each}}
+
+{{/each}}
+//Export
+export default router;

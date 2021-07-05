@@ -1,0 +1,21 @@
+/**
+ * @fileoverview {{inflect "titleize" (inflect "singularize" name)}} model
+ */
+
+//Imports
+import {model as createModel, Document, Schema} from 'mongoose';
+
+//{{inflect "classify" (inflect "singularize" name)}} interface
+export interface {{inflect "classify" (inflect "singularize" name)}} extends Document
+{
+}
+
+//{{inflect "titleize" (inflect "singularize" name)}} schema
+const schema = new Schema<{{inflect "classify" (inflect "singularize" name)}}>({
+});
+
+//Create the model
+const model = createModel<{{inflect "classify" (inflect "singularize" name)}}>('{{inflect "camelize" (inflect "singularize" name)}}', schema);
+
+//Export
+export default model;

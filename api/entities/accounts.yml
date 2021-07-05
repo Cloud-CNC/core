@@ -141,6 +141,13 @@ impersonate:
         $ref: "../responses.yml#/internal-error"
 
 id:
+  parameters:
+    - name: id
+      description: Account ID
+      in: path
+      required: true
+      schema:
+        type: string
   get:
     operationId: GetAccount
     tags:

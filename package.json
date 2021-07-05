@@ -8,7 +8,7 @@
     "build": "tsc",
     "bundle": "swagger-cli bundle api/index.yml -t yaml -o api/openapi.yml",
     "dev": "ts-node src/index.ts",
-    "generate": "npx openapi-codegen nodejs api/index.yml -o src/api",
+    "generate": "ts-node generator/index.ts",
     "lint:api": "spectral lint api/openapi.yml --fail-severity=info",
     "start": "node dist/index.js"
   },
@@ -26,6 +26,7 @@
   },
   "homepage": "https://cloud-cnc.github.io",
   "devDependencies": {
+    "@types/inflected": "^1.1.29",
     "@types/koa": "^2.13.3",
     "@types/koa__router": "^8.0.4",
     "@types/koa-compose": "^3.2.5",
@@ -36,6 +37,10 @@
     "@typescript-eslint/parser": "^4.28.1",
     "eslint": "^7.30.0",
     "eslint-plugin-import": "^2.23.4",
+    "handlebars": "^4.7.7",
+    "inflected": "^2.1.0",
+    "openapi-types": "^9.0.3",
+    "swagger-parser": "^10.0.2",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.5"
   },
@@ -48,6 +53,7 @@
     "koa-helmet": "^6.1.0",
     "koa-jwt": "^4.0.1",
     "koa-pino-logger": "^3.0.0",
+    "mongoose": "^5.13.2",
     "pino": "^6.11.3",
     "pino-pretty": "^5.1.0",
     "redis": "^3.1.2",

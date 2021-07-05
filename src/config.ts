@@ -51,7 +51,7 @@ const pretty = !!process.env.PRETTY;
 const redisUrl = process.env.REDIS_URL;
 
 //Validate config
-const entropy = 512;
+const entropy = 64;
 if (Buffer.byteLength(auth.secret) < entropy)
 {
   //Generate crypto-safe random secret
