@@ -26,7 +26,7 @@ all:
       - "machines"
     summary: Get all machines
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -50,15 +50,15 @@ all:
                     type: string
                     description: Controller ID
                   meta:
-                    $ref: '#/meta'
+                    $ref: "#/meta"
                     
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 create:
@@ -85,9 +85,9 @@ create:
                 type: string
                 description: Controller ID
               meta:
-                $ref: '#/meta'
+                $ref: "#/meta"
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -100,13 +100,13 @@ create:
                 id:
                   type: string
                   description: Machine ID
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 id:
@@ -123,7 +123,7 @@ id:
       - "machines"
     summary: Get a machine
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -141,14 +141,14 @@ id:
                   type: string
                   description: Controller ID
                 meta:
-                  $ref: '#/meta'
-      '400':
+                  $ref: "#/meta"
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   patch:
@@ -170,18 +170,18 @@ id:
                 type: string
                 description: Controller ID
               meta:
-                $ref: '#/meta'
+                $ref: "#/meta"
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   delete:
@@ -190,14 +190,14 @@ id:
       - "machines"
     summary: Delete a machine
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"

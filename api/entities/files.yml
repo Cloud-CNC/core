@@ -40,7 +40,7 @@ all:
       - "files"
     summary: Get all files
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -68,13 +68,13 @@ all:
                   acl:
                     $ref: "#/acl"
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 create:
@@ -108,7 +108,7 @@ create:
                 format: binary
                 description: Raw file
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -120,13 +120,13 @@ create:
                 id:
                   type: string
                   description: File ID
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 id:
@@ -143,7 +143,7 @@ id:
       - "files"
     summary: Get a file
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -169,13 +169,13 @@ id:
                   type: string
                   format: binary
                   description: Raw file
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   patch:
@@ -211,16 +211,16 @@ id:
                 format: binary
                 description: Raw file
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   delete:
@@ -235,14 +235,14 @@ id:
       and update the file status to `deleted` to signify that the file is pending permanent
       deletion instead of invoking this endpoint.
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"

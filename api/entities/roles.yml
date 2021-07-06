@@ -8,7 +8,7 @@ all:
       - "roles"
     summary: Get all roles
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -31,13 +31,13 @@ all:
                     type: string
                     description: Role icon
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 create:
@@ -63,7 +63,7 @@ create:
                 type: string
                 description: Role icon
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -76,13 +76,13 @@ create:
                   type: string
                   description: Role ID
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 id:
@@ -99,7 +99,7 @@ id:
       - "roles"
     summary: Get a role
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -116,13 +116,13 @@ id:
                   type: string
                   description: Role icon
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   patch:
@@ -144,16 +144,16 @@ id:
                 type: string
                 description: Role icon
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   delete:
@@ -162,14 +162,14 @@ id:
       - "roles"
     summary: Delete a role
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"

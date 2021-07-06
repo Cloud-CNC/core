@@ -25,7 +25,7 @@ login:
                 type: string
                 description: The account"s password
     responses:
-      '200':
+      "200":
         description: OK
         headers:
           Set-Cookie:
@@ -47,13 +47,13 @@ login:
                   type: boolean
                   description: Whether or not the account has MFA enabled (And therefore whether or not the client needs to make a request to `/sessions/mfa`)
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 mfa:
@@ -75,7 +75,7 @@ mfa:
                 type: string
                 description: The OTP
     responses:
-      '200':
+      "200":
         description: OK
         headers:
           Set-Cookie:
@@ -93,13 +93,13 @@ mfa:
                   type: boolean
                   description: Whether or not the OTP was valid
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 logout:
@@ -109,11 +109,11 @@ logout:
       - "sessions"
     summary: Log out of an account
     responses:
-      '200':
+      "200":
         description: OK
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"

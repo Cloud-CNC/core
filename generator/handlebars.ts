@@ -4,8 +4,19 @@
 
 //Imports
 import {readFile} from 'fs/promises';
-import {compile, registerHelper} from 'handlebars';
 import * as inflectorBase from 'inflected';
+import _ from 'lodash';
+import {compile, HelperOptions, registerHelper, registerPartial} from 'handlebars';
+import {Entity, Field} from './restructure/types';
+
+/**
+ * Extended inflector
+ */
+const inflector = {
+  ...inflectorBase,
+  camelize: (input: string) => inflectorBase.camelize(input, false),
+  lowercase: (input: string) => input.toLowerCase()
+};
 
 /**
  * Prepare a template
@@ -36,14 +47,28 @@ registerHelper('parameter', (input: string) =>
   return input.replace(/{(.+)}/g, ':$1');
 });
 
-/**
- * Extended inflector
- */
-const inflector = {
-  ...inflectorBase,
-  camelize: (input: string) => inflectorBase.camelize(input, false),
-  lowercase: (input: string) => input.toLowerCase()
-};
+//Unique fields helper
+registerHelper('uniqueFields', (options: HelperOptions) =>
+{
+  const fields = [] as Field[];
+
+  //Aggregate fields
+  for (const route of (options.data.root as Entity).routes)
+  {
+    for (const endpoint of route.endpoints)
+    {
+      fields.push(...endpoint.fields);
+    }
+  }
+
+  //Return unique fields
+  return _.uniqWith(fields, (a, b) =>
+    a.name == b.name &&
+    a.description == b.description &&
+    a.typescriptType == b.typescriptType &&
+    a.mongooseType == b.mongooseType
+  );
+});
 
 //Inflection helper
 type inflectMethod = keyof typeof inflector;
@@ -62,3 +87,6 @@ registerHelper('inflect', (method: inflectMethod, input: string | number) =>
 
   return output;
 });
+
+//Camelcase entity name partial
+registerPartial('camelCaseEntity', '{{inflect "camelize" (inflect "singularize" @root.name)}}');

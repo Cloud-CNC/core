@@ -8,14 +8,32 @@ import {model as createModel, Document, Schema} from 'mongoose';
 //{{inflect "classify" (inflect "singularize" name)}} interface
 export interface {{inflect "classify" (inflect "singularize" name)}} extends Document
 {
+  {{#each (uniqueFields)}}
+  /**
+   * {{{description}}}
+   */
+  {{name}}: {{{typescriptType}}};
+  {{#unless @last}}
+
+  {{/unless}}
+  {{/each}}
 }
 
 //{{inflect "titleize" (inflect "singularize" name)}} schema
 const schema = new Schema<{{inflect "classify" (inflect "singularize" name)}}>({
+  {{#each (uniqueFields)}}
+  {{name}}: {
+    type: {{{mongooseType}}},
+    required: {{required}}
+  }{{#unless @last}},
+  
+  {{/unless}}
+  {{/each}}
+
 });
 
 //Create the model
-const model = createModel<{{inflect "classify" (inflect "singularize" name)}}>('{{inflect "camelize" (inflect "singularize" name)}}', schema);
+const model = createModel<{{inflect "classify" (inflect "singularize" name)}}>('{{> camelCaseEntity}}', schema);
 
 //Export
 export default model;

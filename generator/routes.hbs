@@ -12,7 +12,10 @@ interface Context extends ParameterizedContext
 {
   {{#each routes}}
   {{#each parameters}}
-  {{inflect "camelize" (inflect "singularize" @root.name)}}?: {{inflect "classify" (inflect "singularize" @root.name)}}
+  /**
+   * {{{inflect "singularize" @root.description}}}
+   */
+  {{> camelCaseEntity}}?: {{inflect "classify" (inflect "singularize" @root.name)}}
   {{/each}}
   {{/each}}
 }
@@ -28,29 +31,29 @@ router
   {
     //Get the {{inflect "lowercase" (inflect "singularize" @root.name)}} by its {{name}}
     {{#unless (equals name "id") }}
-    const {{inflect "camelize" (inflect "singularize" @root.name)}} = await model.findOne({
+    const {{> camelCaseEntity}} = await model.findOne({
       {{name}}
     });
     {{/unless}}
     {{#if (equals name "id") }}
-    const {{inflect "camelize" (inflect "singularize" @root.name)}} = await model.findById({{name}});
+    const {{> camelCaseEntity}} = await model.findById({{name}});
     {{/if}}
 
     //Ensure the {{name}} was valid
-    if ({{inflect "camelize" (inflect "singularize" @root.name)}} == null)
+    if ({{> camelCaseEntity}} == null)
     {
-      return ctx.throw('Invalid {{inflect "humanize" (inflect "singularize" @root.name)}} {{name}}', 402);
+      return ctx.throw('Invalid {{inflect "lowercase" (inflect "singularize" @root.name)}} {{name}}', 402);
     }
 
     //Update the context
-    ctx.{{inflect "camelize" (inflect "singularize" @root.name)}} = {{inflect "camelize" (inflect "singularize" @root.name)}};
+    ctx.{{> camelCaseEntity}} = {{> camelCaseEntity}};
 
     return next();
   })
 
   {{/each}}
   {{#each endpoints}}
-  //{{description}}
+  //{{{description}}}
   .{{method}}('{{parameter path}}', ctx =>
   {
 

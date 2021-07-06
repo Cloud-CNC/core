@@ -8,7 +8,7 @@ all:
       - "controllers"
     summary: Get all controllers
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -26,13 +26,13 @@ all:
                   name:
                     type: string
                     description: Controller name
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 create:
@@ -54,7 +54,7 @@ create:
                 type: string
                 description: Controller name
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -75,13 +75,13 @@ create:
 
                     Controller certificate used for mutual TLS authentication when connecting
                     over WebSockets
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 id:
@@ -98,7 +98,7 @@ id:
       - "controllers"
     summary: Get a controller
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -110,13 +110,13 @@ id:
                 name:
                   type: string
                   description: Controller name
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   patch:
@@ -135,16 +135,16 @@ id:
                 type: string
                 description: Controller name
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   delete:
@@ -154,14 +154,14 @@ id:
     summary: Delete a controller
     description: "*Note: this endpoint will kick the controller if it's connected and revoke future connections using the controller's certificate.*"
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"

@@ -5,6 +5,7 @@
 //Imports
 import compose from 'koa-compose';
 import auth from './auth';
+import body from './body';
 import helmet from './helmet';
 import logger from './logger';
 
@@ -12,7 +13,8 @@ import logger from './logger';
 const middleware = compose([
   helmet,
   logger,
-  auth
+  auth,
+  body
 ]);
 
 //Export

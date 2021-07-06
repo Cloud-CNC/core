@@ -15,7 +15,7 @@ all:
       - "accounts"
     summary: Get all accounts
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -32,18 +32,18 @@ all:
                     type: string
                     description: Account ID
                   roles:
-                    $ref: '#/roles'
+                    $ref: "#/roles"
                   username:
                     type: string
                     description: Account username
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 create:
@@ -66,7 +66,7 @@ create:
               - "mfa"
             properties:
               roles:
-                $ref: '#/roles'
+                $ref: "#/roles"
               username:
                 type: string
                 description: Account username
@@ -77,7 +77,7 @@ create:
                 type: boolean
                 description: Whether or not MFA is enabled
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -93,13 +93,13 @@ create:
                   type: string
                   description: MFA secret (Only present if MFA was requested)
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 impersonate:
@@ -128,16 +128,16 @@ impersonate:
                 type: boolean
                 description: Whether to start impersonating or stop impersonating
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
 id:
@@ -154,7 +154,7 @@ id:
       - "accounts"
     summary: Get an account
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -166,7 +166,7 @@ id:
                 - "mfa"
               properties:
                 roles:
-                  $ref: '#/roles'
+                  $ref: "#/roles"
                 username:
                   type: string
                   description: Account username
@@ -174,13 +174,13 @@ id:
                   type: boolean
                   description: Whether or not MFA is enabled
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   patch:
@@ -196,7 +196,7 @@ id:
             type: object
             properties:
               roles:
-                $ref: '#/roles'
+                $ref: "#/roles"
               username:
                 type: string
                 description: Account username
@@ -207,7 +207,7 @@ id:
                 type: boolean
                 description: Whether or not MFA is enabled
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -218,13 +218,13 @@ id:
                   type: string
                   description: MFA secret (Only present if MFA was requested)
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"
 
   delete:
@@ -233,14 +233,14 @@ id:
       - "accounts"
     summary: Delete an account
     responses:
-      '200':
+      "200":
         description: OK
 
-      '400':
+      "400":
         $ref: "../responses.yml#/bad-request"
 
-      '401':
+      "401":
         $ref: "../responses.yml#/unauthorized"
 
-      '500':
+      "500":
         $ref: "../responses.yml#/internal-error"

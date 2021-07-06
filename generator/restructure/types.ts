@@ -15,6 +15,37 @@ export enum Method
 }
 
 /**
+ * HTTP request field
+ */
+export interface Field
+{
+  /**
+   * Field name
+   */
+  name: string;
+
+  /**
+   * Field description
+   */
+  description: string;
+
+  /**
+   * Mongoose field type literal
+   */
+  mongooseType: string;
+
+  /**
+   * TypeScript field type literal
+   */
+  typescriptType: string;
+
+  /**
+   * Whether or not the field is required
+   */
+  required: boolean;
+}
+
+/**
  * HTTP endpoint that acts upon an entity
  */
 export interface Endpoint
@@ -38,6 +69,11 @@ export interface Endpoint
    * Endpoint method
    */
   method: Method;
+
+  /**
+   * Endpoint body fields
+   */
+  fields: Field[];
 }
 
 /**

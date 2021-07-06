@@ -11,7 +11,7 @@ import {resolve} from 'path';
 import {writeFile} from 'fs/promises';
 import {OpenAPIV3} from 'openapi-types';
 import {validate} from 'swagger-parser';
-import restructure from './restructure';
+import restructure from './restructure/document';
 import {prepareTemplate} from './handlebars';
 
 const main = async () =>
