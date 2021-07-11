@@ -5,7 +5,7 @@
 //Imports
 import Router from '@koa/router';
 import {DefaultState, ParameterizedContext} from 'koa';
-import model, {{literal "{"}}{{inflect "classify" (inflect "singularize" name)}}{{literal "}"}} from '../models/{{inflect "camelize" (inflect "pluralize" name)}}';
+import {{literal "{"}}{{inflect "classify" (inflect "singularize" name)}}, I{{inflect "classify" (inflect "singularize" name)}}{{literal "}"}} from '../models/{{inflect "camelize" (inflect "pluralize" name)}}';
 
 //Route context
 interface Context extends ParameterizedContext
@@ -15,7 +15,7 @@ interface Context extends ParameterizedContext
   /**
    * {{{inflect "singularize" @root.description}}}
    */
-  {{> camelCaseEntity}}?: {{inflect "classify" (inflect "singularize" @root.name)}}
+  {{> camelCaseEntity}}?: I{{inflect "classify" (inflect "singularize" @root.name)}}
   {{/each}}
   {{/each}}
 }
@@ -31,12 +31,12 @@ router
   {
     //Get the {{inflect "lowercase" (inflect "singularize" @root.name)}} by its {{name}}
     {{#unless (equals name "id") }}
-    const {{> camelCaseEntity}} = await model.findOne({
+    const {{> camelCaseEntity}} = await {{inflect "classify" (inflect "singularize" @root.name)}}.findOne({
       {{name}}
     });
     {{/unless}}
     {{#if (equals name "id") }}
-    const {{> camelCaseEntity}} = await model.findById({{name}});
+    const {{> camelCaseEntity}} = await {{inflect "classify" (inflect "singularize" @root.name)}}.findById({{name}});
     {{/if}}
 
     //Ensure the {{name}} was valid

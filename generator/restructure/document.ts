@@ -26,7 +26,7 @@ export default (document: OpenAPIV3.Document): Entity[] =>
     entities.push({
       file: {
         model: resolve(__dirname, '..', '..', 'src', 'models', `${tag.name}.ts`),
-        routes: resolve(__dirname, '..', '..', 'src', 'api', `${tag.name}.ts`)
+        routes: resolve(__dirname, '..', '..', 'src', 'routes', `${tag.name}.ts`)
       },
       name: tag.name,
       description: tag.description!,
