@@ -54,16 +54,16 @@ export const typescriptType = (schema: OpenAPIV3.SchemaObject): string =>
 };
 
 /**
- * Translate an OAS3 schema to a Mongoose type
+ * Translate an OAS3 schema to a Joi type
  * @param schema OAS3 schema
- * @returns Mongoose type literal
+ * @returns Joi type definition
  */
- export const mongooseType = (schema: OpenAPIV3.SchemaObject): string =>
+ export const joiType = (schema: OpenAPIV3.SchemaObject): string =>
  {
    //Enums
    if (schema.enum != null)
    {
-     return schema.enum.map(value => `'${value}'`).join(' | ');
+     return `Joi.string().valid(${schema.enum.map(value => '\'' + value + '\'').join(', ')})`;
    }
  
    //Regular types
@@ -74,22 +74,22 @@ export const typescriptType = (schema: OpenAPIV3.SchemaObject): string =>
        const items = schema.items as OpenAPIV3.SchemaObject;
  
        //Translate the item type
-       const itemType = typescriptType(items);
+       const itemType = joiType(items);
  
-       return `Array<${itemType}>()`;
+       return `Joi.array().items(${itemType})`;
  
      case 'boolean':
-       return 'Boolean';
+       return 'Joi.boolean()';
  
      case 'integer':
      case 'number':
-       return 'Number';
+       return 'Joi.number()';
  
      case 'object':
-       return 'Object';
+       return 'Joi.object()';
  
      case 'string':
-       return 'String';
+       return 'Joi.string()';
  
      default:
        throw new Error(`Cannot translate OAS3 type "${schema.type}"!`);

@@ -1,12 +1,14 @@
 /**
- * @fileoverview {{inflect "titleize" (inflect "singularize" name)}} model
+ * @fileoverview Unified {{> lowerCaseEntity}} model
  */
 
 //Imports
-import {model as createModel, Document, Schema} from 'mongoose';
+import Joi from 'joi';
+import {model as createModel, Document} from 'mongoose';
+import joigoose from '../lib/joigoose';
 
-//{{inflect "titleize" (inflect "singularize" name)}} interface
-export interface I{{inflect "classify" (inflect "singularize" name)}} extends Document
+//TypeScript interface
+interface Interface extends Document
 {
   {{#each (uniqueFields)}}
   /**
@@ -19,18 +21,22 @@ export interface I{{inflect "classify" (inflect "singularize" name)}} extends Do
   {{/each}}
 }
 
-//{{inflect "titleize" (inflect "singularize" name)}} schema
-const schema = new Schema<I{{inflect "classify" (inflect "singularize" name)}}>({
+//Joi schema
+const joiSchema = Joi.object({
   {{#each (uniqueFields)}}
-  {{name}}: {
-    type: {{{mongooseType}}},
-    required: {{required}}
-  }{{#unless @last}},
-  
-  {{/unless}}
+  {{name}}: {{{joiType}}}{{#unless @last}},{{/unless}}
   {{/each}}
-
 });
 
-//Create the model
-export const {{inflect "classify" (inflect "singularize" name)}} = createModel<I{{inflect "classify" (inflect "singularize" name)}}>('{{> camelCaseEntity}}', schema);
+//Mongoose schema
+const mongooseSchema = joigoose.convert(joiSchema);
+
+//Mongoose model
+const model = createModel<Interface>('{{> camelCaseEntity}}', mongooseSchema);
+
+//Export
+export {
+  Interface as I{{> titleCaseEntity}},
+  joiSchema as {{> titleCaseEntity}}Schema,
+  model as {{> titleCaseEntity}}
+};

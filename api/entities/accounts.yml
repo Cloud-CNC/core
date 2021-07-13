@@ -11,6 +11,7 @@ roles:
 all:
   get:
     operationId: GetAllAccounts
+    x-operation-type: all
     tags:
       - "accounts"
     summary: Get all accounts
@@ -49,6 +50,7 @@ all:
 create:
   post:
     operationId: CreateAccount
+    x-operation-type: create
     tags:
       - "accounts"
     summary: Create an account
@@ -150,6 +152,7 @@ id:
         type: string
   get:
     operationId: GetAccount
+    x-operation-type: get
     tags:
       - "accounts"
     summary: Get an account
@@ -185,6 +188,7 @@ id:
 
   patch:
     operationId: UpdateAccount
+    x-operation-type: update
     tags:
       - "accounts"
     summary: Update an account
@@ -229,6 +233,7 @@ id:
 
   delete:
     operationId: DeleteAccount
+    x-operation-type: delete
     tags:
       - "accounts"
     summary: Delete an account

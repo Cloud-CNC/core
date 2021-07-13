@@ -11,12 +11,15 @@
         "@koa/router": "^10.0.0",
         "@socket.io/redis-adapter": "^7.0.0",
         "dotenv": "^10.0.0",
+        "joi": "^17.4.1",
+        "joigoose": "^8.0.2",
         "koa": "^2.13.1",
         "koa-bodyparser": "^4.3.0",
         "koa-compose": "^4.1.0",
         "koa-helmet": "^6.1.0",
         "koa-jwt": "^4.0.1",
         "koa-pino-logger": "^3.0.0",
+        "mongodb-sanitize": "^2.2.0",
         "mongoose": "^5.13.2",
         "pino": "^6.11.3",
         "pino-pretty": "^5.1.0",
@@ -25,6 +28,7 @@
       },
       "devDependencies": {
         "@types/inflected": "^1.1.29",
+        "@types/joigoose": "^2.0.6",
         "@types/koa": "^2.13.3",
         "@types/koa__router": "^8.0.4",
         "@types/koa-bodyparser": "^4.3.1",
@@ -236,6 +240,19 @@
       "resolved": "https://registry.npmjs.org/@hapi/bourne/-/bourne-2.0.0.tgz",
       "integrity": "sha512-WEezM1FWztfbzqIUbsDzFRVMxSoLy3HugVcux6KDDtTqzPsLE8NDRHfXvev66aH1i2oOKKar3/XDjbvh/OUBdg=="
     },
+    "node_modules/@hapi/hoek": {
+      "version": "9.2.0",
+      "resolved": "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.2.0.tgz",
+      "integrity": "sha512-sqKVVVOe5ivCaXDWivIJYVSaEgdQK9ul7a4Kity5Iw7u9+wBAPbX1RMSnLLmp7O4Vzj0WOWwMAJsTL00xwaNug=="
+    },
+    "node_modules/@hapi/topo": {
+      "version": "5.1.0",
+      "resolved": "https://registry.npmjs.org/@hapi/topo/-/topo-5.1.0.tgz",
+      "integrity": "sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==",
+      "dependencies": {
+        "@hapi/hoek": "^9.0.0"
+      }
+    },
     "node_modules/@humanwhocodes/config-array": {
       "version": "0.5.0",
       "resolved": "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.5.0.tgz",
@@ -311,6 +328,24 @@
       "engines": {
         "node": ">= 8"
       }
+    },
+    "node_modules/@sideway/address": {
+      "version": "4.1.2",
+      "resolved": "https://registry.npmjs.org/@sideway/address/-/address-4.1.2.tgz",
+      "integrity": "sha512-idTz8ibqWFrPU8kMirL0CoPH/A29XOzzAzpyN3zQ4kAWnzmNfFmRaoMNN6VI8ske5M73HZyhIaW4OuSFIdM4oA==",
+      "dependencies": {
+        "@hapi/hoek": "^9.0.0"
+      }
+    },
+    "node_modules/@sideway/formula": {
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/@sideway/formula/-/formula-3.0.0.tgz",
+      "integrity": "sha512-vHe7wZ4NOXVfkoRb8T5otiENVlT7a3IAiw7H5M2+GO+9CDgcVUUsX1zalAztCmwyOr2RUTGJdgB+ZvSVqmdHmg=="
+    },
+    "node_modules/@sideway/pinpoint": {
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/@sideway/pinpoint/-/pinpoint-2.0.0.tgz",
+      "integrity": "sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ=="
     },
     "node_modules/@socket.io/redis-adapter": {
       "version": "7.0.0",
@@ -460,6 +495,16 @@
       "integrity": "sha1-jvcX3PYY2EWE9QYQjqhc2FL206s=",
       "dev": true
     },
+    "node_modules/@types/joigoose": {
+      "version": "2.0.6",
+      "resolved": "https://registry.npmjs.org/@types/joigoose/-/joigoose-2.0.6.tgz",
+      "integrity": "sha512-4OPQ8lpWLwX46mdhCIeHfPRWP+NnLnyV6d4ntqK3a8tvYPC4f5YGYdifdTnktDJXfhEQDBNxQEkhEyEcokZCDQ==",
+      "dev": true,
+      "dependencies": {
+        "@types/mongoose": "~4.7",
+        "joi": "^17.3.0"
+      }
+    },
     "node_modules/@types/json-schema": {
       "version": "7.0.7",
       "resolved": "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.7.tgz",
@@ -550,6 +595,16 @@
       "integrity": "sha512-krZbirw3ATb8EJySZdlDChX7A8WqTBPWWVjEAl9SUUL6QHJY/5+yCk7DjJv1BE0qmi5iShtd2meEi/Ru0F6c7g==",
       "dependencies": {
         "@types/bson": "*",
+        "@types/node": "*"
+      }
+    },
+    "node_modules/@types/mongoose": {
+      "version": "4.7.56",
+      "resolved": "https://registry.npmjs.org/@types/mongoose/-/mongoose-4.7.56.tgz",
+      "integrity": "sha512-c4bQmM/WUMQvOpEJFJbNjwLU72bzFOtKJ+4HtqdA+wtMhWpwIBoKdL7KsNt7BRjelK0dcSrgymvz/miQuPjikw==",
+      "dev": true,
+      "dependencies": {
+        "@types/mongodb": "*",
         "@types/node": "*"
       }
     },
@@ -2610,6 +2665,30 @@
         "node": ">= 0.6.0"
       }
     },
+    "node_modules/joi": {
+      "version": "17.4.1",
+      "resolved": "https://registry.npmjs.org/joi/-/joi-17.4.1.tgz",
+      "integrity": "sha512-gDPOwQ5sr+BUxXuPDGrC1pSNcVR/yGGcTI0aCnjYxZEa3za60K/iCQ+OFIkEHWZGVCUcUlXlFKvMmrlmxrG6UQ==",
+      "dependencies": {
+        "@hapi/hoek": "^9.0.0",
+        "@hapi/topo": "^5.0.0",
+        "@sideway/address": "^4.1.0",
+        "@sideway/formula": "^3.0.0",
+        "@sideway/pinpoint": "^2.0.0"
+      }
+    },
+    "node_modules/joigoose": {
+      "version": "8.0.2",
+      "resolved": "https://registry.npmjs.org/joigoose/-/joigoose-8.0.2.tgz",
+      "integrity": "sha512-NonwNlg45LfyxaynLlyerRIiHMgavNEbIxijpbMMvx/zFPxC090O7Z7WWzkTMB4Sn5UHCK06n2vNJhaPT7T+cg==",
+      "dependencies": {
+        "@hapi/hoek": "^9.1.1",
+        "joi": "^17.3.0"
+      },
+      "engines": {
+        "node": ">=10"
+      }
+    },
     "node_modules/joycon": {
       "version": "3.0.1",
       "resolved": "https://registry.npmjs.org/joycon/-/joycon-3.0.1.tgz",
@@ -3106,6 +3185,14 @@
         "snappy": {
           "optional": true
         }
+      }
+    },
+    "node_modules/mongodb-sanitize": {
+      "version": "2.2.0",
+      "resolved": "https://registry.npmjs.org/mongodb-sanitize/-/mongodb-sanitize-2.2.0.tgz",
+      "integrity": "sha512-5Jnr3qT0IWkwMuW968LKrwLAZy/oa4kzGcUEoQKjXCo90hXv6Ia6AvaHT6mHiSwTVamCBP1eoIGdJE5BE4VuiA==",
+      "engines": {
+        "node": ">=10.0.0"
       }
     },
     "node_modules/mongoose": {
@@ -4881,6 +4968,19 @@
       "resolved": "https://registry.npmjs.org/@hapi/bourne/-/bourne-2.0.0.tgz",
       "integrity": "sha512-WEezM1FWztfbzqIUbsDzFRVMxSoLy3HugVcux6KDDtTqzPsLE8NDRHfXvev66aH1i2oOKKar3/XDjbvh/OUBdg=="
     },
+    "@hapi/hoek": {
+      "version": "9.2.0",
+      "resolved": "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.2.0.tgz",
+      "integrity": "sha512-sqKVVVOe5ivCaXDWivIJYVSaEgdQK9ul7a4Kity5Iw7u9+wBAPbX1RMSnLLmp7O4Vzj0WOWwMAJsTL00xwaNug=="
+    },
+    "@hapi/topo": {
+      "version": "5.1.0",
+      "resolved": "https://registry.npmjs.org/@hapi/topo/-/topo-5.1.0.tgz",
+      "integrity": "sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==",
+      "requires": {
+        "@hapi/hoek": "^9.0.0"
+      }
+    },
     "@humanwhocodes/config-array": {
       "version": "0.5.0",
       "resolved": "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.5.0.tgz",
@@ -4941,6 +5041,24 @@
         "@nodelib/fs.scandir": "2.1.5",
         "fastq": "^1.6.0"
       }
+    },
+    "@sideway/address": {
+      "version": "4.1.2",
+      "resolved": "https://registry.npmjs.org/@sideway/address/-/address-4.1.2.tgz",
+      "integrity": "sha512-idTz8ibqWFrPU8kMirL0CoPH/A29XOzzAzpyN3zQ4kAWnzmNfFmRaoMNN6VI8ske5M73HZyhIaW4OuSFIdM4oA==",
+      "requires": {
+        "@hapi/hoek": "^9.0.0"
+      }
+    },
+    "@sideway/formula": {
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/@sideway/formula/-/formula-3.0.0.tgz",
+      "integrity": "sha512-vHe7wZ4NOXVfkoRb8T5otiENVlT7a3IAiw7H5M2+GO+9CDgcVUUsX1zalAztCmwyOr2RUTGJdgB+ZvSVqmdHmg=="
+    },
+    "@sideway/pinpoint": {
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/@sideway/pinpoint/-/pinpoint-2.0.0.tgz",
+      "integrity": "sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ=="
     },
     "@socket.io/redis-adapter": {
       "version": "7.0.0",
@@ -5087,6 +5205,16 @@
       "integrity": "sha1-jvcX3PYY2EWE9QYQjqhc2FL206s=",
       "dev": true
     },
+    "@types/joigoose": {
+      "version": "2.0.6",
+      "resolved": "https://registry.npmjs.org/@types/joigoose/-/joigoose-2.0.6.tgz",
+      "integrity": "sha512-4OPQ8lpWLwX46mdhCIeHfPRWP+NnLnyV6d4ntqK3a8tvYPC4f5YGYdifdTnktDJXfhEQDBNxQEkhEyEcokZCDQ==",
+      "dev": true,
+      "requires": {
+        "@types/mongoose": "~4.7",
+        "joi": "^17.3.0"
+      }
+    },
     "@types/json-schema": {
       "version": "7.0.7",
       "resolved": "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.7.tgz",
@@ -5177,6 +5305,16 @@
       "integrity": "sha512-krZbirw3ATb8EJySZdlDChX7A8WqTBPWWVjEAl9SUUL6QHJY/5+yCk7DjJv1BE0qmi5iShtd2meEi/Ru0F6c7g==",
       "requires": {
         "@types/bson": "*",
+        "@types/node": "*"
+      }
+    },
+    "@types/mongoose": {
+      "version": "4.7.56",
+      "resolved": "https://registry.npmjs.org/@types/mongoose/-/mongoose-4.7.56.tgz",
+      "integrity": "sha512-c4bQmM/WUMQvOpEJFJbNjwLU72bzFOtKJ+4HtqdA+wtMhWpwIBoKdL7KsNt7BRjelK0dcSrgymvz/miQuPjikw==",
+      "dev": true,
+      "requires": {
+        "@types/mongodb": "*",
         "@types/node": "*"
       }
     },
@@ -6738,6 +6876,27 @@
       "resolved": "https://registry.npmjs.org/jmespath/-/jmespath-0.15.0.tgz",
       "integrity": "sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc="
     },
+    "joi": {
+      "version": "17.4.1",
+      "resolved": "https://registry.npmjs.org/joi/-/joi-17.4.1.tgz",
+      "integrity": "sha512-gDPOwQ5sr+BUxXuPDGrC1pSNcVR/yGGcTI0aCnjYxZEa3za60K/iCQ+OFIkEHWZGVCUcUlXlFKvMmrlmxrG6UQ==",
+      "requires": {
+        "@hapi/hoek": "^9.0.0",
+        "@hapi/topo": "^5.0.0",
+        "@sideway/address": "^4.1.0",
+        "@sideway/formula": "^3.0.0",
+        "@sideway/pinpoint": "^2.0.0"
+      }
+    },
+    "joigoose": {
+      "version": "8.0.2",
+      "resolved": "https://registry.npmjs.org/joigoose/-/joigoose-8.0.2.tgz",
+      "integrity": "sha512-NonwNlg45LfyxaynLlyerRIiHMgavNEbIxijpbMMvx/zFPxC090O7Z7WWzkTMB4Sn5UHCK06n2vNJhaPT7T+cg==",
+      "requires": {
+        "@hapi/hoek": "^9.1.1",
+        "joi": "^17.3.0"
+      }
+    },
     "joycon": {
       "version": "3.0.1",
       "resolved": "https://registry.npmjs.org/joycon/-/joycon-3.0.1.tgz",
@@ -7146,6 +7305,11 @@
         "safe-buffer": "^5.1.2",
         "saslprep": "^1.0.0"
       }
+    },
+    "mongodb-sanitize": {
+      "version": "2.2.0",
+      "resolved": "https://registry.npmjs.org/mongodb-sanitize/-/mongodb-sanitize-2.2.0.tgz",
+      "integrity": "sha512-5Jnr3qT0IWkwMuW968LKrwLAZy/oa4kzGcUEoQKjXCo90hXv6Ia6AvaHT6mHiSwTVamCBP1eoIGdJE5BE4VuiA=="
     },
     "mongoose": {
       "version": "5.13.2",

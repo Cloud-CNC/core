@@ -4,6 +4,7 @@
 all:
   get:
     operationId: GetAllRoles
+    x-operation-type: all
     tags:
       - "roles"
     summary: Get all roles
@@ -43,6 +44,7 @@ all:
 create:
   post:
     operationId: CreateRole
+    x-operation-type: create
     tags:
       - "roles"
     summary: Create a role
@@ -95,6 +97,7 @@ id:
         type: string
   get:
     operationId: GetRole
+    x-operation-type: get
     tags:
       - "roles"
     summary: Get a role
@@ -127,6 +130,7 @@ id:
 
   patch:
     operationId: UpdateRole
+    x-operation-type: update
     tags:
       - "roles"
     summary: Update a role
@@ -158,6 +162,7 @@ id:
 
   delete:
     operationId: DeleteRole
+    x-operation-type: delete
     tags:
       - "roles"
     summary: Delete a role

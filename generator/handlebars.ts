@@ -66,7 +66,7 @@ registerHelper('uniqueFields', (options: HelperOptions) =>
     a.name == b.name &&
     a.description == b.description &&
     a.typescriptType == b.typescriptType &&
-    a.mongooseType == b.mongooseType
+    a.joiType == b.joiType
   );
 });
 
@@ -90,3 +90,9 @@ registerHelper('inflect', (method: inflectMethod, input: string | number) =>
 
 //Camelcase entity name partial
 registerPartial('camelCaseEntity', '{{inflect "camelize" (inflect "singularize" @root.name)}}');
+
+//Titlecase entity name partial
+registerPartial('titleCaseEntity', '{{inflect "classify" (inflect "singularize" @root.name)}}');
+
+//Lowercase entity name partial
+registerPartial('lowerCaseEntity', '{{inflect "lowercase" (inflect "singularize" @root.name)}}');

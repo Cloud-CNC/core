@@ -6,7 +6,7 @@
 import _ from 'lodash';
 import {OpenAPIV3} from 'openapi-types';
 import {Endpoint, Field, Method, Parameter, Route} from './types';
-import {methods, mongooseType, typescriptType} from './utils';
+import {joiType, methods, typescriptType} from './utils';
 
 /**
  * Restructure an OAS3 path into a route
@@ -21,7 +21,7 @@ export default (pathName: string, path: OpenAPIV3.PathItemObject): Route =>
 
   for (const [entryName, entry] of Object.entries(path))
   {
-    //Route parameters
+    //Path parameters
     if (entryName == 'parameters')
     {
       //Cast
@@ -70,7 +70,7 @@ export default (pathName: string, path: OpenAPIV3.PathItemObject): Route =>
             fields.push({
               name: propertyName!,
               description: property.description!,
-              mongooseType: mongooseType(property),
+              joiType: joiType(property),
               typescriptType: typescriptType(property),
               required: schema.required?.includes(propertyName) || false
             });
@@ -81,6 +81,7 @@ export default (pathName: string, path: OpenAPIV3.PathItemObject): Route =>
       //Add the endpoint
       routeEndpoints.push({
         name: endpoint.operationId!,
+        type: (endpoint as Record<string, any>)['x-operation-type'],
         description: endpoint.summary!,
         path: pathName,
         method: entryName as Method,

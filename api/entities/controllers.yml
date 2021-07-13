@@ -4,6 +4,7 @@
 all:
   get:
     operationId: GetAllControllers
+    x-operation-type: all
     tags:
       - "controllers"
     summary: Get all controllers
@@ -38,6 +39,7 @@ all:
 create:
   post:
     operationId: CreateController
+    x-operation-type: create
     tags:
       - "controllers"
     summary: Create a controller
@@ -94,6 +96,7 @@ id:
       type: string
   get:
     operationId: GetController
+    x-operation-type: get
     tags:
       - "controllers"
     summary: Get a controller
@@ -121,6 +124,7 @@ id:
 
   patch:
     operationId: UpdateController
+    x-operation-type: update
     tags:
       - "controllers"
     summary: Update a controller
@@ -149,6 +153,7 @@ id:
 
   delete:
     operationId: DeleteController
+    x-operation-type: delete
     tags:
       - "controllers"
     summary: Delete a controller

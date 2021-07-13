@@ -36,6 +36,7 @@ acl:
 all:
   get:
     operationId: GetAllFiles
+    x-operation-type: all
     tags:
       - "files"
     summary: Get all files
@@ -80,6 +81,7 @@ all:
 create:
   post:
     operationId: CreateFile
+    x-operation-type: create
     tags:
       - "files"
     summary: Create a file
@@ -139,6 +141,7 @@ id:
         type: string
   get:
     operationId: GetFile
+    x-operation-type: get
     tags:
       - "files"
     summary: Get a file
@@ -180,6 +183,7 @@ id:
 
   patch:
     operationId: UpdateFile
+    x-operation-type: update
     tags:
       - "files"
     summary: Update a file
@@ -225,6 +229,7 @@ id:
 
   delete:
     operationId: DeleteFile
+    x-operation-type: delete
     tags:
       - "files"
     summary: Delete a file

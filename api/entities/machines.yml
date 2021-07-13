@@ -22,6 +22,7 @@ meta:
 all:
   get:
     operationId: GetAllMachines
+    x-operation-type: all
     tags:
       - "machines"
     summary: Get all machines
@@ -64,6 +65,7 @@ all:
 create:
   post:
     operationId: CreateMachine
+    x-operation-type: create
     tags:
       - "machines"
     summary: Create a machine
@@ -119,6 +121,7 @@ id:
         type: string
   get:
     operationId: GetMachine
+    x-operation-type: get
     tags:
       - "machines"
     summary: Get a machine
@@ -153,6 +156,7 @@ id:
 
   patch:
     operationId: UpdateMachine
+    x-operation-type: update
     tags:
       - "machines"
     summary: Update a machine
@@ -186,6 +190,7 @@ id:
 
   delete:
     operationId: DeleteMachine
+    x-operation-type: delete
     tags:
       - "machines"
     summary: Delete a machine

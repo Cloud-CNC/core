@@ -30,9 +30,9 @@ export interface Field
   description: string;
 
   /**
-   * Mongoose field type literal
+   * Jou field type literal
    */
-  mongooseType: string;
+  joiType: string;
 
   /**
    * TypeScript field type literal
@@ -46,6 +46,18 @@ export interface Field
 }
 
 /**
+ * Generic operation types
+ */
+enum OperationType
+{
+  ALL = 'all',
+  CREATE = 'create',
+  GET = 'get',
+  UPDATE = 'update',
+  DELETE = 'delete'
+}
+
+/**
  * HTTP endpoint that acts upon an entity
  */
 export interface Endpoint
@@ -54,6 +66,11 @@ export interface Endpoint
    * Endpoint name
    */
   name: string;
+
+  /**
+   * Endpoint operation type (If applicable)
+   */
+  type?: OperationType;
 
   /**
    * Endpoint description
@@ -77,7 +94,7 @@ export interface Endpoint
 }
 
 /**
- * Route parameter
+ * Path parameter
  */
 export interface Parameter
 {

@@ -1,11 +1,12 @@
 /**
- * @fileoverview {{inflect "titleize" (inflect "singularize" name)}} routes
+ * @fileoverview {{> titleCaseEntity}} routes
  */
 
 //Imports
 import Router from '@koa/router';
 import {DefaultState, ParameterizedContext} from 'koa';
-import {{literal "{"}}{{inflect "classify" (inflect "singularize" name)}}, I{{inflect "classify" (inflect "singularize" name)}}{{literal "}"}} from '../models/{{inflect "camelize" (inflect "pluralize" name)}}';
+import validate from '../lib/validate';
+import {{literal "{"}}{{> titleCaseEntity}}, {{> titleCaseEntity}}Schema, I{{> titleCaseEntity}}{{literal "}"}} from '../models/{{inflect "camelize" (inflect "pluralize" name)}}';
 
 //Route context
 interface Context extends ParameterizedContext
@@ -15,7 +16,7 @@ interface Context extends ParameterizedContext
   /**
    * {{{inflect "singularize" @root.description}}}
    */
-  {{> camelCaseEntity}}?: I{{inflect "classify" (inflect "singularize" @root.name)}}
+  {{> camelCaseEntity}}?: I{{> titleCaseEntity}}
   {{/each}}
   {{/each}}
 }
@@ -26,26 +27,25 @@ const router = new Router<DefaultState, Context>();
 {{#each routes}}
 router
   {{#each parameters}}
-  //Route level {{inflect "lowercase" (inflect "pluralize" @root.name)}}
+  //Route level {{> lowerCaseEntity}}
   .param('{{name}}', async ({{name}}, ctx: Context, next) =>
   {
-    //Get the {{inflect "lowercase" (inflect "singularize" @root.name)}} by its {{name}}
+    //Get the {{> lowerCaseEntity}} by its {{name}}
     {{#unless (equals name "id") }}
-    const {{> camelCaseEntity}} = await {{inflect "classify" (inflect "singularize" @root.name)}}.findOne({
+    const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.findOne({
       {{name}}
     });
     {{/unless}}
     {{#if (equals name "id") }}
-    const {{> camelCaseEntity}} = await {{inflect "classify" (inflect "singularize" @root.name)}}.findById({{name}});
+    const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.findById({{name}});
     {{/if}}
 
     //Ensure the {{name}} was valid
     if ({{> camelCaseEntity}} == null)
     {
-      return ctx.throw('Invalid {{inflect "lowercase" (inflect "singularize" @root.name)}} {{name}}', 402);
+      return ctx.throw('Invalid {{> lowerCaseEntity}} {{name}}', 402);
     }
 
-    //Update the context
     ctx.{{> camelCaseEntity}} = {{> camelCaseEntity}};
 
     return next();
@@ -54,9 +54,21 @@ router
   {{/each}}
   {{#each endpoints}}
   //{{{description}}}
-  .{{method}}('{{parameter path}}', ctx =>
+  .{{method}}('{{parameter path}}', 
+  {{~#if (equals type 'create')}} validate({{> titleCaseEntity}}Schema),{{/if}}
+  {{~#if (equals type 'update')}} validate({{> titleCaseEntity}}Schema),{{/if}} async ctx =>
   {
-
+    {{#if (equals type 'all')}}ctx.response.body = await {{> titleCaseEntity}}.find();{{/if}}
+    {{~#if (equals type 'create')}}const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.create(ctx.request.body);
+    
+    await {{> camelCaseEntity}}.save();
+    
+    ctx.response.body = {
+      id: {{> camelCaseEntity}}.id
+    };{{/if}}
+    {{~#if (equals type 'get')}}ctx.response.body = ctx.{{> camelCaseEntity}};{{/if}}
+    {{~#if (equals type 'update')}}await ctx.{{> camelCaseEntity}}!.update(ctx.request.body as object);{{/if}}
+    {{~#if (equals type 'delete')}}await ctx.{{> camelCaseEntity}}!.delete();{{/if}}
   }){{#unless @last}}
   {{/unless}}{{#if @last}};{{/if}}
   {{/each}}
