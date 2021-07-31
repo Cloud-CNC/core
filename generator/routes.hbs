@@ -1,38 +1,42 @@
 /**
-* @fileoverview {{> titleCaseEntity}} routes
+* @fileoverview {{> entityClass}} routes
 */
 
 //Imports
 import Router from '@koa/router';
 import {DefaultState} from 'koa';
-import controller, {{literal '{'}}{{> titleCaseEntity}}Context{{literal '}'}} from '../controllers/{{inflect 'camelize' (inflect 'pluralize' name)}}';
-import {{literal '{'}}{{> titleCaseEntity}}{{literal '}'}} from '../models/{{inflect 'camelize' (inflect 'pluralize' name)}}';
+import controller, {{literal '{'}}{{> entityClass}}Context{{literal '}'}} from '../controllers/{{> entityPluralObject}}';
+import {{literal '{'}}{{> entityClass}}{{literal '}'}} from '../models/{{> entityPluralObject}}';
 
 //Router setup
-const router = new Router<DefaultState, {{> titleCaseEntity}}Context>();
+const router = new Router<DefaultState, {{> entityClass}}Context>();
 
 router
 {{#each (uniqueParameters)}}
-  //Route level {{> lowerCaseEntity}}
-  .param('{{name}}', async ({{name}}, ctx: {{> titleCaseEntity}}Context, next) =>
+  //Route level {{> entityLower}}
+  .param('{{name}}', async ({{name}}, ctx: {{> entityClass}}Context, next) =>
   {
-    //Get the {{> lowerCaseEntity}} by its {{name}}
+    //Get the {{> entityLower}} by its {{name}}
 {{#unless (equals name "id") }}
-    const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.findOne({
+    const {{> entityObject}} = await {{> entityClass}}.findOne({
       {{name}}
     });
 {{/unless}}
 {{#if (equals name "id") }}
-    const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.findById({{name}});
+    const {{> entityObject}} = await {{> entityClass}}.findById({{name}});
 {{/if}}
 
-    //Ensure the {{name}} is valid
-    if ({{> camelCaseEntity}} == null)
+    //Ensure the {{> entityLower}} is valid
+    if ({{> entityObject}} == null)
     {
-      return ctx.throw('Invalid {{> lowerCaseEntity}} {{name}}', 402);
+      //Log
+      ctx.log.error({ctx, id}, 'Invalid {{> entityLower}} {{name}}!');
+
+      //Reject
+      ctx.throw('Invalid {{> entityLower}} {{name}}', 402);
     }
 
-    ctx.{{> camelCaseEntity}} = {{> camelCaseEntity}};
+    ctx.{{> entityObject}} = {{> entityObject}};
 
     return next();
   })

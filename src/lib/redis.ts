@@ -1,10 +1,10 @@
 /**
- * @fileoverview Redis helper
+ * @fileoverview Redis factory helper
  */
 
 //Imports
 import {RedisClient} from 'redis';
-import {redisUrl} from '../config';
+import {redisUrl} from './config';
 
 //Export
 export default () =>

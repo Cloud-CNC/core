@@ -6,7 +6,7 @@
 import {Server} from 'net';
 import {Server as SocketServer} from 'socket.io';
 import {createAdapter} from '@socket.io/redis-adapter';
-import {redisUrl} from '../config';
+import {redisUrl} from '../lib/config';
 import redis from '../lib/redis';
 
 /**
@@ -33,4 +33,6 @@ export default (server: Server) =>
   {
     console.log('Connected!');
   });
+
+  return io;
 };

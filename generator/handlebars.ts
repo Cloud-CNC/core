@@ -4,19 +4,10 @@
 
 //Imports
 import {readFile} from 'fs/promises';
-import * as inflectorBase from 'inflected';
 import _ from 'lodash';
 import {compile, HelperOptions, registerHelper, registerPartial} from 'handlebars';
+import inflector from './inflector';
 import {Entity, Field, Parameter} from './restructure/types';
-
-/**
- * Extended inflector
- */
-const inflector = {
-  ...inflectorBase,
-  camelize: (input: string) => inflectorBase.camelize(input, false),
-  lowercase: (input: string) => input.toLowerCase()
-};
 
 /**
  * Prepare a template
@@ -106,11 +97,17 @@ registerHelper('inflect', (method: inflectMethod, input: string | number) =>
   return output;
 });
 
-//Camelcase entity name partial
-registerPartial('camelCaseEntity', '{{inflect "camelize" (inflect "singularize" @root.name)}}');
+//Entity object name partial
+registerPartial('entityObject', '{{inflect "camelize" (inflect "singularize" @root.name)}}');
 
-//Titlecase entity name partial
-registerPartial('titleCaseEntity', '{{inflect "classify" (inflect "singularize" @root.name)}}');
+//Entity plural object name partial
+registerPartial('entityPluralObject', '{{inflect "camelize" (inflect "pluralize" @root.name)}}');
 
-//Lowercase entity name partial
-registerPartial('lowerCaseEntity', '{{inflect "lowercase" (inflect "singularize" @root.name)}}');
+//Entity class name partial
+registerPartial('entityClass', '{{inflect "classify" (inflect "singularize" @root.name)}}');
+
+//Entity lowercase name partial
+registerPartial('entityLower', '{{inflect "lowercase" (inflect "singularize" @root.name)}}');
+
+//Entity plural lowercase name partial
+registerPartial('entityPluralLower', '{{inflect "lowercase" (inflect "pluralize" @root.name)}}');

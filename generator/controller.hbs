@@ -1,20 +1,20 @@
 /**
-* @fileoverview {{> titleCaseEntity}} controller
+* @fileoverview {{> entityClass}} controller
 */
 
 //Imports
 import {ParameterizedContext} from 'koa';
 import validate from '../lib/validate';
-import {{literal '{'}}{{> titleCaseEntity}}, {{> titleCaseEntity}}Schema, I{{> titleCaseEntity}}{{literal '}'}} from '../models/{{inflect 'camelize' (inflect 'pluralize' name)}}';
+import {{literal '{'}}{{> entityClass}}, {{> entityClass}}Schema, I{{> entityClass}}{{literal '}'}} from '../models/{{> entityPluralObject}}';
 
 //Controller context
-export interface {{> titleCaseEntity}}Context extends ParameterizedContext
+export interface {{> entityClass}}Context extends ParameterizedContext
 {
 {{#each (uniqueParameters)}}
   /**
   * {{{inflect "singularize" @root.description}}}
   */
-  {{> camelCaseEntity}}?: I{{> titleCaseEntity}}
+  {{> entityObject}}?: I{{> entityClass}}
 {{#unless @last}}
 
 {{/unless}}
@@ -25,48 +25,67 @@ export interface {{> titleCaseEntity}}Context extends ParameterizedContext
 /**
  * {{{description}}}
  */
-const {{inflect 'camelize' name}} = {{#if (includes type 'all' 'create' 'update' 'delete')}}async {{/if}}(ctx: {{> titleCaseEntity}}Context) =>
+const {{inflect 'camelize' name}} = {{#if (includes type 'all' 'create' 'update' 'delete')}}async {{/if}}(ctx: {{> entityClass}}Context) =>
 {
 {{#if (includes type 'get' 'update' 'delete')}}
-  //Ensure the {{> lowerCaseEntity}} is valid
-  if (ctx.{{> camelCaseEntity}} == null)
+  //Ensure the {{> entityLower}} is valid
+  if (ctx.{{> entityObject}} == null)
   {
-    return ctx.throw('Invalid {{> lowerCaseEntity}}', 402);
+    //Log
+    ctx.log.error(ctx, 'Invalid {{> entityLower}}!');
+
+    //Reject
+    ctx.throw('Invalid {{> entityLower}}', 402);
   }
 
 {{/if}}
 {{#if (includes type 'get' 'update' 'delete')}}
   //Validate the body
-  validate({{> titleCaseEntity}}Schema, ctx);
+  validate({{> entityClass}}Schema, ctx);
 
 {{/if}}
 {{#if (equals type 'all')}}
-  //Find and return all {{inflect 'lowercase' (inflect 'pluralize' @root.name)}}
-  ctx.response.body = await {{> titleCaseEntity}}.find();
+  //Find and return all {{> entityPluralLower}}
+  ctx.response.body = await {{> entityClass}}.find();
+
+  //Log
+  ctx.log.info('Got all {{> entityPluralLower}}.');
 {{/if}}
 {{#if (equals type 'create')}}
   //Instantiate the model
-  const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.create(ctx.request.body);
+  const {{> entityObject}} = await {{> entityClass}}.create(ctx.request.body);
 
   //Save the model
-  await {{> camelCaseEntity}}.save();
+  await {{> entityObject}}.save();
 
   //Return the model
   ctx.response.body = {
-    id: {{> camelCaseEntity}}.id
+    id: {{> entityObject}}.id
   };
+
+  //Log
+  ctx.log.info(`Created {{> entityLower}} ${{literal '{'}}{{> entityObject}}.id{{literal '}'}}.`);
 {{/if}}
 {{#if (equals type 'get')}}
   //Return the model
-  ctx.response.body = ctx.{{> camelCaseEntity}};
+  ctx.response.body = ctx.{{> entityObject}};
+
+  //Log
+  ctx.log.info(`Got {{> entityLower}} ${{literal '{'}}ctx.{{> entityObject}}.id{{literal '}'}}.`);
 {{/if}}
 {{#if (equals type 'update')}}
   //Update the model
-  await ctx.{{> camelCaseEntity}}.update(ctx.request.body as object);
+  await ctx.{{> entityObject}}.update(ctx.request.body as object);
+
+  //Log
+  ctx.log.info(`Updated {{> entityLower}} ${{literal '{'}}ctx.{{> entityObject}}.id{{literal '}'}}.`);
 {{/if}}
 {{#if (equals type 'delete')}}
   //Delete the model
-  await ctx.{{> camelCaseEntity}}.delete();
+  await ctx.{{> entityObject}}.delete();
+
+  //Log
+  ctx.log.info(`Deleted {{> entityLower}} ${{literal '{'}}ctx.{{> entityObject}}.id{{literal '}'}}.`);
 {{/if}}
 };
 {{#unless @last}}

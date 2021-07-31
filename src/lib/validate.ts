@@ -16,17 +16,17 @@ const validate = (schema: Schema, ctx: Context) =>
   if (res.error != null)
   {
     //Log
-    ctx.log.error(res, 'Invalid request!');
+    ctx.log.error({ctx, res}, 'Invalid request!');
 
     //Reject
-    ctx.status = 400;
-    throw res.error;
+    ctx.throw(res.error, 400);
   }
 
   //Suspect requests
   if (res.warning != null)
   {
-    ctx.log.warn(res, 'Suspect request!');
+    //Log
+    ctx.log.warn({ctx, res}, 'Suspect request!');
   }
 };
 

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Unified {{> lowerCaseEntity}} model
+ * @fileoverview Unified {{> entityLower}} model
  */
 
 //Imports
@@ -32,11 +32,11 @@ const joiSchema = Joi.object({
 const mongooseSchema = joigoose.convert(joiSchema);
 
 //Mongoose model
-const model = createModel<Interface>('{{> camelCaseEntity}}', mongooseSchema);
+const model = createModel<Interface>('{{> entityObject}}', mongooseSchema);
 
 //Export
 export {
-  Interface as I{{> titleCaseEntity}},
-  joiSchema as {{> titleCaseEntity}}Schema,
-  model as {{> titleCaseEntity}}
+  Interface as I{{> entityClass}},
+  joiSchema as {{> entityClass}}Schema,
+  model as {{> entityClass}}
 };

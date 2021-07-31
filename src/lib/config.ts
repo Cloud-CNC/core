@@ -2,11 +2,9 @@
  * @fileoverview App config
  * 
  * There are a few guiding principles for the config:
- * 1. There should be no required fields
- * 2. All values must be coerced, parsed, or validated
- * 3. All values should default to a sane, production-ready state (Unless this conflicts with #1, then warn the user)
- * 4. If a value needs processing, it should be done here
- * 5. Use named exports
+ * 1. Minimize required fields
+ * 2. All variables must default to sane, production-safe values
+ * 3. Process/validate variables in this file (As apposed to when the variable is actually used)
  */
 
 //Imports
@@ -46,6 +44,9 @@ const http = {
 
 //Pretty print log
 const pretty = !!process.env.PRETTY;
+
+//Mongo URL (For persisted state)
+const mongoUrl = process.env.MONGO_URL;
 
 //Redis URL (For multi-instance deployments)
 const redisUrl = process.env.REDIS_URL;
@@ -89,6 +90,12 @@ else if (http.tls)
   http.key = readFileSync(http.key!, 'utf-8');
 }
 
+if (mongoUrl == null)
+{
+  //Panic with message
+  panic('Missing Mongo URL!');
+}
+
 if (redisUrl == null)
 {
   //Log
@@ -102,5 +109,6 @@ export
   debug,
   http,
   pretty,
+  mongoUrl,
   redisUrl
 };

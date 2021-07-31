@@ -4,7 +4,7 @@
 
 //Imports
 import jwt from 'koa-jwt';
-import {auth} from '../config';
+import {auth} from '../lib/config';
 
 //Middleware
 const middleware = jwt({

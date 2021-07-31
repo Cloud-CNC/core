@@ -6,6 +6,7 @@
 import {resolve} from 'path';
 import _ from 'lodash';
 import {OpenAPIV3} from 'openapi-types';
+import inflector from '../inflector';
 import restructurePath from './path';
 import {Entity} from './types';
 import {methods} from './utils';
@@ -23,11 +24,15 @@ export default (document: OpenAPIV3.Document): Entity[] =>
   //Add entity metadata
   for (const tag of Object.values(document.tags!))
   {
+    //Inflect the tag
+    const name = inflector.camelize(inflector.pluralize(tag.name));
+
+    //Add the entity
     entities.push({
       file: {
-        controller: resolve(__dirname, '..', '..', 'src', 'controllers', `${tag.name}.ts`),
-        model: resolve(__dirname, '..', '..', 'src', 'models', `${tag.name}.ts`),
-        routes: resolve(__dirname, '..', '..', 'src', 'routes', `${tag.name}.ts`)
+        controller: resolve(__dirname, '..', '..', 'src', 'controllers', `${name}.ts`),
+        model: resolve(__dirname, '..', '..', 'src', 'models', `${name}.ts`),
+        routes: resolve(__dirname, '..', '..', 'src', 'routes', `${name}.ts`)
       },
       name: tag.name,
       description: tag.description!,

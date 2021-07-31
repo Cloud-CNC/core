@@ -4,7 +4,7 @@
 
 //Imports
 import pino from 'koa-pino-logger';
-import log from '../log';
+import log from '../lib/log';
 
 //Middleware
 const middleware = pino({

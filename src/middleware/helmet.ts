@@ -5,7 +5,7 @@
 //Imports
 import compose from 'koa-compose';
 import {contentSecurityPolicy, expectCt, frameguard, hsts, ieNoOpen, noSniff, permittedCrossDomainPolicies, referrerPolicy, xssFilter} from 'koa-helmet';
-import {http} from '../config';
+import {http} from '../lib/config';
 
 //Middleware
 const middlewares = [
