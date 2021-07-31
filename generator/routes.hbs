@@ -1,46 +1,32 @@
 /**
- * @fileoverview {{> titleCaseEntity}} routes
- */
+* @fileoverview {{> titleCaseEntity}} routes
+*/
 
 //Imports
 import Router from '@koa/router';
-import {DefaultState, ParameterizedContext} from 'koa';
-import validate from '../lib/validate';
-import {{literal "{"}}{{> titleCaseEntity}}, {{> titleCaseEntity}}Schema, I{{> titleCaseEntity}}{{literal "}"}} from '../models/{{inflect "camelize" (inflect "pluralize" name)}}';
-
-//Route context
-interface Context extends ParameterizedContext
-{
-  {{#each routes}}
-  {{#each parameters}}
-  /**
-   * {{{inflect "singularize" @root.description}}}
-   */
-  {{> camelCaseEntity}}?: I{{> titleCaseEntity}}
-  {{/each}}
-  {{/each}}
-}
+import {DefaultState} from 'koa';
+import controller, {{literal '{'}}{{> titleCaseEntity}}Context{{literal '}'}} from '../controllers/{{inflect 'camelize' (inflect 'pluralize' name)}}';
+import {{literal '{'}}{{> titleCaseEntity}}{{literal '}'}} from '../models/{{inflect 'camelize' (inflect 'pluralize' name)}}';
 
 //Router setup
-const router = new Router<DefaultState, Context>();
+const router = new Router<DefaultState, {{> titleCaseEntity}}Context>();
 
-{{#each routes}}
 router
-  {{#each parameters}}
+{{#each (uniqueParameters)}}
   //Route level {{> lowerCaseEntity}}
-  .param('{{name}}', async ({{name}}, ctx: Context, next) =>
+  .param('{{name}}', async ({{name}}, ctx: {{> titleCaseEntity}}Context, next) =>
   {
     //Get the {{> lowerCaseEntity}} by its {{name}}
-    {{#unless (equals name "id") }}
+{{#unless (equals name "id") }}
     const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.findOne({
       {{name}}
     });
-    {{/unless}}
-    {{#if (equals name "id") }}
+{{/unless}}
+{{#if (equals name "id") }}
     const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.findById({{name}});
-    {{/if}}
+{{/if}}
 
-    //Ensure the {{name}} was valid
+    //Ensure the {{name}} is valid
     if ({{> camelCaseEntity}} == null)
     {
       return ctx.throw('Invalid {{> lowerCaseEntity}} {{name}}', 402);
@@ -51,28 +37,14 @@ router
     return next();
   })
 
-  {{/each}}
-  {{#each endpoints}}
-  //{{{description}}}
-  .{{method}}('{{parameter path}}', 
-  {{~#if (equals type 'create')}} validate({{> titleCaseEntity}}Schema),{{/if}}
-  {{~#if (equals type 'update')}} validate({{> titleCaseEntity}}Schema),{{/if}} async ctx =>
-  {
-    {{#if (equals type 'all')}}ctx.response.body = await {{> titleCaseEntity}}.find();{{/if}}
-    {{~#if (equals type 'create')}}const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.create(ctx.request.body);
-    
-    await {{> camelCaseEntity}}.save();
-    
-    ctx.response.body = {
-      id: {{> camelCaseEntity}}.id
-    };{{/if}}
-    {{~#if (equals type 'get')}}ctx.response.body = ctx.{{> camelCaseEntity}};{{/if}}
-    {{~#if (equals type 'update')}}await ctx.{{> camelCaseEntity}}!.update(ctx.request.body as object);{{/if}}
-    {{~#if (equals type 'delete')}}await ctx.{{> camelCaseEntity}}!.delete();{{/if}}
-  }){{#unless @last}}
-  {{/unless}}{{#if @last}};{{/if}}
-  {{/each}}
-
 {{/each}}
+{{#each operations}}
+  //{{{description}}}
+  .{{method}}('{{parameter path}}', controller.{{inflect 'camelize' name}}){{#if @last}};{{/if}}
+{{#unless @last}}
+
+{{/unless}}
+{{/each}}
+
 //Export
 export default router;

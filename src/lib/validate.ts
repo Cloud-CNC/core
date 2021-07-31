@@ -7,7 +7,7 @@ import {Context} from 'koa';
 import {Schema} from 'joi';
 
 //Middleware
-const middleware = (schema: Schema) => (ctx: Context) =>
+const validate = (schema: Schema, ctx: Context) =>
 {
   //Validate the body
   const res = schema.validate(ctx.body);
@@ -31,4 +31,4 @@ const middleware = (schema: Schema) => (ctx: Context) =>
 };
 
 //Export
-export default middleware;
+export default validate;

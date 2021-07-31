@@ -1,0 +1,82 @@
+/**
+* @fileoverview {{> titleCaseEntity}} controller
+*/
+
+//Imports
+import {ParameterizedContext} from 'koa';
+import validate from '../lib/validate';
+import {{literal '{'}}{{> titleCaseEntity}}, {{> titleCaseEntity}}Schema, I{{> titleCaseEntity}}{{literal '}'}} from '../models/{{inflect 'camelize' (inflect 'pluralize' name)}}';
+
+//Controller context
+export interface {{> titleCaseEntity}}Context extends ParameterizedContext
+{
+{{#each (uniqueParameters)}}
+  /**
+  * {{{inflect "singularize" @root.description}}}
+  */
+  {{> camelCaseEntity}}?: I{{> titleCaseEntity}}
+{{#unless @last}}
+
+{{/unless}}
+{{/each}}
+}
+
+{{#each operations}}
+/**
+ * {{{description}}}
+ */
+const {{inflect 'camelize' name}} = {{#if (includes type 'all' 'create' 'update' 'delete')}}async {{/if}}(ctx: {{> titleCaseEntity}}Context) =>
+{
+{{#if (includes type 'get' 'update' 'delete')}}
+  //Ensure the {{> lowerCaseEntity}} is valid
+  if (ctx.{{> camelCaseEntity}} == null)
+  {
+    return ctx.throw('Invalid {{> lowerCaseEntity}}', 402);
+  }
+
+{{/if}}
+{{#if (includes type 'get' 'update' 'delete')}}
+  //Validate the body
+  validate({{> titleCaseEntity}}Schema, ctx);
+
+{{/if}}
+{{#if (equals type 'all')}}
+  //Find and return all {{inflect 'lowercase' (inflect 'pluralize' @root.name)}}
+  ctx.response.body = await {{> titleCaseEntity}}.find();
+{{/if}}
+{{#if (equals type 'create')}}
+  //Instantiate the model
+  const {{> camelCaseEntity}} = await {{> titleCaseEntity}}.create(ctx.request.body);
+
+  //Save the model
+  await {{> camelCaseEntity}}.save();
+
+  //Return the model
+  ctx.response.body = {
+    id: {{> camelCaseEntity}}.id
+  };
+{{/if}}
+{{#if (equals type 'get')}}
+  //Return the model
+  ctx.response.body = ctx.{{> camelCaseEntity}};
+{{/if}}
+{{#if (equals type 'update')}}
+  //Update the model
+  await ctx.{{> camelCaseEntity}}.update(ctx.request.body as object);
+{{/if}}
+{{#if (equals type 'delete')}}
+  //Delete the model
+  await ctx.{{> camelCaseEntity}}.delete();
+{{/if}}
+};
+{{#unless @last}}
+
+{{/unless}}
+{{/each}}
+
+//Export
+export default {
+{{#each operations}}
+  {{inflect 'camelize' name}}{{#unless @last}},{{/unless}}
+{{/each}}
+};

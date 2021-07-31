@@ -23,6 +23,7 @@ const main = async () =>
   const entities = restructure(api as OpenAPIV3.Document);
 
   //Prepare templates
+  const controllerTemplate = await prepareTemplate(resolve(__dirname, 'controller.hbs'));
   const modelTemplate = await prepareTemplate(resolve(__dirname, 'model.hbs'));
   const routeTemplate = await prepareTemplate(resolve(__dirname, 'routes.hbs'));
 
@@ -30,10 +31,12 @@ const main = async () =>
   for (const entity of entities)
   {
     //Render
+    const controller = controllerTemplate(entity);
     const model = modelTemplate(entity);
     const routes = routeTemplate(entity);
 
     //Save
+    await writeFile(entity.file.controller, controller);
     await writeFile(entity.file.model, model);
     await writeFile(entity.file.routes, routes);
   }

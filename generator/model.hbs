@@ -10,22 +10,22 @@ import joigoose from '../lib/joigoose';
 //TypeScript interface
 interface Interface extends Document
 {
-  {{#each (uniqueFields)}}
+{{#each (uniqueFields)}}
   /**
    * {{{description}}}
    */
   {{name}}: {{{typescriptType}}};
-  {{#unless @last}}
+{{#unless @last}}
 
-  {{/unless}}
-  {{/each}}
+{{/unless}}
+{{/each}}
 }
 
 //Joi schema
 const joiSchema = Joi.object({
-  {{#each (uniqueFields)}}
+{{#each (uniqueFields)}}
   {{name}}: {{{joiType}}}{{#unless @last}},{{/unless}}
-  {{/each}}
+{{/each}}
 });
 
 //Mongoose schema

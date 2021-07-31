@@ -7,7 +7,7 @@ import {readFile} from 'fs/promises';
 import * as inflectorBase from 'inflected';
 import _ from 'lodash';
 import {compile, HelperOptions, registerHelper, registerPartial} from 'handlebars';
-import {Entity, Field} from './restructure/types';
+import {Entity, Field, Parameter} from './restructure/types';
 
 /**
  * Extended inflector
@@ -37,6 +37,9 @@ export const prepareTemplate = async (path: string) =>
 //Value equality helper
 registerHelper('equals', (a: string, b: string) => a == b);
 
+//List includes helper
+registerHelper('includes', <T>(item: T, ...list: T[]) => list?.includes(item));
+
 //Literal character helper
 registerHelper('literal', (input: string) => input);
 
@@ -47,18 +50,33 @@ registerHelper('parameter', (input: string) =>
   return input.replace(/{(.+)}/g, ':$1');
 });
 
+//Unique parameters helper
+registerHelper('uniqueParameters', (options: HelperOptions) =>
+{
+  const parameters = [] as Parameter[];
+
+  //Aggregate parameters
+  for (const operation of (options.data.root as Entity).operations)
+  {
+    parameters.push(...operation.parameters);
+  }
+
+  //Return unique parameters
+  return _.uniqWith(parameters, (a, b) =>
+    a.name == b.name &&
+    a.description == b.description
+  );
+});
+
 //Unique fields helper
 registerHelper('uniqueFields', (options: HelperOptions) =>
 {
   const fields = [] as Field[];
 
   //Aggregate fields
-  for (const route of (options.data.root as Entity).routes)
+  for (const operation of (options.data.root as Entity).operations)
   {
-    for (const endpoint of route.endpoints)
-    {
-      fields.push(...endpoint.fields);
-    }
+    fields.push(...operation.fields);
   }
 
   //Return unique fields

@@ -25,12 +25,13 @@ export default (document: OpenAPIV3.Document): Entity[] =>
   {
     entities.push({
       file: {
+        controller: resolve(__dirname, '..', '..', 'src', 'controllers', `${tag.name}.ts`),
         model: resolve(__dirname, '..', '..', 'src', 'models', `${tag.name}.ts`),
         routes: resolve(__dirname, '..', '..', 'src', 'routes', `${tag.name}.ts`)
       },
       name: tag.name,
       description: tag.description!,
-      routes: []
+      operations: []
     });
   }
 
@@ -59,33 +60,10 @@ export default (document: OpenAPIV3.Document): Entity[] =>
     }
 
     //Restructure the path
-    const newRoute = restructurePath(pathName, path);
+    const newOperations = restructurePath(pathName, path);
 
-    //Attempt to get the existing route
-    const existingRoute = entity.routes.find(existingRoute =>
-    {
-      //Verify each new parameter is in the existing route
-      for (const newParameter of newRoute.parameters)
-      {
-        if (!existingRoute.parameters.find(existingParameter => _.isEqual(newParameter, existingParameter)))
-        {
-          return false;
-        }
-      }
-
-      return true;
-    });
-
-    //Add to existing route
-    if (existingRoute != null)
-    {
-      existingRoute.endpoints.push(...newRoute.endpoints);
-    }
-    //Add new route
-    else
-    {
-      entity.routes.push(newRoute);
-    }
+    //Add the operations
+    entity.operations.push(...newOperations);
   }
 
   return entities;

@@ -5,23 +5,25 @@
 //Imports
 import _ from 'lodash';
 import {OpenAPIV3} from 'openapi-types';
-import {Endpoint, Field, Method, Parameter, Route} from './types';
+import {Field, Parameter, Operation, Method} from './types';
 import {joiType, methods, typescriptType} from './utils';
 
 /**
- * Restructure an OAS3 path into a route
+ * Restructure an OAS3 path into one or more operations
+ * @param pathName OAS3 path name
  * @param path OAS3 path
- * @returns Route
+ * @returns Operation
  */
-export default (pathName: string, path: OpenAPIV3.PathItemObject): Route =>
+export default (pathName: string, path: OpenAPIV3.PathItemObject): Operation[] =>
 {
-  //Route data
-  const routeParameter = [] as Parameter[];
-  const routeEndpoints = [] as Endpoint[];
+  //Operation data
+  const operationParameters = [] as Parameter[];
 
+  //Generate operations
+  const operations = [] as Operation[];
   for (const [entryName, entry] of Object.entries(path))
   {
-    //Path parameters
+    //Generate parameters
     if (entryName == 'parameters')
     {
       //Cast
@@ -30,22 +32,20 @@ export default (pathName: string, path: OpenAPIV3.PathItemObject): Route =>
       //Add the parameters
       for (const parameter of parameters)
       {
-        routeParameter.push({
+        operationParameters.push({
           name: parameter.name,
           description: parameter.description!
         });
       }
     }
 
-    //Endpoint
+    //Generate fields
+    const operationFields = [] as Field[];
     if (methods.includes(entryName as OpenAPIV3.HttpMethods))
     {
       //Cast
       const endpoint = entry as OpenAPIV3.OperationObject;
       const body = endpoint.requestBody as OpenAPIV3.RequestBodyObject;
-
-      //Get the request fields
-      const fields = [] as Field[];
 
       if (body != null)
       {
@@ -67,7 +67,7 @@ export default (pathName: string, path: OpenAPIV3.PathItemObject): Route =>
             const property = schemaProperty as OpenAPIV3.SchemaObject;
 
             //Add the field
-            fields.push({
+            operationFields.push({
               name: propertyName!,
               description: property.description!,
               joiType: joiType(property),
@@ -78,20 +78,18 @@ export default (pathName: string, path: OpenAPIV3.PathItemObject): Route =>
         }
       }
 
-      //Add the endpoint
-      routeEndpoints.push({
+      //Append the operation
+      operations.push({
         name: endpoint.operationId!,
-        type: (endpoint as Record<string, any>)['x-operation-type'],
         description: endpoint.summary!,
-        path: pathName,
+        type: (endpoint as Record<string, any>)['x-operation-type'],
         method: entryName as Method,
-        fields
+        path: pathName,
+        parameters: operationParameters,
+        fields: operationFields
       });
     }
   }
 
-  return {
-    endpoints: routeEndpoints,
-    parameters: routeParameter
-  };
+  return operations;
 };
