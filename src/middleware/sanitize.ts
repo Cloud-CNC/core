@@ -3,11 +3,11 @@
  */
 
 //Imports
-import {Context} from 'koa';
+import {Context, Next} from 'koa';
 import {sanitize} from 'mongodb-sanitize';
 
 //Middleware
-const middleware = (ctx: Context) =>
+const middleware = async (ctx: Context, next: Next) =>
 {
   //Sanitize the body
   if (ctx.request.body != null)
@@ -26,6 +26,8 @@ const middleware = (ctx: Context) =>
   {
     ctx.query = sanitize(ctx.query);
   }
+
+  await next();
 };
 
 //Export

@@ -25,7 +25,7 @@ export interface {{> entityClass}}Context extends ParameterizedContext
 /**
  * {{{description}}}
  */
-const {{inflect 'camelize' name}} = {{#if (includes type 'all' 'create' 'update' 'delete')}}async {{/if}}(ctx: {{> entityClass}}Context) =>
+const {{name}} = {{#if (includes type 'all' 'create' 'update' 'delete')}}async {{/if}}(ctx: {{> entityClass}}Context) =>
 {
 {{#if (includes type 'get' 'update' 'delete')}}
   //Ensure the {{> entityLower}} is valid
@@ -35,7 +35,12 @@ const {{inflect 'camelize' name}} = {{#if (includes type 'all' 'create' 'update'
     ctx.log.error(ctx, 'Invalid {{> entityLower}}!');
 
     //Reject
-    ctx.throw('Invalid {{> entityLower}}', 402);
+    ctx.throw({
+      error: {
+        name: 'Invalid {{> entityLower}}!',
+        description: 'The supplied {{> entityLower}} was invalid.'
+      }
+    }, 400);
   }
 
 {{/if}}
@@ -96,6 +101,6 @@ const {{inflect 'camelize' name}} = {{#if (includes type 'all' 'create' 'update'
 //Export
 export default {
 {{#each operations}}
-  {{inflect 'camelize' name}}{{#unless @last}},{{/unless}}
+  {{name}}{{#unless @last}},{{/unless}}
 {{/each}}
 };

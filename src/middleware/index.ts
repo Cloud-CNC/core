@@ -4,7 +4,8 @@
 
 //Imports
 import compose from 'koa-compose';
-import auth from './auth';
+import authentication from './authentication';
+//import authorization from './authorization';
 import body from './body';
 import helmet from './helmet';
 import logger from './logger';
@@ -14,7 +15,8 @@ import sanitize from './sanitize';
 const middleware = compose([
   helmet,
   logger,
-  auth,
+  authentication,
+//  authorization,
   body,
   sanitize
 ]);

@@ -1,33 +1,68 @@
 # Machine entity
 
 # Types
-meta:
-  description: Machine metadata
+_id:
+  type: string
+  description: Machine ID
+
+name:
+  type: string
+  description: Machine name
+
+dimensions:
+  description: Physical machine dimensions
   type: object
+  required:
+    - 'length'
+    - 'width'
   properties:
-    slicer:
-      description: Whether or not to enable [Cura WASM](https://github.com/cloud-cnc/cura-wasm)
-      type: boolean
     length:
-      description: Machine area/volume length (Required if `slicer` is enabled)
+      description: Machine length (2D/3D)
       type: number
     width:
-      description: Machine area/volume width (Required if `slicer` is enabled)
+      description: Machine width (2D/3D)
       type: number
     height:
-      description: Machine volume height (Required if `slicer` is enabled)
+      description: Machine height (3D only)
       type: number
+
+controller:
+  type: string
+  description: Controller ID
+
+connection:
+  type: object
+  description: Arbitrary connection information (Consult your plugin's documentation)
+
+labels:
+  description: Machine labels (Not to be confused with controller labels)
+  type: array
+  items:
+    type: string
+
+taints:
+  description: |
+    Machine taints (Not to be confused with controller taints). Well known ones are:
+    * `machine.cloud-cnc/emergency-stopped`: the machine is stopped as a result of an emergency-stop
+    signal<sup>1</sup>
+    * `machine.cloud-cnc/busy`: the machine is currently busy<sup>1</sup>
+    * `machine.cloud-cnc/offline`: the machine is offline<sup>1</sup>
+
+    <sup>1</sup> automatically added and removed
+  type: array
+  items:
+    type: string
 
 # Routes
 all:
   get:
-    operationId: GetAllMachines
+    operationId: getAllMachines
     x-operation-type: all
     tags:
-      - "machines"
+      - 'machines'
     summary: Get all machines
     responses:
-      "200":
+      '200':
         description: OK
         content:
           application/json:
@@ -36,38 +71,41 @@ all:
               items:
                 type: object
                 required:
-                  - "id"
-                  - "name"
-                  - "controller"
-                  - "meta"
+                  - 'id'
+                  - 'name'
+                  - 'dimensions'
+                  - 'controller'
+                  - 'connection'
+                  - 'labels'
+                  - 'taints'
                 properties:
                   id:
-                    type: string
-                    description: Machine ID
+                    $ref: '#/_id'
                   name:
-                    type: string
-                    description: Machine name
+                    $ref: '#/name'
+                  dimensions:
+                    $ref: '#/dimensions'
                   controller:
-                    type: string
-                    description: Controller ID
-                  meta:
-                    $ref: "#/meta"
-                    
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+                    $ref: '#/controller'
+                  connection:
+                    $ref: '#/connection'
+                  labels:
+                    $ref: '#/labels'
+                  taints:
+                    $ref: '#/taints'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
 create:
   post:
-    operationId: CreateMachine
+    operationId: createMachine
     x-operation-type: create
     tags:
-      - "machines"
+      - 'machines'
     summary: Create a machine
     requestBody:
       required: true
@@ -76,40 +114,43 @@ create:
           schema:
             type: object
             required:
-              - "name"
-              - "controller"
-              - "meta"
+              - 'name'
+              - 'dimensions'
+              - 'controller'
+              - 'connection'
+              - 'labels'
+              - 'taints'
             properties:
               name:
-                type: string
-                description: Machine name
+                $ref: '#/name'
+              dimensions:
+                $ref: '#/dimensions'
               controller:
-                type: string
-                description: Controller ID
-              meta:
-                $ref: "#/meta"
+                $ref: '#/controller'
+              connection:
+                $ref: '#/connection'
+              labels:
+                $ref: '#/labels'
+              taints:
+                $ref: '#/taints'
     responses:
-      "200":
+      '200':
         description: OK
         content:
           application/json:
             schema:
               type: object
               required:
-                - "id"
-                - "certificate"
+                - 'id'
               properties:
                 id:
-                  type: string
-                  description: Machine ID
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+                  $ref: '#/_id'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
 id:
   parameters:
@@ -120,45 +161,50 @@ id:
       schema:
         type: string
   get:
-    operationId: GetMachine
+    operationId: getMachine
     x-operation-type: get
     tags:
-      - "machines"
+      - 'machines'
     summary: Get a machine
     responses:
-      "200":
+      '200':
         description: OK
         content:
           application/json:
             schema:
               type: object
               required:
-                - "name"
-                - "controller"
-                - "meta"
+                - 'name'
+                - 'dimensions'
+                - 'controller'
+                - 'connection'
+                - 'labels'
+                - 'taints'
               properties:
                 name:
-                  type: string
-                  description: Machine name
+                  $ref: '#/name'
+                dimensions:
+                  $ref: '#/dimensions'
                 controller:
-                  type: string
-                  description: Controller ID
-                meta:
-                  $ref: "#/meta"
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+                  $ref: '#/controller'
+                connection:
+                  $ref: '#/connection'
+                labels:
+                  $ref: '#/labels'
+                taints:
+                  $ref: '#/taints'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
   patch:
-    operationId: UpdateMachine
+    operationId: updateMachine
     x-operation-type: update
     tags:
-      - "machines"
+      - 'machines'
     summary: Update a machine
     requestBody:
       required: true
@@ -168,41 +214,39 @@ id:
             type: object
             properties:
               name:
-                type: string
-                description: Machine name
+                $ref: '#/name'
+              dimensions:
+                $ref: '#/dimensions'
               controller:
-                type: string
-                description: Controller ID
-              meta:
-                $ref: "#/meta"
+                $ref: '#/controller'
+              connection:
+                $ref: '#/connection'
+              labels:
+                $ref: '#/labels'
+              taints:
+                $ref: '#/taints'
     responses:
-      "200":
-        description: OK
-
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+      '200':
+        $ref: '../responses.yml#/empty-success'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
   delete:
-    operationId: DeleteMachine
+    operationId: deleteMachine
     x-operation-type: delete
     tags:
-      - "machines"
+      - 'machines'
     summary: Delete a machine
     responses:
-      "200":
-        description: OK
-
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+      '200':
+        $ref: '../responses.yml#/empty-success'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'

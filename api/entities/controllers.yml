@@ -1,15 +1,59 @@
 # Controller entity
 
+# Types
+_id:
+  type: string
+  description: Controller ID
+
+name:
+  type: string
+  description: Controller name
+
+tls:
+  description: |
+    mTLS data used for connecting to the core
+
+    *Note: for security purposes, this will not be revealed after creating the controller,
+    even when updating it.*
+  type: object
+  properties:
+    certificate:
+      type: string
+      description: PEM-encoded mTLS client certificate
+    key:
+      type: string
+      description: PEM-encoded mTLS client key
+  additionalProperties:
+    type: string
+
+labels:
+  description: Controller labels (Not to be confused with machine labels)
+  type: array
+  items:
+    type: string
+
+taints:
+  description: |
+    Controller taints (Not to be confused with machine taints). Well known ones are:
+    * `controller.cloud-cnc/incompatible-version`: the core and controller versions are incompatible
+    with each other<sup>1</sup>
+    * `controller.cloud-cnc/offline`: the controller is offline<sup>1</sup>
+
+    <sup>1</sup> automatically added and removed
+  type: array
+  items:
+    type: string
+
 # Routes
 all:
   get:
-    operationId: GetAllControllers
+    operationId: getAllControllers
     x-operation-type: all
     tags:
-      - "controllers"
+      - 'controllers'
     summary: Get all controllers
     responses:
-      "200":
+      '200':
         description: OK
         content:
           application/json:
@@ -18,30 +62,32 @@ all:
               items:
                 type: object
                 required:
-                  - "id"
-                  - "name"
+                  - 'id'
+                  - 'name'
+                  - 'labels'
+                  - 'taints'
                 properties:
                   id:
-                    type: string
-                    description: Controller ID
+                    $ref: '#/_id'
                   name:
-                    type: string
-                    description: Controller name
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+                    $ref: '#/name'
+                  labels:
+                    $ref: '#/labels'
+                  taints:
+                    $ref: '#/taints'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
 create:
   post:
-    operationId: CreateController
+    operationId: createController
     x-operation-type: create
     tags:
-      - "controllers"
+      - 'controllers'
     summary: Create a controller
     requestBody:
       required: true
@@ -50,83 +96,76 @@ create:
           schema:
             type: object
             required:
-              - "name"
+              - 'name'
             properties:
               name:
-                type: string
-                description: Controller name
+                $ref: '#/name'
     responses:
-      "200":
+      '200':
         description: OK
         content:
           application/json:
             schema:
               type: object
               required:
-                - "id"
-                - "certificate"
+                - 'id'
+                - 'tls'
               properties:
                 id:
-                  type: string
-                  description: Controller ID
-                certificate:
-                  type: string
-                  description: |
-                    *Note: for security purposes, the certificate will not be revealed after
-                    creating the controller, even when updating it.*
-
-                    Controller certificate used for mutual TLS authentication when connecting
-                    over WebSockets
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+                  $ref: '#/_id'
+                tls:
+                  $ref: '#/tls'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
 id:
   parameters:
-  - name: id
-    description: Controller ID
-    in: path
-    required: true
-    schema:
-      type: string
+    - name: id
+      description: Controller ID
+      in: path
+      required: true
+      schema:
+        type: string
   get:
-    operationId: GetController
+    operationId: getController
     x-operation-type: get
     tags:
-      - "controllers"
+      - 'controllers'
     summary: Get a controller
     responses:
-      "200":
+      '200':
         description: OK
         content:
           application/json:
             schema:
               type: object
               required:
-                - "name"
+                - 'name'
+                - 'labels'
+                - 'taints'
               properties:
                 name:
-                  type: string
-                  description: Controller name
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+                  $ref: '#/name'
+                labels:
+                  $ref: '#/labels'
+                taints:
+                  $ref: '#/taints'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
   patch:
-    operationId: UpdateController
+    operationId: updateController
     x-operation-type: update
     tags:
-      - "controllers"
+      - 'controllers'
     summary: Update a controller
     requestBody:
       required: true
@@ -136,37 +175,37 @@ id:
             type: object
             properties:
               name:
-                type: string
-                description: Controller name
+                $ref: '#/name'
+              labels:
+                $ref: '#/labels'
+              taints:
+                $ref: '#/taints'
     responses:
-      "200":
-        description: OK
-
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+      '200':
+        $ref: '../responses.yml#/empty-success'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
   delete:
-    operationId: DeleteController
+    operationId: deleteController
     x-operation-type: delete
     tags:
-      - "controllers"
+      - 'controllers'
     summary: Delete a controller
-    description: "*Note: this endpoint will kick the controller if it's connected and revoke future connections using the controller's certificate.*"
+    description: |
+      *Note: this endpoint will kick the controller if it's currently connected and add the client
+      certificate to an internal Certificate Revocation List (CRL) preventing future connections
+      using the same certificate/key.*
     responses:
-      "200":
-        description: OK
-
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+      '200':
+        $ref: '../responses.yml#/empty-success'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'

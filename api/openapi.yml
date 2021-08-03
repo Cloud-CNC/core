@@ -3,10 +3,29 @@ openapi: 3.0.3
 info:
   title: Cloud CNC HTTP API
   description: |
+    ## Preface
+    This specification is the global source of truth for all components of Cloud CNC. Some of the
+    concepts in Cloud CNC are based on [Kubernetes](https://kubernetes.io) (Specifically affinity,
+    labels, taints, and tolerations).
+
     ## Glossary
     * ACL: Access Control List
     * MFA: Multi-Factor Authentication
-    * OTP: One Time Password
+    * TOTP: Time-based One Time Password ([RFC 6238](https://tools.ietf.org/html/rfc6238))
+
+
+    * Labels: **arbitrary** aspects of a controller/machine that can be selected for or against via
+    job affinity (eg: working-area dimensions).
+    * Taints: **arbitrary** aspects of a controller/machine that make an entity unsuitable for most
+    jobs (eg: broken or low filament). Tainted entities are avoided by default but jobs can ignore
+    taints via tolerations. Taints also serve as a status system: if an entity has no taints, it's
+    considered fully functional and online.
+
+    ## Custom route attributes
+    * `x-operation-type` (enum): common operation types (used for code autogeneration). Valid values
+    are: `all` (Get all entity instances), `create` (Create an entity instance), `get` (Get an entity
+    instance by ID), `update` (Update an entity instance by ID), and `delete` (Delete an entity 
+    instance by ID).
   version: 2.0.0
   license:
     name: MIT
@@ -19,11 +38,11 @@ tags:
   - name: accounts
     description: User accounts
 
-  - name: roles
-    description: Account roles
-
   - name: files
     description: Model & machine files
+
+  - name: jobs
+    description: Machine jobs
 
   - name: controllers
     description: Machine controllers
@@ -32,49 +51,49 @@ tags:
     description: CNC machines
 
 paths:
-  /sessions/login:
-    $ref: "./entities/sessions.yml#/login"
-  /sessions/mfa:
-    $ref: "./entities/sessions.yml#/mfa"
+  /sessions/login/userpass:
+    $ref: './entities/sessions.yml#/userpass'
+  /sessions/login/mfa:
+    $ref: './entities/sessions.yml#/mfa'
   /sessions/logout:
-    $ref: "./entities/sessions.yml#/logout"
+    $ref: './entities/sessions.yml#/logout'
 
   /accounts/all:
-    $ref: "./entities/accounts.yml#/all"
+    $ref: './entities/accounts.yml#/all'
   /accounts/create:
-    $ref: "./entities/accounts.yml#/create"
+    $ref: './entities/accounts.yml#/create'
   /accounts/{id}/impersonate:
-    $ref: "./entities/accounts.yml#/impersonate"
+    $ref: './entities/accounts.yml#/impersonate'
   /accounts/{id}:
-    $ref: "./entities/accounts.yml#/id"
-
-  /roles/all:
-    $ref: "./entities/roles.yml#/all"
-  /roles/create:
-    $ref: "./entities/roles.yml#/create"
-  /roles/{id}:
-    $ref: "./entities/roles.yml#/id"
+    $ref: './entities/accounts.yml#/id'
 
   /files/all:
-    $ref: "./entities/files.yml#/all"
+    $ref: './entities/files.yml#/all'
   /files/create:
-    $ref: "./entities/files.yml#/create"
+    $ref: './entities/files.yml#/create'
   /files/{id}:
-    $ref: "./entities/files.yml#/id"
+    $ref: './entities/files.yml#/id'
+
+  /jobs/all:
+    $ref: './entities/jobs.yml#/all'
+  /jobs/create:
+    $ref: './entities/jobs.yml#/create'
+  /jobs/{id}:
+    $ref: './entities/jobs.yml#/id'
 
   /controllers/all:
-    $ref: "./entities/controllers.yml#/all"
+    $ref: './entities/controllers.yml#/all'
   /controllers/create:
-    $ref: "./entities/controllers.yml#/create"
+    $ref: './entities/controllers.yml#/create'
   /controllers/{id}:
-    $ref: "./entities/controllers.yml#/id"
+    $ref: './entities/controllers.yml#/id'
 
   /machines/all:
-    $ref: "./entities/machines.yml#/all"
+    $ref: './entities/machines.yml#/all'
   /machines/create:
-    $ref: "./entities/machines.yml#/create"
+    $ref: './entities/machines.yml#/create'
   /machines/{id}:
-    $ref: "./entities/machines.yml#/id"
+    $ref: './entities/machines.yml#/id'
 
 components:
   securitySchemes:

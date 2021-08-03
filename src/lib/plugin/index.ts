@@ -43,7 +43,7 @@ export default async (app: Koa, io: Server) =>
       io,
       joigoose,
       log,
-      redis
+      redis: config.redisUrl != null ? redis : null
     });
 
     //Log

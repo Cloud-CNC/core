@@ -19,7 +19,12 @@ const validate = (schema: Schema, ctx: Context) =>
     ctx.log.error({ctx, res}, 'Invalid request!');
 
     //Reject
-    ctx.throw(res.error, 400);
+    ctx.throw({
+      error: {
+        name: 'Invalid request!',
+        description: res.error
+      }
+    }, 400);
   }
 
   //Suspect requests

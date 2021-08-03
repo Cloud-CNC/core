@@ -1,9 +1,21 @@
 # File entity
 
 # Types
-file-status:
+_id:
+  type: string
+  description: File ID
+
+name:
+  type: string
+  description: File name
+
+description:
+  type: string
+  description: File description
+
+state:
   description: |
-    File lifecycle status
+    File lifecycle state
     * `present`: the file is present; both the metadata and data is accessible
     * `deleted`: the file is in the trash; only the metadata is accessible
   type: string
@@ -13,10 +25,10 @@ file-status:
 
 permission:
   description: |
-    File permission
-    * `owner`: the entity can read, write, and delete the file and update the file"s ACL
-    * `write`: the entity can only read and edit the file
-    * `read`: the entity can only read the file
+    File subject permission
+    * `owner`: the subject can read from, write to, delete the file and update the file's ACL
+    * `write`: the subject can only read from and write to the file
+    * `read`: the subject can only read from the file
   type: string
   enum:
     - owner
@@ -26,22 +38,27 @@ permission:
 acl:
   description: |
     File access control list
-    * Keys: entity (account/role) ID
+    * Keys: account  name (`account` or `role`) + `:` + entity ID (eg: `role:61087e44c7f60e5269e4cb0a`)
     * Values: permission
-  type: object
+  type: array
   additionalProperties:
-    $ref: "#/permission"
+    $ref: '#/permission'
+
+raw:
+  type: string
+  format: binary
+  description: Raw file
 
 # Routes
 all:
   get:
-    operationId: GetAllFiles
+    operationId: getAllFiles
     x-operation-type: all
     tags:
-      - "files"
+      - 'files'
     summary: Get all files
     responses:
-      "200":
+      '200':
         description: OK
         content:
           application/json:
@@ -50,42 +67,36 @@ all:
               items:
                 type: object
                 required:
-                  - "id"
-                  - "name"
-                  - "status"
-                  - "acl"
+                  - 'id'
+                  - 'name'
+                  - 'lifecycle'
+                  - 'acl'
                 properties:
                   id:
-                    type: string
-                    description: File ID
+                    $ref: '#/_id'
                   name:
-                    type: string
-                    description: File name
+                    $ref: '#/name'
                   description:
-                    type: string
-                    description: File description
-                  status:
-                    $ref: "#/file-status"
+                    $ref: '#/description'
+                  state:
+                    $ref: '#/state'
                   acl:
-                    $ref: "#/acl"
-
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+                    $ref: '#/acl'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
 create:
   post:
-    operationId: CreateFile
+    operationId: createFile
     x-operation-type: create
     tags:
-      - "files"
+      - 'files'
     summary: Create a file
-    description: "*Note: endpoint accepts a multipart form, not JSON.*"
+    description: '*Note: endpoint accepts a multipart form, not JSON.*'
     requestBody:
       required: true
       content:
@@ -93,43 +104,36 @@ create:
           schema:
             type: object
             required:
-              - "name"
-              - "acl"
-              - "raw"
+              - 'name'
+              - 'acl'
+              - 'raw'
             properties:
               name:
-                type: string
-                description: File name
+                $ref: '#/name'
               description:
-                type: string
-                description: File description
+                $ref: '#/description'
               acl:
-                $ref: "#/acl"
+                $ref: '#/acl'
               raw:
-                type: string
-                format: binary
-                description: Raw file
+                $ref: '#/raw'
     responses:
-      "200":
+      '200':
         description: OK
         content:
           application/json:
             schema:
               type: object
               required:
-                - "id"
+                - 'id'
               properties:
                 id:
-                  type: string
-                  description: File ID
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+                  $ref: '#/_id'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
 id:
   parameters:
@@ -140,59 +144,53 @@ id:
       schema:
         type: string
   get:
-    operationId: GetFile
+    operationId: getFile
     x-operation-type: get
     tags:
-      - "files"
+      - 'files'
     summary: Get a file
     responses:
-      "200":
+      '200':
         description: OK
         content:
           application/json:
             schema:
               type: object
               required:
-                - "name"
-                - "status"
-                - "acl"
-                - "raw"
+                - 'name'
+                - 'state'
+                - 'acl'
+                - 'raw'
               properties:
                 name:
-                  type: string
-                  description: File name
+                  $ref: '#/name'
                 description:
-                  type: string
-                  description: File description
-                status:
-                  $ref: "#/file-status"
+                  $ref: '#/description'
+                state:
+                  $ref: '#/state'
                 acl:
-                  $ref: "#/acl"
+                  $ref: '#/acl'
                 raw:
-                  type: string
-                  format: binary
-                  description: Raw file
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+                  $ref: '#/raw'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
   patch:
-    operationId: UpdateFile
+    operationId: updateFile
     x-operation-type: update
     tags:
-      - "files"
+      - 'files'
     summary: Update a file
     description: |
       *Note: endpoint accepts a multipart form, not JSON.*
-      
+
       If the client is implementing a "trash" system, the client should use this endpoint
-      and update the file status to `deleted` to signify that the file is pending permanent
-      deletion instead of invoking the delete endpoint.
+      and update the file state to `deleted` to signify that the file is pending permanent
+      deletion instead of invoking the `DELETE /files/{id}` endpoint.
     requestBody:
       required: true
       content:
@@ -201,53 +199,43 @@ id:
             type: object
             properties:
               name:
-                type: string
-                description: File name
+                $ref: '#/name'
               description:
-                type: string
-                description: File description
-              status:
-                $ref: "#/file-status"
+                $ref: '#/description'
+              state:
+                $ref: '#/state'
               acl:
-                $ref: "#/acl"
+                $ref: '#/acl'
               raw:
-                type: string
-                format: binary
-                description: Raw file
+                $ref: '#/raw'
     responses:
-      "200":
-        description: OK
-
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+      '200':
+        $ref: '../responses.yml#/empty-success'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
 
   delete:
-    operationId: DeleteFile
+    operationId: deleteFile
     x-operation-type: delete
     tags:
-      - "files"
+      - 'files'
     summary: Delete a file
     description: |
       *Note: this endpoint permanently and irreversibly deletes the file.*
 
-      If the client is implementing a "trash" system, the client should use the update endpoint
-      and update the file status to `deleted` to signify that the file is pending permanent
+      If the client is implementing a "trash" system, the client should use the `PATCH /files/{id}`
+      endpoint and update the file state to `deleted` to signify that the file is pending permanent
       deletion instead of invoking this endpoint.
     responses:
-      "200":
-        description: OK
-
-      "400":
-        $ref: "../responses.yml#/bad-request"
-
-      "401":
-        $ref: "../responses.yml#/unauthorized"
-
-      "500":
-        $ref: "../responses.yml#/internal-error"
+      '200':
+        $ref: '../responses.yml#/empty-success'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'

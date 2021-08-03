@@ -24,7 +24,8 @@ export default (listener: Listener) =>
   {
     return createHttpsServer({
       cert: http.certificate,
-      key: http.key
+      key: http.key,
+      minVersion: 'TLSv1.2'
     }, listener);
   }
   //HTTP2 server
@@ -33,7 +34,8 @@ export default (listener: Listener) =>
     return createHttp2Server({
       allowHTTP1: true,
       cert: http.certificate,
-      key: http.key
+      key: http.key,
+      minVersion: 'TLSv1.1'
     }, listener);
   }
 };

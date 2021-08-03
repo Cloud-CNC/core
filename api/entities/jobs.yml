@@ -1,0 +1,255 @@
+# Job entity
+
+# Types
+_id:
+  type: string
+  description: Job ID
+
+name:
+  type: string
+  description: Job name
+
+file:
+  type: string
+  description: Job file ID
+
+state:
+  description: |
+    Job lifecycle state
+    * `waiting`: the job is waiting to be scheduled
+    * `processing`: the job is being processed by a machine
+    * `complete`: the job successfully completed
+    * `aborted`: the job unsuccessfully completed
+  type: string
+  enum:
+    - waiting
+    - processing
+    - complete
+    - aborted
+
+filterItem:
+  description: Label/taint filter
+  type: object
+  required:
+    - 'key'
+    - 'operator'
+  properties:
+    key:
+      type: string
+      description: Label/taint key
+    operator:
+      description: |
+        Operator used to compare the label/taint values and `values`
+        * `in`: the label/taint value is **in** `values`
+        * `notIn`: the label/taint value is **not in** `values`
+        * `exists`: the label/taint key **exists** (`values` is ignored and not required)
+        * `doesNotExist`: the label/taint key **does not exist** (`values` is ignored and not required)
+        * `gt`: the label/taint value is greater than the **first** item in `values` (Subsequent
+        items in `values` are ignored)
+        * `lt`: the label/taint value is less than the **first** item in `values` (Subsequent items
+        in `values` are ignored)
+      type: string
+      enum:
+        - in
+        - notIn
+        - exists
+        - doesNotExist
+        - gt
+        - lt
+    values:
+      description: Value(s) to compare the label/taint value against
+      type: array
+      items:
+        type: string
+
+filterGroup:
+  description: |
+    Array of label/taint **filters**. Each item must match for the group as a whole to be considered
+    a match for the candidate controller/machine (Items are ANDed together).
+  type: array
+  items:
+    $ref: '#/filterItem'
+
+filterGroups:
+  description: |
+    Array of label/taint **groups**. At least one group must match for the job to be considered a
+    match for the candidate controller/machine (Groups are ORed together).
+  type: array
+  items:
+    $ref: '#/filterGroup'
+
+# Routes
+all:
+  get:
+    operationId: getAllJobs
+    x-operation-type: all
+    tags:
+      - 'jobs'
+    summary: Get all files
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                  - 'id'
+                  - 'name'
+                  - 'file'
+                  - 'affinity'
+                  - 'tolerations'
+                properties:
+                  id:
+                    $ref: '#/_id'
+                  name:
+                    $ref: '#/name'
+                  file:
+                    $ref: '#/file'
+                  affinity:
+                    $ref: '#/filterGroups'
+                  tolerations:
+                    $ref: '#/filterGroups'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
+
+create:
+  post:
+    operationId: createJob
+    x-operation-type: create
+    tags:
+      - 'jobs'
+    summary: Create a job
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - 'name'
+              - 'file'
+              - 'affinity'
+              - 'tolerations'
+            properties:
+              name:
+                $ref: '#/name'
+              file:
+                $ref: '#/file'
+              affinity:
+                $ref: '#/filterGroups'
+              tolerations:
+                $ref: '#/filterGroups'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - 'id'
+              properties:
+                id:
+                  $ref: '#/_id'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
+
+id:
+  parameters:
+    - name: id
+      description: Job ID
+      in: path
+      required: true
+      schema:
+        type: string
+  get:
+    operationId: getJob
+    x-operation-type: get
+    tags:
+      - 'jobs'
+    summary: Get a job
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - 'name'
+                - 'file'
+                - 'affinity'
+                - 'tolerations'
+              properties:
+                name:
+                  $ref: '#/name'
+                file:
+                  $ref: '#/file'
+                affinity:
+                  $ref: '#/filterGroups'
+                tolerations:
+                  $ref: '#/filterGroups'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
+
+  patch:
+    operationId: updateJob
+    x-operation-type: update
+    tags:
+      - 'jobs'
+    summary: Update a job
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/name'
+              file:
+                $ref: '#/file'
+              affinity:
+                $ref: '#/filterGroups'
+              tolerations:
+                $ref: '#/filterGroups'
+    responses:
+      '200':
+        $ref: '../responses.yml#/empty-success'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'
+
+  delete:
+    operationId: deleteJob
+    x-operation-type: delete
+    tags:
+      - 'jobs'
+    summary: Delete a job
+    responses:
+      '200':
+        $ref: '../responses.yml#/empty-success'
+      '400':
+        $ref: '../responses.yml#/bad-request'
+      '401':
+        $ref: '../responses.yml#/unauthorized'
+      '500':
+        $ref: '../responses.yml#/internal-error'

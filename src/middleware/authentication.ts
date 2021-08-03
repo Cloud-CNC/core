@@ -1,5 +1,5 @@
 /**
- * @fileoverview Authentication and authorization middleware
+ * @fileoverview Authentication middleware
  */
 
 //Imports
@@ -11,7 +11,10 @@ const middleware = jwt({
   algorithms: [
     'HS512'
   ],
+  cookie: 'jwt',
   secret: auth.secret
+}).unless({
+  path: /^\/sessions\/login\//
 });
 
 //Export

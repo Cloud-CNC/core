@@ -4,14 +4,14 @@ error:
   description: Generic error schema
   type: object
   required:
-    - "error"
+    - 'error'
   properties:
     error:
       description: Error information
       type: object
       required:
-        - "name"
-        - "description"
+        - 'name'
+        - 'description'
       properties:
         name:
           type: string

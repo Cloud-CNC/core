@@ -33,7 +33,12 @@ router
       ctx.log.error({ctx, id}, 'Invalid {{> entityLower}} {{name}}!');
 
       //Reject
-      ctx.throw('Invalid {{> entityLower}} {{name}}', 402);
+      ctx.throw({
+        error: {
+          name: 'Invalid {{> entityLower}} {{name}}!',
+          description: 'The supplied {{> entityLower}} {{name}} was invalid.'
+        }
+      }, 400);
     }
 
     ctx.{{> entityObject}} = {{> entityObject}};
@@ -44,7 +49,7 @@ router
 {{/each}}
 {{#each operations}}
   //{{{description}}}
-  .{{method}}('{{parameter path}}', controller.{{inflect 'camelize' name}}){{#if @last}};{{/if}}
+  .{{method}}('{{parameter path}}', controller.{{name}}){{#if @last}};{{/if}}
 {{#unless @last}}
 
 {{/unless}}
