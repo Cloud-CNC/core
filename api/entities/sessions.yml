@@ -4,6 +4,7 @@
 userpass:
   post:
     operationId: loginUserPass
+    x-bifurcate-permissions: false
     tags:
       - 'sessions'
     summary: Log in to an account with a username and password
@@ -57,6 +58,7 @@ userpass:
 mfa:
   post:
     operationId: loginMFA
+    x-bifurcate-permissions: false
     tags:
       - 'sessions'
     summary: Log in to an account with MFA
@@ -101,6 +103,7 @@ mfa:
 logout:
   post:
     operationId: logout
+    x-bifurcate-permissions: false
     tags:
       - 'sessions'
     summary: Log out of an account

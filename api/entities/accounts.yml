@@ -35,6 +35,7 @@ roles:
 all:
   get:
     operationId: getAllAccounts
+    x-bifurcate-permissions: false
     x-operation-type: all
     tags:
       - 'accounts'
@@ -72,6 +73,7 @@ all:
 create:
   post:
     operationId: createAccount
+    x-bifurcate-permissions: false
     x-operation-type: create
     tags:
       - 'accounts'
@@ -128,6 +130,7 @@ impersonate:
         type: string
   post:
     operationId: impersonateAccount
+    x-bifurcate-permissions: false
     tags:
       - 'accounts'
     summary: Start/stop impersonating an account
@@ -163,6 +166,7 @@ id:
         type: string
   get:
     operationId: getAccount
+    x-bifurcate-permissions: true
     x-operation-type: get
     tags:
       - 'accounts'
@@ -194,6 +198,7 @@ id:
 
   patch:
     operationId: updateAccount
+    x-bifurcate-permissions: true
     x-operation-type: update
     tags:
       - 'accounts'
@@ -233,6 +238,7 @@ id:
 
   delete:
     operationId: deleteAccount
+    x-bifurcate-permissions: true
     x-operation-type: delete
     tags:
       - 'accounts'

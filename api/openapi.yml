@@ -21,11 +21,24 @@ info:
     taints via tolerations. Taints also serve as a status system: if an entity has no taints, it's
     considered fully functional and online.
 
+    ## Permissions
+    * RBAC is used for route-level permissions while ACLs are used for individual ownable resources
+    (eg: files). For convenience, ACLs accept the same roles the RBAC uses (In addition to regular
+    accounts).
+    * Both the RBAC and ACLs are add-only (Permissions can only be added); by default, users have
+    no permissions.
+    * ACL permission **key** format: `[entity name]:[entity ID]` (eg: `account:6109ba1dc24de13eb8fa0c94`
+    or `role:6109ba287a72978d7d621f97`)
+    * RBAC permission format: `[operationId]<:[variant]>` (eg: `getAllMachines`, `getFile:own`)
+
     ## Custom route attributes
     * `x-operation-type` (enum): common operation types (used for code autogeneration). Valid values
     are: `all` (Get all entity instances), `create` (Create an entity instance), `get` (Get an entity
     instance by ID), `update` (Update an entity instance by ID), and `delete` (Delete an entity 
     instance by ID).
+    * `x-bifurcate-permissions`: whether the route permissions should be bifurcated into an `own`
+    variant (For operating upon one's own resources) and an `other` variant (For operating upon
+    other's resources) or left as a single permission.
   version: 2.0.0
   license:
     name: MIT
@@ -37,6 +50,9 @@ tags:
 
   - name: accounts
     description: User accounts
+
+  - name: roles
+    description: Account roles
 
   - name: files
     description: Model & machine files
@@ -66,6 +82,13 @@ paths:
     $ref: './entities/accounts.yml#/impersonate'
   /accounts/{id}:
     $ref: './entities/accounts.yml#/id'
+
+  /roles/all:
+    $ref: './entities/roles.yml#/all'
+  /roles/create:
+    $ref: './entities/roles.yml#/create'
+  /roles/{id}:
+    $ref: './entities/roles.yml#/id'
 
   /files/all:
     $ref: './entities/files.yml#/all'

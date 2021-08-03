@@ -38,9 +38,11 @@ permission:
 acl:
   description: |
     File access control list
-    * Keys: account  name (`account` or `role`) + `:` + entity ID (eg: `role:61087e44c7f60e5269e4cb0a`)
-    * Values: permission
-  type: array
+    * Keys: ACL permission keys (Valid for `account` and `role` entity names only)
+    * Values: ACL permission values
+
+    *Note: if sending over `multipart/form-data`, this field should be a JSON-encoded string.*
+  type: object
   additionalProperties:
     $ref: '#/permission'
 
@@ -53,6 +55,7 @@ raw:
 all:
   get:
     operationId: getAllFiles
+    x-bifurcate-permissions: true
     x-operation-type: all
     tags:
       - 'files'
@@ -92,11 +95,12 @@ all:
 create:
   post:
     operationId: createFile
+    x-bifurcate-permissions: true
     x-operation-type: create
     tags:
       - 'files'
     summary: Create a file
-    description: '*Note: endpoint accepts a multipart form, not JSON.*'
+    description: '*Note: endpoint accepts `multipart/form-data`, not `application/json`.*'
     requestBody:
       required: true
       content:
@@ -145,6 +149,7 @@ id:
         type: string
   get:
     operationId: getFile
+    x-bifurcate-permissions: true
     x-operation-type: get
     tags:
       - 'files'
@@ -181,12 +186,13 @@ id:
 
   patch:
     operationId: updateFile
+    x-bifurcate-permissions: true
     x-operation-type: update
     tags:
       - 'files'
     summary: Update a file
     description: |
-      *Note: endpoint accepts a multipart form, not JSON.*
+      *Note: endpoint accepts `multipart/form-data`, not `application/json`.*
 
       If the client is implementing a "trash" system, the client should use this endpoint
       and update the file state to `deleted` to signify that the file is pending permanent
@@ -220,6 +226,7 @@ id:
 
   delete:
     operationId: deleteFile
+    x-bifurcate-permissions: true
     x-operation-type: delete
     tags:
       - 'files'

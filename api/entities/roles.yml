@@ -1,45 +1,14 @@
-# Controller entity
+# Role entity
 
 # Types
 _id:
   type: string
-  description: Controller ID
-
+  description: Role ID
 name:
   type: string
-  description: Controller name
-
-tls:
-  description: |
-    mTLS data used for connecting to the core
-
-    *Note: for security purposes, this will not be revealed after creating the controller,
-    even when updating it.*
-  type: object
-  properties:
-    certificate:
-      type: string
-      description: PEM-encoded mTLS client certificate
-    key:
-      type: string
-      description: PEM-encoded mTLS client key
-  additionalProperties:
-    type: string
-
-labels:
-  description: Controller labels (Not to be confused with machine labels)
-  type: array
-  items:
-    type: string
-
-taints:
-  description: |
-    Controller taints (Not to be confused with machine taints). Well known ones are:
-    * `controller.cloud-cnc/incompatible-version`: the core and controller versions are incompatible
-    with each other<sup>1</sup>
-    * `controller.cloud-cnc/offline`: the controller is offline<sup>1</sup>
-
-    <sup>1</sup> automatically added and removed
+  description: Role name
+permissions:
+  description: RBAC role permissions. These permissions will be granted to all role members.
   type: array
   items:
     type: string
@@ -47,12 +16,12 @@ taints:
 # Routes
 all:
   get:
-    operationId: getAllControllers
+    operationId: getAllRoles
     x-bifurcate-permissions: false
     x-operation-type: all
     tags:
-      - 'controllers'
-    summary: Get all controllers
+      - 'roles'
+    summary: Get all roles
     responses:
       '200':
         description: OK
@@ -65,17 +34,14 @@ all:
                 required:
                   - 'id'
                   - 'name'
-                  - 'labels'
-                  - 'taints'
+                  - 'permissions'
                 properties:
                   id:
                     $ref: '#/_id'
                   name:
                     $ref: '#/name'
-                  labels:
-                    $ref: '#/labels'
-                  taints:
-                    $ref: '#/taints'
+                  permissions:
+                    $ref: '#/permissions'
       '400':
         $ref: '../responses.yml#/bad-request'
       '401':
@@ -85,12 +51,12 @@ all:
 
 create:
   post:
-    operationId: createController
+    operationId: createRole
     x-bifurcate-permissions: false
     x-operation-type: create
     tags:
-      - 'controllers'
-    summary: Create a controller
+      - 'roles'
+    summary: Create a role
     requestBody:
       required: true
       content:
@@ -99,9 +65,12 @@ create:
             type: object
             required:
               - 'name'
+              - 'permissions'
             properties:
               name:
                 $ref: '#/name'
+              permissions:
+                $ref: '#/permissions'
     responses:
       '200':
         description: OK
@@ -111,12 +80,9 @@ create:
               type: object
               required:
                 - 'id'
-                - 'tls'
               properties:
                 id:
                   $ref: '#/_id'
-                tls:
-                  $ref: '#/tls'
       '400':
         $ref: '../responses.yml#/bad-request'
       '401':
@@ -127,18 +93,18 @@ create:
 id:
   parameters:
     - name: id
-      description: Controller ID
+      description: Role ID
       in: path
       required: true
       schema:
         type: string
   get:
-    operationId: getController
+    operationId: getRole
     x-bifurcate-permissions: false
     x-operation-type: get
     tags:
-      - 'controllers'
-    summary: Get a controller
+      - 'roles'
+    summary: Get a role
     responses:
       '200':
         description: OK
@@ -148,15 +114,12 @@ id:
               type: object
               required:
                 - 'name'
-                - 'labels'
-                - 'taints'
+                - 'permissions'
               properties:
                 name:
                   $ref: '#/name'
-                labels:
-                  $ref: '#/labels'
-                taints:
-                  $ref: '#/taints'
+                permissions:
+                  $ref: '#/permissions'
       '400':
         $ref: '../responses.yml#/bad-request'
       '401':
@@ -165,12 +128,12 @@ id:
         $ref: '../responses.yml#/internal-error'
 
   patch:
-    operationId: updateController
+    operationId: updateRole
     x-bifurcate-permissions: false
     x-operation-type: update
     tags:
-      - 'controllers'
-    summary: Update a controller
+      - 'roles'
+    summary: Update a role
     requestBody:
       required: true
       content:
@@ -180,10 +143,8 @@ id:
             properties:
               name:
                 $ref: '#/name'
-              labels:
-                $ref: '#/labels'
-              taints:
-                $ref: '#/taints'
+              permissions:
+                $ref: '#/permissions'
     responses:
       '200':
         $ref: '../responses.yml#/empty-success'
@@ -195,16 +156,12 @@ id:
         $ref: '../responses.yml#/internal-error'
 
   delete:
-    operationId: deleteController
+    operationId: deleteRole
     x-bifurcate-permissions: false
     x-operation-type: delete
     tags:
-      - 'controllers'
-    summary: Delete a controller
-    description: |
-      *Note: this endpoint will kick the controller if it's currently connected and add the client
-      certificate to an internal Certificate Revocation List (CRL) preventing future connections
-      using the same certificate/key.*
+      - 'roles'
+    summary: Delete a role
     responses:
       '200':
         $ref: '../responses.yml#/empty-success'
